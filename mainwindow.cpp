@@ -9,15 +9,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    int w=ui->label_pic->width();
-    int h=ui->label_pic->height();
-    QPixmap pix(":/img/tmp.jpg");
-    ui->label_pic->setPixmap(pix);
-    ui->label_pic->setPixmap(pix.scaled(w,h,Qt::KeepAspectRatio));
     num[0]=num[1]=num[2]=0;
-    //connect(qb, SIGNAL(clicked()), this, SLOT(on_dm_clicked0()));
-
-    //connect(this, SIGNAL(clicked()), this, SLOT(on_dm_clicked2()));
+//    int w=ui->label_pic->width();
+//    int h=ui->label_pic->height();
+//    QPixmap pix(":/img/tmp.jpg");
+//    ui->label_pic->setPixmap(pix);
+//    ui->label_pic->setPixmap(pix.scaled(w,h,Qt::KeepAspectRatio));
 }
 
 MainWindow::~MainWindow()
@@ -33,6 +30,47 @@ QPushButton* MainWindow::newButton(QString name, QString str)
        return button;
 }
 
+void MainWindow::makeTab(QWidget* Tab){
+    QWidget *widget = Tab;
+    QVBoxLayout *layout = new QVBoxLayout(widget);
+
+    widget->setLayout(layout);
+
+    QGroupBox *box = new QGroupBox(Kor("기본 정보"), widget);
+    QVBoxLayout *boxLayout = new QVBoxLayout(box);
+    layout->addWidget(box);
+
+    QWidget* nameWidget = new QWidget(box);
+    QWidget* ageWidget = new QWidget(box);
+    QWidget* addressWidget = new QWidget(box);
+
+    boxLayout->addWidget(nameWidget);
+    boxLayout->addWidget(ageWidget);
+    boxLayout->addWidget(addressWidget);
+
+    QHBoxLayout *nameLayout = new QHBoxLayout(nameWidget);
+    nameLayout->addWidget(new QLabel(Kor("이 름 :")));
+    nameLayout->addWidget(new QLineEdit(nameWidget));
+
+
+    QHBoxLayout *ageLayout = new QHBoxLayout(ageWidget);
+    ageLayout->addWidget(new QLabel(Kor("나 이 :")));
+    ageLayout->addWidget(new QLineEdit(ageWidget));
+
+    QHBoxLayout *addressLayout = new QHBoxLayout(addressWidget);
+    addressLayout->addWidget(new QLabel(Kor("주 소 :")));
+    addressLayout->addWidget(new QLineEdit(addressWidget));
+
+
+    QWidget* validateWidget = new QWidget(widget);
+    QHBoxLayout *validateLayout = new QHBoxLayout(validateWidget);
+    validateLayout->addWidget(new QPushButton(Kor("확 인"), validateWidget));
+    validateLayout->addWidget(new QPushButton(Kor("리 셋"), validateWidget));
+    validateLayout->addWidget(new QPushButton(Kor("취 소"), validateWidget));
+
+    layout->addWidget(validateWidget);
+}
+
 void MainWindow::on_plus_clicked(){
     QObject *sel=QObject::sender();
     if(sel==mb[0]){
@@ -42,6 +80,8 @@ void MainWindow::on_plus_clicked(){
         mb[0]=list[0][num[0]];
         connect(list[0][num[0]], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
         ui->dropmenu0->layout()->addWidget(list[0][num[0]++]);
+
+        makeTab(ui->tab);
     }
     else if(sel==mb[1]){
         mb[1]->setText(Kor("인적사항")+QString::number(num[1]));

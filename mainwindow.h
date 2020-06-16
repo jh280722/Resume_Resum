@@ -9,6 +9,9 @@
 #include <QPushButton>
 #include <QList>
 #include <QObject>
+#include <QGroupBox>
+#include <QLineEdit>
+#include <QLabel>
 #define Kor(str) QString::fromLocal8Bit(str)
 
 QT_BEGIN_NAMESPACE
@@ -29,13 +32,14 @@ private slots:
     void on_dm0_clicked();
     void on_dm1_clicked();
     void on_dm2_clicked();
-    QPushButton* newButton(QString name, QString str);
 
 private:
     Ui::MainWindow *ui;
     QPushButton *mb[3];
     int num[3];
     QList<QPushButton*> list[3];
+    QPushButton* newButton(QString name, QString str);
+    void makeTab(QWidget* Tab);
 };
 
 
