@@ -35,11 +35,13 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    int idx=0;
     QPushButton *mb[3];
     int num[3];
     QList<QPushButton*> list[3];
-    QPushButton* newButton(QString name, QString str);
-    void makeTab(QWidget* Tab);
+    QPushButton* new_button(QString name, QString str);
+    void make_tab(QWidget* Tab);
+    void hide_show(int idx, int flg);
 };
 
 
