@@ -13,19 +13,31 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QPushButton#dm0 { 
+	border:6px solid black;
+}
+
+QPushButton#dm1{
+	border:6px solid black;
+}
+QPushButton#dm2{
+	border:6px solid black;
+}</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
-       <widget class="QPushButton" name="pushButton_3">
+       <widget class="QPushButton" name="dm0">
         <property name="text">
          <string>기본 정보</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="widget" native="true">
+       <widget class="QWidget" name="dropmenu0" native="true">
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <property name="leftMargin">
           <number>0</number>
@@ -43,7 +55,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="dm">
+       <widget class="QPushButton" name="dm1">
         <property name="styleSheet">
          <string notr="true"/>
         </property>
@@ -53,7 +65,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="dropmenu" native="true">
+       <widget class="QWidget" name="dropmenu1" native="true">
         <layout class="QVBoxLayout" name="verticalLayout">
          <property name="spacing">
           <number>0</number>
@@ -74,14 +86,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="dm2">
         <property name="text">
          <string>자소서</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="widget_2" native="true">
+       <widget class="QWidget" name="dropmenu2" native="true">
         <layout class="QVBoxLayout" name="verticalLayout_6">
          <property name="spacing">
           <number>0</number>
@@ -124,7 +136,7 @@
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
@@ -148,7 +160,7 @@
                 <string>이 름</string>
                </property>
                <property name="buddy">
-                <cstring>dropmenu</cstring>
+                <cstring>dropmenu1</cstring>
                </property>
               </widget>
              </item>

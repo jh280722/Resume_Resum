@@ -23,10 +23,20 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+signals:
 private slots:
-    void on_dm_clicked();
+    void on_plus_clicked();
+    void on_dm0_clicked();
+    void on_dm1_clicked();
+    void on_dm2_clicked();
     QPushButton* newButton(QString name, QString str);
+
 private:
     Ui::MainWindow *ui;
+    QPushButton *mb[3];
+    int num[3];
+    QList<QPushButton*> list[3];
 };
+
+
 #endif // MAINWINDOW_H
