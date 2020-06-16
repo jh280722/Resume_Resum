@@ -4,6 +4,9 @@
 QString name;
 int kor,eng,math;
 int total,avg;
+int tapidx;
+QList<QPushButton*> taplist;
+QPushButton*mbt;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -71,6 +74,7 @@ void MainWindow::make_tab(QWidget* Tab){
     layout->addWidget(validateWidget);
 }
 
+
 void MainWindow::on_plus_clicked(){
     QObject *sel=QObject::sender();
     QString name;
@@ -92,8 +96,10 @@ void MainWindow::on_plus_clicked(){
     list[idx].push_back(new_button("dm"+QString::number(idx)+"_"+QString::number(num[idx]),Kor("항목추가")));
     mb[idx]=list[idx][num[idx]];
     connect(list[idx][num[idx]], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
-    menu->layout()->addWidget(list[idx][num[idx]++]);
-    //makeTab(ui->tab);
+    menu->layout()->addWidget(list[idx][num[idx]]);
+
+    taplist.push_back(list[idx][num[idx]]);
+    connect(list[idx][num[idx]++], SIGNAL(clicked()), this, SLOT(connect_subTopic()));
 }
 
 void MainWindow::hide_show(int idx, int flg){
@@ -110,29 +116,46 @@ void MainWindow::hide_show(int idx, int flg){
         list[idx].push_back(new_button("dm"+QString::number(idx)+"_"+QString::number(num[idx]),Kor("항목추가")));
         mb[idx]=list[idx][num[idx]];
         connect(list[idx][num[idx]], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
-        menu->layout()->addWidget(list[idx][num[idx]++]);
-    }
-    if(flg==1){
-        flg=2;
-        for(int i = 0; i < num[idx]; i++)
-        {
-             list[idx][i]->show();
-        }
-    }
-    else if(flg==2){
-        flg=1;
-        for(int i = 0; i < num[idx]; i++)
-        {
-             list[idx][i]->hide();
-        }
+        menu->layout()->addWidget(list[idx][num[idx]]);
+
+        taplist.push_back(list[idx][num[idx]]);
+        connect(list[idx][num[idx]++], SIGNAL(clicked()), this, SLOT(connect_subTopic()));
     }
 }
+void MainWindow::connect_subTopic(){
+    QObject *sel=QObject::sender();
+    for(int i=0;i<taplist.size();++i){
+        if(taplist[i]==sel){
+            tapidx=i;
+        }
+    }
+    mbt=taplist[tapidx];
+    connect(mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
+}
+void MainWindow::on_Tb1_deleteTab(){
+   // QWidget* new_tab= new QWidget;
+   // ui->Tb1->removeTab();
+   // ui->Tb1->show();
+   // disconnect(mb_tab,SIGNAL(clicked()),this,SLOT(connect_subTopic()));
+}
+void MainWindow::on_Tb1_addTab(){
+    QWidget* new_tab= new QWidget;
+    ui->Tb1->addTab(new_tab,mbt->text());
+    ui->Tb1->show();
+    if(ui->Tb1->indexOf(new_tab)!=-1){
+        disconnect( mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
+        connect( mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
+    }
+}
+
 
 void MainWindow::on_dm0_clicked()
 {
     static int flg=0;
     idx=0;
     hide_show(idx,flg);
+
+
 }
 
 void MainWindow::on_dm1_clicked()

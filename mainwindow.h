@@ -32,6 +32,9 @@ private slots:
     void on_dm0_clicked();
     void on_dm1_clicked();
     void on_dm2_clicked();
+    void connect_subTopic();
+    void on_Tb1_deleteTab();
+    void on_Tb1_addTab();
 
 private:
     Ui::MainWindow *ui;
