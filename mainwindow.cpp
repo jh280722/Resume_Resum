@@ -1,12 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-QString name;
-int kor,eng,math;
-int total,avg;
-int tapidx;
-QList<QPushButton*> taplist;
-QPushButton*mbt;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -93,16 +87,15 @@ void MainWindow::on_plus_clicked(){
     }
     mb[idx]->setText(name);
     disconnect(mb[idx], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
-    list[idx].push_back(new_button("dm"+QString::number(idx)+"_"+QString::number(num[idx]),Kor("항목추가")));
-    mb[idx]=list[idx][num[idx]];
-    connect(list[idx][num[idx]], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
-    menu->layout()->addWidget(list[idx][num[idx]]);
+    PBList[idx].push_back(new_button("dm"+QString::number(idx)+"_"+QString::number(num[idx]),Kor("항목추가")));
+    mb[idx]=PBList[idx][num[idx]];
+    menu->layout()->addWidget(PBList[idx][num[idx]]);
 
-    taplist.push_back(list[idx][num[idx]]);
-    connect(list[idx][num[idx]++], SIGNAL(clicked()), this, SLOT(connect_subTopic()));
+    connect(PBList[idx][num[idx]], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
+    connect(PBList[idx][num[idx]++], SIGNAL(clicked()), this, SLOT(connect_subTopic()));
 }
 
-void MainWindow::hide_show(int idx, int flg){
+void MainWindow::hide_show(int idx, int &flg){
     QWidget* menu=0;
     if(idx==0)
         menu=ui->dropmenu0;
@@ -112,24 +105,39 @@ void MainWindow::hide_show(int idx, int flg){
         menu=ui->dropmenu2;
 
     if(flg==0){
-        flg=1;
-        list[idx].push_back(new_button("dm"+QString::number(idx)+"_"+QString::number(num[idx]),Kor("항목추가")));
-        mb[idx]=list[idx][num[idx]];
-        connect(list[idx][num[idx]], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
-        menu->layout()->addWidget(list[idx][num[idx]]);
+        flg=2;
+        PBList[idx].push_back(new_button("dm"+QString::number(idx)+"_"+QString::number(num[idx]),
+                                         Kor("항목추가")));
+        mb[idx]=PBList[idx][num[idx]];
+        menu->layout()->addWidget(PBList[idx][num[idx]]);
 
-        taplist.push_back(list[idx][num[idx]]);
-        connect(list[idx][num[idx]++], SIGNAL(clicked()), this, SLOT(connect_subTopic()));
+        connect(PBList[idx][num[idx]], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
+        connect(PBList[idx][num[idx]++], SIGNAL(clicked()), this, SLOT(connect_subTopic()));
+    }
+    else if(flg==1){
+        flg=2;
+        for(int i = 0; i < num[idx]; i++)
+        {
+             PBList[idx][i]->show();
+        }
+    }
+    else if(flg==2){
+        flg=1;
+        for(int i = 0; i < num[idx]; i++)
+        {
+             PBList[idx][i]->hide();
+        }
     }
 }
 void MainWindow::connect_subTopic(){
     QObject *sel=QObject::sender();
-    for(int i=0;i<taplist.size();++i){
-        if(taplist[i]==sel){
-            tapidx=i;
+    int tabidx=-1;
+    for(int i=0;i<PBList[idx].size();++i){
+        if(PBList[idx][i]==sel){
+            tabidx=i;
         }
     }
-    mbt=taplist[tapidx];
+    mbt=PBList[idx][tabidx];
     connect(mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
 }
 void MainWindow::on_Tb1_deleteTab(){
@@ -142,6 +150,7 @@ void MainWindow::on_Tb1_addTab(){
     QWidget* new_tab= new QWidget;
     ui->Tb1->addTab(new_tab,mbt->text());
     ui->Tb1->show();
+    make_tab(new_tab);
     if(ui->Tb1->indexOf(new_tab)!=-1){
         disconnect( mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
         connect( mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
@@ -154,8 +163,6 @@ void MainWindow::on_dm0_clicked()
     static int flg=0;
     idx=0;
     hide_show(idx,flg);
-
-
 }
 
 void MainWindow::on_dm1_clicked()

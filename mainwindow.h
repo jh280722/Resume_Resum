@@ -37,14 +37,22 @@ private slots:
     void on_Tb1_addTab();
 
 private:
+    //UI
     Ui::MainWindow *ui;
+
+    //QPLIST
     int idx=0;
-    QPushButton *mb[3];
     int num[3];
-    QList<QPushButton*> list[3];
+    QPushButton *mb[3];
     QPushButton* new_button(QString name, QString str);
+    QList<QPushButton*> PBList[3];
+    void hide_show(int idx, int &flg);
+
+    //TABLIST
+    QPushButton* mbt;
+    QList<QWidget*> TList[3];
     void make_tab(QWidget* Tab);
-    void hide_show(int idx, int flg);
+
 };
 
 
