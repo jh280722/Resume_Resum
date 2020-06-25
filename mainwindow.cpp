@@ -131,13 +131,27 @@ void MainWindow::hide_show(int idx, int &flg){
 }
 void MainWindow::connect_subTopic(){
     QObject *sel=QObject::sender();
-    int tabidx=-1;
-    for(int i=0;i<PBList[idx].size();++i){
-        if(PBList[idx][i]==sel){
-            tabidx=i;
+    int Topicidx=-1;
+    int subTopicidx=-1;
+    for(int i=0;i<PBList[0].size();++i){
+        if(PBList[0][i]==sel){
+            Topicidx=0;
+            subTopicidx=i;
         }
     }
-    mbt=PBList[idx][tabidx];
+    for(int i=0;i<PBList[1].size();++i){
+        if(PBList[1][i]==sel){
+            Topicidx=1;
+            subTopicidx=i;
+        }
+    }
+    for(int i=0;i<PBList[2].size();++i){
+        if(PBList[2][i]==sel){
+            Topicidx=2;
+            subTopicidx=i;
+        }
+    }
+    mbt=PBList[Topicidx][subTopicidx];
     connect(mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
 }
 void MainWindow::on_Tb1_deleteTab(){
@@ -178,4 +192,3 @@ void MainWindow::on_dm2_clicked()
     idx=2;
     hide_show(idx,flg);
 }
-

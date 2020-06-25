@@ -23,7 +23,8 @@ QPushButton#dm1{
 }
 QPushButton#dm2{
 	border:6px solid black;
-}</string>
+}
+</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
