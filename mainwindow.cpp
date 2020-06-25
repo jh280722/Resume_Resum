@@ -74,14 +74,17 @@ void MainWindow::on_plus_clicked(){
     QString name;
     QWidget *menu=0;
     if(sel==mb[0]){
+        idx=0;
         name=Kor("기본 정보 ")+QString::number(num[idx]);
         menu=ui->dropmenu0;
     }
     else if(sel==mb[1]){
+        idx=1;
         name=Kor("인적 사항 ")+QString::number(num[idx]);
         menu=ui->dropmenu1;
     }
     else if(sel==mb[2]){
+        idx=2;
         name=Kor("자 소 서 ")+QString::number(num[idx]);
         menu=ui->dropmenu2;
     }
