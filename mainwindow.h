@@ -34,7 +34,7 @@ private slots:
     void on_dm2_clicked();
     void connect_subTopic();
     void on_Tb1_deleteTab(int);
-    void on_Tb1_addTab();
+    void on_Tb1_addTab(int subTopicIdx);
 
 private:
     //UI
@@ -49,7 +49,7 @@ private:
     void hide_show(int idx, int &flg);
 
     //TABLIST
-    int Topicidx=-1;
+    int TopicIdx=-1;
     QPushButton* mbt;
     QList<QWidget*> TList[3];
     void make_tab(QWidget* Tab);
