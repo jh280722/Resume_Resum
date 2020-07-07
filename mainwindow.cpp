@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+
 }
 
 
@@ -64,7 +65,6 @@ void MainWindow::make_tab(QWidget* Tab){
     validateLayout->addWidget(new QPushButton(Kor("확 인"), validateWidget));
     validateLayout->addWidget(new QPushButton(Kor("리 셋"), validateWidget));
     validateLayout->addWidget(new QPushButton(Kor("취 소"), validateWidget));
-
     layout->addWidget(validateWidget);
 }
 
@@ -116,6 +116,8 @@ void MainWindow::hide_show(int idx, int &flg){
 
         connect(PBList[idx][num[idx]], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
         connect(PBList[idx][num[idx]++], SIGNAL(clicked()), this, SLOT(connect_subTopic()));
+        ui->Tb1->setTabsClosable(true);
+        connect(ui->Tb1,SIGNAL(tabCloseRequested(int)),this,SLOT(on_Tb1_deleteTab(int)));
     }
     else if(flg==1){
         flg=2;
@@ -134,8 +136,11 @@ void MainWindow::hide_show(int idx, int &flg){
 }
 void MainWindow::connect_subTopic(){
     QObject *sel=QObject::sender();
-    int Topicidx=-1;
+    bool existList=false;
+    int tmpidx=-1;
     int subTopicidx=-1;
+
+
     for(int i=0;i<PBList[0].size();++i){
         if(PBList[0][i]==sel){
             Topicidx=0;
@@ -154,23 +159,45 @@ void MainWindow::connect_subTopic(){
             subTopicidx=i;
         }
     }
-    mbt=PBList[Topicidx][subTopicidx];
-    connect(mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
+    for(int i=0;i<ui->Tb1->count();++i){
+        if(PBList[Topicidx][subTopicidx]->text()== ui->Tb1->tabText(i)){
+            existList=true;
+            tmpidx=i;
+            break;
+        }
+    }
+
+
+
+    if(existList){
+        ui->Tb1->setCurrentIndex(tmpidx);
+
+    }
+    else{
+        mbt=PBList[Topicidx][subTopicidx];
+        on_Tb1_addTab();
+       // connect(mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
+        ui->Tb1->setCurrentIndex(ui->Tb1->count()-1);
+    }
+
 }
-void MainWindow::on_Tb1_deleteTab(){
-   // QWidget* new_tab= new QWidget;
-   // ui->Tb1->removeTab();
-   // ui->Tb1->show();
-   // disconnect(mb_tab,SIGNAL(clicked()),this,SLOT(connect_subTopic()));
+void MainWindow::on_Tb1_deleteTab(int idx){
+   ui->Tb1->removeTab(idx);
+
+//   disconnect(mbt,SIGNAL(clicked()),this,SLOT(connect_subTopic()));
+//   disconnect( mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
 }
 void MainWindow::on_Tb1_addTab(){
     QWidget* new_tab= new QWidget;
     ui->Tb1->addTab(new_tab,mbt->text());
-    ui->Tb1->show();
+    //ui->Tb1->show();
     make_tab(new_tab);
+    TList[Topicidx].push_back(new_tab);
+
     if(ui->Tb1->indexOf(new_tab)!=-1){
-        disconnect( mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
-        connect( mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
+       // disconnect( mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
+       // connect( mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
+        //ui->Tb1->removeTab(ui->Tb1->indexOf(new_tab));
     }
 }
 
