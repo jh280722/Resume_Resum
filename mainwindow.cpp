@@ -12,6 +12,17 @@ MainWindow::MainWindow(QWidget* parent)
     //    QPixmap pix(":/img/tmp.jpg");
     //    ui->label_pic->setPixmap(pix);
     //    ui->label_pic->setPixmap(pix.scaled(w,h,Qt::KeepAspectRatio));
+    QMenu *pFileMenu;
+    QAction *pSlotNewFile = new QAction(Kor("저장"), this);
+    pSlotNewFile->setShortcut(Kor("Ctrl+S"));
+    pSlotNewFile->setStatusTip(Kor("수정사항을 저장합니다."));
+    connect(pSlotNewFile, SIGNAL(triggered()), this, SLOT(Main_SlotTest1()));
+    pFileMenu = menuBar()->addMenu(Kor("파일"));
+    pFileMenu->addAction(pSlotNewFile); // 테스트
+
+
+    ui->Tb1->setTabsClosable(true);
+    connect(ui->Tb1, SIGNAL(tabCloseRequested(int)), this, SLOT(on_Tb1_deleteTab(int)));
 }
 
 MainWindow::~MainWindow()
@@ -118,8 +129,6 @@ void MainWindow::hide_show(int TopicIdx, int& flg) {
 
         connect(PBList[TopicIdx][num[TopicIdx]], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
         connect(PBList[TopicIdx][num[TopicIdx]++], SIGNAL(clicked()), this, SLOT(connect_subTopic()));
-        ui->Tb1->setTabsClosable(true);
-        connect(ui->Tb1, SIGNAL(tabCloseRequested(int)), this, SLOT(on_Tb1_deleteTab(int)));
     }
     else if (flg == 1) {
         flg = 2;
@@ -169,16 +178,12 @@ void MainWindow::connect_subTopic() {
             break;
         }
     }
-
-
-
     if (existList) {
         ui->Tb1->setCurrentIndex(tmpIdx);
     }
     else {
         mbt = PBList[TopicIdx][subTopicIdx];
         on_Tb1_addTab(subTopicIdx);
-        // connect(mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
         ui->Tb1->setCurrentIndex(ui->Tb1->count() - 1);
     }
 
@@ -186,20 +191,10 @@ void MainWindow::connect_subTopic() {
 
 void MainWindow::on_Tb1_deleteTab(int idx) {
     ui->Tb1->removeTab(idx);
-
-    //   disconnect(mbt,SIGNAL(clicked()),this,SLOT(connect_subTopic()));
-    //   disconnect( mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
 }
 void MainWindow::on_Tb1_addTab(int subTopicIdx) {
     QWidget* new_tab = TList[TopicIdx][subTopicIdx];
     ui->Tb1->addTab(new_tab, mbt->text());
-    //ui->Tb1->show();
-
-    if (ui->Tb1->indexOf(new_tab) != -1) {
-        // disconnect( mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
-        // connect( mbt,SIGNAL(clicked()),this,SLOT(on_Tb1_addTab()));
-         //ui->Tb1->removeTab(ui->Tb1->indexOf(new_tab));
-    }
 }
 
 
