@@ -29,31 +29,32 @@ public:
 signals:
 private slots:
 	void on_plus_clicked();
-	void on_dm0_clicked();
-	void on_dm1_clicked();
-	void on_dm2_clicked();
-	void connect_subTopic();
-	void on_Tb1_deleteTab(int);
-	void on_Tb1_addTab(int subTopicIdx);
+	void on_srt0_clicked();
+	void on_srt1_clicked();
+	void on_srt2_clicked();
+	void connect_doc();
+	void on_docTab_deleteTab(int);
+
+    void on_toolBox_currentChanged(int index);
 
 private:
 	//UI
 	Ui::MainWindow* ui;
 
-    int TopicIdx = -1;
+    int srtIdx = -1;
 
     //QPLIST
-	int num[3];
-	QPushButton* mb[3];
+	int docNum[3];
+	QPushButton* srtPlusBtn[3];
 	QPushButton* new_button(QString name, QString str);
-	QList<QPushButton*> PBList[3];
-	void hide_show(int idx, int& flg);
+	QList<QPushButton*> docBtnList[3];
+	void hide_show_doc(int idx, int& flg);
 
     //TABLIST
-	QPushButton* mbt;
-	QList<QWidget*> TList[3];
-	void make_tab(QWidget* Tab);
-
+	QPushButton* pBtn;
+	QList<QWidget*> docList[3];
+	void add_box(QWidget* docTab);
+	void add_docTab(int);
 };
 
 

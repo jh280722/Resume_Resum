@@ -10,5 +10,6 @@
         <file>README.md</file>
         <file>Resources.qrc</file>
         <file>img/tmp.jpg</file>
+        <file>img/Start.png</file>
     </qresource>
 </RCC>
