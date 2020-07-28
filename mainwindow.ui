@@ -70,21 +70,7 @@ QPushButton#dm2{
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <layout class="QVBoxLayout" name="srtBox0">
-            <item>
-             <spacer name="verticalSpacer">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
+           <layout class="QVBoxLayout" name="srtBox0"/>
           </item>
          </layout>
         </widget>
@@ -285,7 +271,6 @@ QPushButton#dm2{
      <string/>
     </property>
    </widget>
-   <zorder></zorder>
    <zorder>intro</zorder>
    <zorder></zorder>
   </widget>

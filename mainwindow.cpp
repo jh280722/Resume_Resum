@@ -6,12 +6,13 @@ MainWindow::MainWindow(QWidget* parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    docNum[0] = docNum[1] = docNum[2] = 0;
-        int w=ui->intro->width();
-        int h=ui->intro->height();
-       QPixmap pix(":/img/Start.png");
-        ui->intro->setPixmap(pix);
-        ui->intro->setPixmap(pix.scaled(w,h,Qt::KeepAspectRatio));
+
+    int w=ui->intro->width();
+    int h=ui->intro->height();
+    QPixmap pix(":/img/Start.png");
+    //ui->intro->setPixmap(pix);
+    //ui->intro->setPixmap(pix.scaled(w,h,Qt::KeepAspectRatio));
+
     QMenu *pFileMenu;
     QAction *pSlotNewFile = new QAction(Kor("저장"), this);
     pSlotNewFile->setShortcut(Kor("Ctrl+S"));
@@ -23,7 +24,10 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->docTab->setTabsClosable(true);
     connect(ui->docTab, SIGNAL(tabCloseRequested(int)), this, SLOT(on_docTab_deleteTab(int)));
-    QString s="srtBox";
+    for(int i=0;i<9;i++){
+        docNum[i]=0;
+        srtInit(i);
+    }
 }
 
 MainWindow::~MainWindow()
@@ -80,28 +84,24 @@ void MainWindow::add_box(QWidget* docTab) {
     layout->addWidget(validateWidget);
 }
 
+QString srtTitle[9]={Kor("인적 사항"), Kor("학력 사항"),Kor("경력 사항"),Kor("활동 및 수상 경력"),
+                     Kor("자격증"),Kor("프로젝트"),Kor("자기소개서"),Kor("포트폴리오"), Kor("기타")};
 
 void MainWindow::on_plus_clicked() {
     QObject* sel = QObject::sender();
     QString name;
     QWidget* menu = 0;
-    if (sel == srtPlusBtn[0]) {
-        srtIdx = 0;
-        name = Kor("기본 정보 ") + QString::number(docNum[srtIdx]);
-        menu = ui->srt0;
+    for(int i=0;i<9;i++){
+        if(sel==srtPlusBtn[i]){
+            srtIdx = i;
+            name = srtTitle[srtIdx] + QString::number(docNum[srtIdx]);
+            menu = ui->toolBox->findChild<QWidget*>("srt"+QString::number(srtIdx));
+            break;
+        }
     }
-    else if (sel == srtPlusBtn[1]) {
-        srtIdx = 1;
-        name = Kor("인적 사항 ") + QString::number(docNum[srtIdx]);
-        menu = ui->srt1;
-    }
-    else if (sel == srtPlusBtn[2]) {
-        srtIdx = 2;
-        name = Kor("자 소 서 ") + QString::number(docNum[srtIdx]);
-        menu = ui->srt2;
-    }
+
     srtPlusBtn[srtIdx]->setText(name);
-    disconnect(srtPlusBtn[srtIdx], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
+    disconnect(sel, SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
     docBtnList[srtIdx].push_back(new_button("dm" + QString::number(srtIdx) + "_" + QString::number(docNum[srtIdx]), Kor("항목추가")));
     srtPlusBtn[srtIdx] = docBtnList[srtIdx][docNum[srtIdx]];
     menu->layout()->addWidget(docBtnList[srtIdx][docNum[srtIdx]]);
@@ -112,17 +112,11 @@ void MainWindow::on_plus_clicked() {
     connect(docBtnList[srtIdx][docNum[srtIdx]++], SIGNAL(clicked()), this, SLOT(connect_doc()));
 }
 
-void MainWindow::hide_show_doc(int srtIdx, int& flg) {
+void MainWindow::srtInit(int srtIdx) {
     QWidget* menu = 0;
-    if (srtIdx == 0)
-        menu = ui->srt0;
-    else if (srtIdx == 1)
-        menu = ui->srt1;
-    else if (srtIdx == 2)
-        menu = ui->srt2;
 
-    if (flg == 0) {
-        flg = 2;
+     menu = ui->toolBox->findChild<QWidget*>("srt"+QString::number(srtIdx));
+
         docBtnList[srtIdx].push_back(new_button("dm" + QString::number(srtIdx) + "_" + QString::number(docNum[srtIdx]),
             Kor("항목추가")));
         srtPlusBtn[srtIdx] = docBtnList[srtIdx][docNum[srtIdx]];
@@ -130,21 +124,20 @@ void MainWindow::hide_show_doc(int srtIdx, int& flg) {
 
         connect(docBtnList[srtIdx][docNum[srtIdx]], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
         connect(docBtnList[srtIdx][docNum[srtIdx]++], SIGNAL(clicked()), this, SLOT(connect_doc()));
-    }
-    else if (flg == 1) {
-        flg = 2;
-        for (int i = 0; i < docNum[srtIdx]; i++)
-        {
-            docBtnList[srtIdx][i]->show();
-        }
-    }
-    else if (flg == 2) {
-        flg = 1;
-        for (int i = 0; i < docNum[srtIdx]; i++)
-        {
-            docBtnList[srtIdx][i]->hide();
-        }
-    }
+//    else if (flg == 1) {
+//        flg = 2;
+//        for (int i = 0; i < docNum[srtIdx]; i++)
+//        {
+//            docBtnList[srtIdx][i]->show();
+//        }
+//    }
+//    else if (flg == 2) {
+//        flg = 1;
+//        for (int i = 0; i < docNum[srtIdx]; i++)
+//        {
+//            docBtnList[srtIdx][i]->hide();
+//        }
+//    }
 }
 
 void MainWindow::connect_doc() {
@@ -154,23 +147,18 @@ void MainWindow::connect_doc() {
     int subSrtIdx = -1;
 
 
-    for (int i = 0; i < docBtnList[0].size(); ++i) {
-        if (docBtnList[0][i] == sel) {
-            srtIdx = 0;
-            subSrtIdx = i;
+    for(int j=0;j<9;j++){
+        bool ok=0;
+        for (int i = 0; i < docBtnList[j].size(); ++i) {
+            if (docBtnList[j][i] == sel) {
+                srtIdx = j;
+                subSrtIdx = i;
+                ok=1;
+                break;
+            }
         }
-    }
-    for (int i = 0; i < docBtnList[1].size(); ++i) {
-        if (docBtnList[1][i] == sel) {
-            srtIdx = 1;
-            subSrtIdx = i;
-        }
-    }
-    for (int i = 0; i < docBtnList[2].size(); ++i) {
-        if (docBtnList[2][i] == sel) {
-            srtIdx = 2;
-            subSrtIdx = i;
-        }
+        if(ok)
+            break;
     }
     for (int i = 0; i < ui->docTab->count(); ++i) {
         if (docBtnList[srtIdx][subSrtIdx]->text() == ui->docTab->tabText(i)) {
@@ -187,7 +175,6 @@ void MainWindow::connect_doc() {
         add_docTab(subSrtIdx);
         ui->docTab->setCurrentIndex(ui->docTab->count() - 1);
     }
-
 }
 
 void MainWindow::on_docTab_deleteTab(int idx) {
@@ -198,31 +185,7 @@ void MainWindow::add_docTab(int subSrtIdx) {
     ui->docTab->addTab(new_tab, pBtn->text());
 }
 
-
-void MainWindow::on_srt0_clicked()
-{
-    static int flg = 0;
-    srtIdx = 0;
-    hide_show_doc(srtIdx, flg);
-}
-
-void MainWindow::on_srt1_clicked()
-{
-    static int flg = 0;
-    srtIdx = 1;
-    hide_show_doc(srtIdx, flg);
-}
-
-void MainWindow::on_srt2_clicked()
-{
-    static int flg = 0;
-    srtIdx = 2;
-    hide_show_doc(srtIdx, flg);
-}
-
 void MainWindow::on_toolBox_currentChanged(int index)
 {
-    static int flg = 0;
     srtIdx = index-1;
-    hide_show_doc(srtIdx, flg);
 }

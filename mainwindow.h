@@ -28,10 +28,7 @@ public:
 
 signals:
 private slots:
-	void on_plus_clicked();
-	void on_srt0_clicked();
-	void on_srt1_clicked();
-	void on_srt2_clicked();
+    void on_plus_clicked();
 	void connect_doc();
 	void on_docTab_deleteTab(int);
 
@@ -42,17 +39,16 @@ private:
 	Ui::MainWindow* ui;
 
     int srtIdx = -1;
-
     //QPLIST
-	int docNum[3];
-	QPushButton* srtPlusBtn[3];
+    int docNum[9];
+    QPushButton* srtPlusBtn[9];
 	QPushButton* new_button(QString name, QString str);
-	QList<QPushButton*> docBtnList[3];
-	void hide_show_doc(int idx, int& flg);
+    QList<QPushButton*> docBtnList[9];
+    void srtInit(int idx);
 
     //TABLIST
 	QPushButton* pBtn;
-	QList<QWidget*> docList[3];
+    QList<QWidget*> docList[9];
 	void add_box(QWidget* docTab);
 	void add_docTab(int);
 };
