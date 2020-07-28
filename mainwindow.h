@@ -12,6 +12,8 @@
 #include <QGroupBox>
 #include <QLineEdit>
 #include <QLabel>
+#include <QScrollArea>
+#include <QAbstractScrollArea>
 #define Kor(str) QString::fromLocal8Bit(str)
 
 QT_BEGIN_NAMESPACE
@@ -52,6 +54,5 @@ private:
 	void add_box(QWidget* docTab);
 	void add_docTab(int);
 };
-
 
 #endif // MAINWINDOW_H

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>710</width>
+    <width>711</width>
     <height>421</height>
    </rect>
   </property>
@@ -61,7 +61,7 @@ QPushButton#dm2{
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>139</width>
+           <width>140</width>
            <height>126</height>
           </rect>
          </property>
@@ -79,8 +79,8 @@ QPushButton#dm2{
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>139</width>
-           <height>126</height>
+           <width>533</width>
+           <height>412</height>
           </rect>
          </property>
          <attribute name="label">
@@ -97,8 +97,8 @@ QPushButton#dm2{
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>139</width>
-           <height>126</height>
+           <width>533</width>
+           <height>412</height>
           </rect>
          </property>
          <attribute name="label">
@@ -115,8 +115,8 @@ QPushButton#dm2{
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>139</width>
-           <height>126</height>
+           <width>533</width>
+           <height>412</height>
           </rect>
          </property>
          <attribute name="label">
@@ -133,8 +133,8 @@ QPushButton#dm2{
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>139</width>
-           <height>126</height>
+           <width>533</width>
+           <height>412</height>
           </rect>
          </property>
          <attribute name="label">
@@ -151,8 +151,8 @@ QPushButton#dm2{
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>139</width>
-           <height>126</height>
+           <width>533</width>
+           <height>412</height>
           </rect>
          </property>
          <attribute name="label">
@@ -169,8 +169,8 @@ QPushButton#dm2{
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>139</width>
-           <height>126</height>
+           <width>533</width>
+           <height>412</height>
           </rect>
          </property>
          <attribute name="label">
@@ -187,8 +187,8 @@ QPushButton#dm2{
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>139</width>
-           <height>126</height>
+           <width>533</width>
+           <height>412</height>
           </rect>
          </property>
          <attribute name="label">
@@ -205,8 +205,8 @@ QPushButton#dm2{
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>139</width>
-           <height>126</height>
+           <width>533</width>
+           <height>412</height>
           </rect>
          </property>
          <attribute name="label">
@@ -279,7 +279,7 @@ QPushButton#dm2{
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>710</width>
+     <width>711</width>
      <height>21</height>
     </rect>
    </property>

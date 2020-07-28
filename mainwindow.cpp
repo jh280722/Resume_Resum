@@ -7,9 +7,9 @@ MainWindow::MainWindow(QWidget* parent)
 {
     ui->setupUi(this);
 
-    int w=ui->intro->width();
-    int h=ui->intro->height();
-    QPixmap pix(":/img/Start.png");
+    //    int w=ui->intro->width();
+    //    int h=ui->intro->height();
+    //    QPixmap pix(":/img/Start.png");
     //ui->intro->setPixmap(pix);
     //ui->intro->setPixmap(pix.scaled(w,h,Qt::KeepAspectRatio));
 
@@ -44,45 +44,6 @@ QPushButton* MainWindow::new_button(QString name, QString str)
     return button;
 }
 
-void MainWindow::add_box(QWidget* docTab) {
-    QWidget* widget = docTab;
-    QVBoxLayout* layout = new QVBoxLayout(widget);
-
-    widget->setLayout(layout);
-
-    QGroupBox* box = new QGroupBox(Kor("기본 정보"), widget);
-    QVBoxLayout* boxLayout = new QVBoxLayout(box);
-    layout->addWidget(box);
-
-    QWidget* nameWidget = new QWidget(box);
-    QWidget* ageWidget = new QWidget(box);
-    QWidget* addressWidget = new QWidget(box);
-
-    boxLayout->addWidget(nameWidget);
-    boxLayout->addWidget(ageWidget);
-    boxLayout->addWidget(addressWidget);
-
-    QHBoxLayout* nameLayout = new QHBoxLayout(nameWidget);
-    nameLayout->addWidget(new QLabel(Kor("이 름 :")));
-    nameLayout->addWidget(new QLineEdit(nameWidget));
-
-
-    QHBoxLayout* ageLayout = new QHBoxLayout(ageWidget);
-    ageLayout->addWidget(new QLabel(Kor("나 이 :")));
-    ageLayout->addWidget(new QLineEdit(ageWidget));
-
-    QHBoxLayout* addressLayout = new QHBoxLayout(addressWidget);
-    addressLayout->addWidget(new QLabel(Kor("주 소 :")));
-    addressLayout->addWidget(new QLineEdit(addressWidget));
-
-
-    QWidget* validateWidget = new QWidget(widget);
-    QHBoxLayout* validateLayout = new QHBoxLayout(validateWidget);
-    validateLayout->addWidget(new QPushButton(Kor("확 인"), validateWidget));
-    validateLayout->addWidget(new QPushButton(Kor("리 셋"), validateWidget));
-    validateLayout->addWidget(new QPushButton(Kor("취 소"), validateWidget));
-    layout->addWidget(validateWidget);
-}
 
 QString srtTitle[9]={Kor("인적 사항"), Kor("학력 사항"),Kor("경력 사항"),Kor("활동 및 수상 경력"),
                      Kor("자격증"),Kor("프로젝트"),Kor("자기소개서"),Kor("포트폴리오"), Kor("기타")};
@@ -105,9 +66,11 @@ void MainWindow::on_plus_clicked() {
     docBtnList[srtIdx].push_back(new_button("dm" + QString::number(srtIdx) + "_" + QString::number(docNum[srtIdx]), Kor("항목추가")));
     srtPlusBtn[srtIdx] = docBtnList[srtIdx][docNum[srtIdx]];
     menu->layout()->addWidget(docBtnList[srtIdx][docNum[srtIdx]]);
+
     QWidget* new_tab = new QWidget;
     add_box(new_tab);
     docList[srtIdx].push_back(new_tab);
+
     connect(docBtnList[srtIdx][docNum[srtIdx]], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
     connect(docBtnList[srtIdx][docNum[srtIdx]++], SIGNAL(clicked()), this, SLOT(connect_doc()));
 }
@@ -115,29 +78,29 @@ void MainWindow::on_plus_clicked() {
 void MainWindow::srtInit(int srtIdx) {
     QWidget* menu = 0;
 
-     menu = ui->toolBox->findChild<QWidget*>("srt"+QString::number(srtIdx));
+    menu = ui->toolBox->findChild<QWidget*>("srt"+QString::number(srtIdx));
 
-        docBtnList[srtIdx].push_back(new_button("dm" + QString::number(srtIdx) + "_" + QString::number(docNum[srtIdx]),
-            Kor("항목추가")));
-        srtPlusBtn[srtIdx] = docBtnList[srtIdx][docNum[srtIdx]];
-        menu->layout()->addWidget(docBtnList[srtIdx][docNum[srtIdx]]);
+    docBtnList[srtIdx].push_back(new_button("dm" + QString::number(srtIdx) + "_" + QString::number(docNum[srtIdx]),
+                                            Kor("항목추가")));
+    srtPlusBtn[srtIdx] = docBtnList[srtIdx][docNum[srtIdx]];
+    menu->layout()->addWidget(docBtnList[srtIdx][docNum[srtIdx]]);
 
-        connect(docBtnList[srtIdx][docNum[srtIdx]], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
-        connect(docBtnList[srtIdx][docNum[srtIdx]++], SIGNAL(clicked()), this, SLOT(connect_doc()));
-//    else if (flg == 1) {
-//        flg = 2;
-//        for (int i = 0; i < docNum[srtIdx]; i++)
-//        {
-//            docBtnList[srtIdx][i]->show();
-//        }
-//    }
-//    else if (flg == 2) {
-//        flg = 1;
-//        for (int i = 0; i < docNum[srtIdx]; i++)
-//        {
-//            docBtnList[srtIdx][i]->hide();
-//        }
-//    }
+    connect(docBtnList[srtIdx][docNum[srtIdx]], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
+    connect(docBtnList[srtIdx][docNum[srtIdx]++], SIGNAL(clicked()), this, SLOT(connect_doc()));
+    //    else if (flg == 1) {
+    //        flg = 2;
+    //        for (int i = 0; i < docNum[srtIdx]; i++)
+    //        {
+    //            docBtnList[srtIdx][i]->show();
+    //        }
+    //    }
+    //    else if (flg == 2) {
+    //        flg = 1;
+    //        for (int i = 0; i < docNum[srtIdx]; i++)
+    //        {
+    //            docBtnList[srtIdx][i]->hide();
+    //        }
+    //    }
 }
 
 void MainWindow::connect_doc() {
