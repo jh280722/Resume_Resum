@@ -14,6 +14,8 @@
 #include <QLabel>
 #include <QScrollArea>
 #include <QAbstractScrollArea>
+#include <QFormLayout>
+#include <QSpacerItem>
 #define Kor(str) QString::fromLocal8Bit(str)
 
 QT_BEGIN_NAMESPACE
