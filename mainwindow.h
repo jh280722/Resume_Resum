@@ -18,6 +18,7 @@
 #include <QSpacerItem>
 #include <QToolButton>
 #include <QToolBar>
+#include <QMenu>
 #include "Document.h"
 #define Kor(str) QString::fromLocal8Bit(str)
 
