@@ -1,5 +1,9 @@
 #include "mainwindow.h"
+#include "Document.h"
 #include "ui_mainwindow.h"
+
+QString srtTitle[9]={Kor("인적 사항"), Kor("학력 사항"),Kor("경력 사항"),Kor("활동 및 수상 경력"),
+                     Kor("자격증"),Kor("프로젝트"),Kor("자기소개서"),Kor("포트폴리오"), Kor("기타")};
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -17,7 +21,7 @@ MainWindow::MainWindow(QWidget* parent)
     QAction *pSlotNewFile = new QAction(Kor("저장"), this);
     pSlotNewFile->setShortcut(Kor("Ctrl+S"));
     pSlotNewFile->setStatusTip(Kor("수정사항을 저장합니다."));
-    connect(pSlotNewFile, SIGNAL(triggered()), this, SLOT(Main_SlotTest1()));
+    //connect(pSlotNewFile, SIGNAL(triggered()), this, SLOT(Main_SlotTest1()));
     pFileMenu = menuBar()->addMenu(Kor("파일"));
     pFileMenu->addAction(pSlotNewFile); // 테스트
 
@@ -36,7 +40,6 @@ MainWindow::~MainWindow()
 
 }
 
-
 QPushButton* MainWindow::new_button(QString name, QString str)
 {
     QPushButton* button = new QPushButton(str);
@@ -44,9 +47,6 @@ QPushButton* MainWindow::new_button(QString name, QString str)
     return button;
 }
 
-
-QString srtTitle[9]={Kor("인적 사항"), Kor("학력 사항"),Kor("경력 사항"),Kor("활동 및 수상 경력"),
-                     Kor("자격증"),Kor("프로젝트"),Kor("자기소개서"),Kor("포트폴리오"), Kor("기타")};
 
 void MainWindow::on_plus_clicked() {
     QObject* sel = QObject::sender();
@@ -67,7 +67,7 @@ void MainWindow::on_plus_clicked() {
     srtPlusBtn[srtIdx] = docBtnList[srtIdx][docNum[srtIdx]];
     menu->layout()->addWidget(docBtnList[srtIdx][docNum[srtIdx]]);
 
-    QWidget* new_tab = new QWidget;
+    QWidget* new_tab = new QWidget();
     add_box(new_tab);
     docList[srtIdx].push_back(new_tab);
 

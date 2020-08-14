@@ -16,11 +16,16 @@
 #include <QAbstractScrollArea>
 #include <QFormLayout>
 #include <QSpacerItem>
+#include <QToolButton>
+#include <QToolBar>
+#include "Document.h"
 #define Kor(str) QString::fromLocal8Bit(str)
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+extern QString srtTitle[9];
 
 class MainWindow : public QMainWindow
 {
@@ -34,7 +39,7 @@ signals:
 private slots:
     void on_plus_clicked();
 	void connect_doc();
-	void on_docTab_deleteTab(int);
+    void on_docTab_deleteTab(int);
 
     void on_toolBox_currentChanged(int index);
 
@@ -53,8 +58,9 @@ private:
     //TABLIST
 	QPushButton* pBtn;
     QList<QWidget*> docList[9];
-	void add_box(QWidget* docTab);
+    void add_box(QWidget* docTab);
 	void add_docTab(int);
+
 };
 
 #endif // MAINWINDOW_H

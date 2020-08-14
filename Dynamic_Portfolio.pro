@@ -21,6 +21,7 @@ SOURCES += \
     makeDoc.cpp
 
 HEADERS += \
+    Document.h \
     mainwindow.h
 
 FORMS += \
