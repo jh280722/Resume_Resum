@@ -19,6 +19,7 @@
 #include <QToolButton>
 #include <QToolBar>
 #include <QMenu>
+#include <QTextEdit>
 #include "Document.h"
 #define Kor(str) QString::fromLocal8Bit(str)
 
@@ -43,6 +44,8 @@ private slots:
     void on_docTab_deleteTab(int);
 
     void on_toolBox_currentChanged(int index);
+
+   // void on_textEdit_copyAvailable(bool b);
 
 private:
 	//UI

@@ -4,6 +4,7 @@
 void Document::AddItemText(){
     QObject* item = QObject::sender();
     QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
+    qDebug()<<boxlayout;
     QWidget* newWidget = new QWidget();
     QHBoxLayout* newLayout = new QHBoxLayout();
     newLayout->addWidget(new QLabel(Kor("이 름"),newWidget));
@@ -15,74 +16,6 @@ void Document::AddItemText(){
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
 }
-void Document::AddItemTextarea(){
-    QObject* item = QObject::sender();
-    QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
-    QWidget* newWidget = new QWidget();
-    QHBoxLayout* newLayout = new QHBoxLayout();
-    QLabel* name = new QLabel(Kor("이 름"),newWidget);
-    QLabel* sep = new QLabel((" :"),newWidget);
-    QTextEdit* textedit=new QTextEdit(newWidget);
-    textedit->setMinimumHeight(100);
-
-    newLayout->addWidget(name);
-    newLayout->addWidget(sep);
-    newLayout->addWidget(textedit);
-    QPushButton* delButton = new QPushButton(newWidget);
-
-    newLayout->addWidget(delButton);
-    connect(delButton,SIGNAL(clicked()),this,SLOT(deleteItem()));
-    newWidget->setLayout(newLayout);
-    boxlayout->addWidget(newWidget);
-
-
-    newLayout->setAlignment(name,Qt::AlignTop);
-     newLayout->setAlignment(sep,Qt::AlignTop);
-     newLayout->setAlignment(delButton,Qt::AlignTop);
-}
-void Document::AddItemImage(){
-    QObject* item = QObject::sender();
-    QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
-    QWidget* newWidget = new QWidget();
-    QHBoxLayout* newLayout = new QHBoxLayout();
-    newLayout->addWidget(new QLabel(Kor("이 름"),newWidget));
-    newLayout->addWidget(new QLabel(Kor(" :"),newWidget));
-    newLayout->addWidget(new QLineEdit(newWidget));
-    QPushButton* delButton = new QPushButton(newWidget);
-    newLayout->addWidget(delButton);
-    connect(delButton,SIGNAL(clicked()),this,SLOT(deleteItem()));
-    newWidget->setLayout(newLayout);
-    boxlayout->addWidget(newWidget);
-}
-void Document::AddItemDate(){
-    QObject* item = QObject::sender();
-    QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
-    QWidget* newWidget = new QWidget();
-    QHBoxLayout* newLayout = new QHBoxLayout();
-    newLayout->addWidget(new QLabel(Kor("이 름"),newWidget));
-    newLayout->addWidget(new QLabel(Kor(" :"),newWidget));
-    newLayout->addWidget(new QLineEdit(newWidget));
-    QPushButton* delButton = new QPushButton(newWidget);
-    newLayout->addWidget(delButton);
-    connect(delButton,SIGNAL(clicked()),this,SLOT(deleteItem()));
-    newWidget->setLayout(newLayout);
-    boxlayout->addWidget(newWidget);
-}
-void Document::AddItemDropdown(){
-    QObject* item = QObject::sender();
-    QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
-    QWidget* newWidget = new QWidget();
-    QHBoxLayout* newLayout = new QHBoxLayout();
-    newLayout->addWidget(new QLabel(Kor("이 름"),newWidget));
-    newLayout->addWidget(new QLabel(Kor(" :"),newWidget));
-    newLayout->addWidget(new QLineEdit(newWidget));
-    QPushButton* delButton = new QPushButton(newWidget);
-    newLayout->addWidget(delButton);
-    connect(delButton,SIGNAL(clicked()),this,SLOT(deleteItem()));
-    newWidget->setLayout(newLayout);
-    boxlayout->addWidget(newWidget);
-}
-
 void Document::deleteItem(){
 
     QObject* item = QObject::sender();
@@ -122,14 +55,11 @@ void Document::make_doc0(){
 
     QAction *TBAAddText = new QAction (Kor("텍스트"),boxLayout);
     connect(TBAAddText, SIGNAL(triggered()), this, SLOT(AddItemText()));
-    QAction *TBAAddTextarea = new QAction (Kor("글 상자"),boxLayout);
-    connect(TBAAddTextarea, SIGNAL(triggered()), this, SLOT(AddItemTextarea()));
-    QAction *TBAAddDropdown = new QAction (Kor("드롭 다운"),boxLayout);
-    connect(TBAAddDropdown, SIGNAL(triggered()), this, SLOT(AddItemDropdown()));
-    QAction *TBAAddDate = new QAction (Kor("날짜"),boxLayout);
-    connect(TBAAddDate, SIGNAL(triggered()), this, SLOT(AddItemDate()));
-    QAction *TBAAddImage = new QAction (Kor("이미지"),boxLayout);
-    connect(TBAAddImage, SIGNAL(triggered()), this, SLOT(AddItemImage()));
+    QAction *TBAAddTextarea = new QAction (Kor("글 상자"),box);
+    QAction *TBAAddDropdown = new QAction (Kor("드롭 다운"),box);
+    QAction *TBAAddDate = new QAction (Kor("날짜"),box);
+    QAction *TBAAddImage = new QAction (Kor("이미지"),box);
+
     Menu->addAction(TBADelete);
     Menu->addAction(TBAAdd);
 
@@ -139,12 +69,12 @@ void Document::make_doc0(){
     InputMenu->addAction(TBAAddDate);
     InputMenu->addAction(TBAAddImage);
 
-//    connect(TBADelete,SIGNAL(triggered()),this,SLOT());
-//    connect(TBAAddText,SIGNAL(triggered()),this,SLOT());
-//    connect(TBAAddTextarea,SIGNAL(triggered()),this,SLOT());
-//    connect(TBAAddDropdown,SIGNAL(triggered()),this,SLOT());
-//    connect(TBAAddDate,SIGNAL(triggered()),this,SLOT());
-//    connect(TBAAddImage,SIGNAL(triggered()),this,SLOT());
+    connect(TBADelete,SIGNAL(triggered()),this,SLOT());
+    connect(TBAAddText,SIGNAL(triggered()),this,SLOT());
+    connect(TBAAddTextarea,SIGNAL(triggered()),this,SLOT());
+    connect(TBAAddDropdown,SIGNAL(triggered()),this,SLOT());
+    connect(TBAAddDate,SIGNAL(triggered()),this,SLOT());
+    connect(TBAAddImage,SIGNAL(triggered()),this,SLOT());
 
     TBAAdd->setMenu(InputMenu);
     tool->setMenu(Menu);
@@ -181,9 +111,8 @@ void Document::make_doc0(){
 
     box->setMinimumSize(600,200);
     box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed));
+    layout->addWidget(box);
 
-    int n=box->parent()->children().size();
-    layout->insertWidget(n-3,box);
 }
 
 void Document::make_doc1(){
@@ -256,7 +185,7 @@ void MainWindow::add_box(QWidget* docTab) {
     Document* SAW=new Document(docTab);
 
     //저장, 삭제, 미리보기, 활성화 버튼 생성
-    QWidget* Par = new QWidget(SAW);
+    QWidget* Par = new QWidget(docTab);
 
     QHBoxLayout* HBox = new QHBoxLayout(Par);
     QPushButton* PB;
@@ -276,50 +205,37 @@ void MainWindow::add_box(QWidget* docTab) {
 
     SAW->VBox->addWidget(Par);
 
-    Par = new QWidget(SAW);
-    QHBoxLayout* plusButton = new QHBoxLayout(Par);
-    PB=new QPushButton(Kor("추가"),Par);
-    plusButton->addWidget(PB);
-    plusButton->setAlignment(Qt::AlignRight);
-    SAW->VBox->addWidget(Par);
-
     switch(srtIdx){ //srt별로 양식 생성
     //connect로 함수들 연결
     case 0:
         SAW->make_doc0();
-        connect(PB, SIGNAL(clicked()), SAW, SLOT(make_doc0()));
         break;
-    case 1:
-        SAW->make_doc1();
-        connect(PB, SIGNAL(clicked()), SAW, SLOT(make_doc1()));
-        break;
-    case 2:
-        SAW->make_doc2();
-        connect(PB, SIGNAL(clicked()), SAW, SLOT(make_doc2()));
-        break;
-    case 3:
-        SAW->make_doc3();
-        connect(PB, SIGNAL(clicked()), SAW, SLOT(make_doc3()));
-        break;
-    case 4:
-        SAW->make_doc4();
-        connect(PB, SIGNAL(clicked()), SAW, SLOT(make_doc4()));
-        break;
-    case 5:
-        SAW->make_doc5();
-        connect(PB, SIGNAL(clicked()), SAW, SLOT(make_doc5()));
-        break;
-    case 6:
-        SAW->make_doc6();
-        connect(PB, SIGNAL(clicked()), SAW, SLOT(make_doc6()));
-        break;
-    case 7:
-        SAW->make_doc7();
-        connect(PB, SIGNAL(clicked()), SAW, SLOT(make_doc7()));
-        break;
-    case 8:
-        SAW->make_doc8();
-        connect(PB, SIGNAL(clicked()), SAW, SLOT(make_doc8()));
-        break;
+        //    case 1:
+        //        make_doc1(SAW, VBox2);
+        //        break;
+        //    case 2:
+        //        make_doc2(SAW, VBox2);
+        //        break;
+        //    case 3:
+        //        make_doc3(SAW, VBox2);
+        //        break;
+        //    case 4:
+        //        make_doc4(SAW, VBox2);
+        //        break;
+        //    case 5:
+        //        make_doc5(SAW, VBox2);
+        //        break;
+        //    case 6:
+        //        make_doc6(SAW, VBox2);
+        //        break;
+        //    case 7:
+        //        make_doc7(SAW, VBox2);
+        //        break;
+        //    case 8:
+        //        make_doc8(SAW, VBox2);
+        //        break;
     }
+    //가로 스페이서 생성
+    QSpacerItem* VS= new QSpacerItem(500,500);
+    //SAW->VBox->addItem(VS);
 }

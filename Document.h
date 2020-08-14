@@ -30,6 +30,10 @@ public slots:
     void deleteItem();
     void deleteBox();
     void AddItemText();
+    void AddItemTextarea();
+    void AddItemImage();
+    void AddItemDate();
+    void AddItemDropdown();
 private slots:
 
 private:

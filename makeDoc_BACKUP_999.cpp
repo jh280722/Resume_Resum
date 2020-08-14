@@ -15,74 +15,6 @@ void Document::AddItemText(){
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
 }
-void Document::AddItemTextarea(){
-    QObject* item = QObject::sender();
-    QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
-    QWidget* newWidget = new QWidget();
-    QHBoxLayout* newLayout = new QHBoxLayout();
-    QLabel* name = new QLabel(Kor("이 름"),newWidget);
-    QLabel* sep = new QLabel((" :"),newWidget);
-    QTextEdit* textedit=new QTextEdit(newWidget);
-    textedit->setMinimumHeight(100);
-
-    newLayout->addWidget(name);
-    newLayout->addWidget(sep);
-    newLayout->addWidget(textedit);
-    QPushButton* delButton = new QPushButton(newWidget);
-
-    newLayout->addWidget(delButton);
-    connect(delButton,SIGNAL(clicked()),this,SLOT(deleteItem()));
-    newWidget->setLayout(newLayout);
-    boxlayout->addWidget(newWidget);
-
-
-    newLayout->setAlignment(name,Qt::AlignTop);
-     newLayout->setAlignment(sep,Qt::AlignTop);
-     newLayout->setAlignment(delButton,Qt::AlignTop);
-}
-void Document::AddItemImage(){
-    QObject* item = QObject::sender();
-    QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
-    QWidget* newWidget = new QWidget();
-    QHBoxLayout* newLayout = new QHBoxLayout();
-    newLayout->addWidget(new QLabel(Kor("이 름"),newWidget));
-    newLayout->addWidget(new QLabel(Kor(" :"),newWidget));
-    newLayout->addWidget(new QLineEdit(newWidget));
-    QPushButton* delButton = new QPushButton(newWidget);
-    newLayout->addWidget(delButton);
-    connect(delButton,SIGNAL(clicked()),this,SLOT(deleteItem()));
-    newWidget->setLayout(newLayout);
-    boxlayout->addWidget(newWidget);
-}
-void Document::AddItemDate(){
-    QObject* item = QObject::sender();
-    QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
-    QWidget* newWidget = new QWidget();
-    QHBoxLayout* newLayout = new QHBoxLayout();
-    newLayout->addWidget(new QLabel(Kor("이 름"),newWidget));
-    newLayout->addWidget(new QLabel(Kor(" :"),newWidget));
-    newLayout->addWidget(new QLineEdit(newWidget));
-    QPushButton* delButton = new QPushButton(newWidget);
-    newLayout->addWidget(delButton);
-    connect(delButton,SIGNAL(clicked()),this,SLOT(deleteItem()));
-    newWidget->setLayout(newLayout);
-    boxlayout->addWidget(newWidget);
-}
-void Document::AddItemDropdown(){
-    QObject* item = QObject::sender();
-    QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
-    QWidget* newWidget = new QWidget();
-    QHBoxLayout* newLayout = new QHBoxLayout();
-    newLayout->addWidget(new QLabel(Kor("이 름"),newWidget));
-    newLayout->addWidget(new QLabel(Kor(" :"),newWidget));
-    newLayout->addWidget(new QLineEdit(newWidget));
-    QPushButton* delButton = new QPushButton(newWidget);
-    newLayout->addWidget(delButton);
-    connect(delButton,SIGNAL(clicked()),this,SLOT(deleteItem()));
-    newWidget->setLayout(newLayout);
-    boxlayout->addWidget(newWidget);
-}
-
 void Document::deleteItem(){
 
     QObject* item = QObject::sender();
@@ -107,7 +39,7 @@ void Document::make_doc0(){
 
     box->setObjectName("AddText");
 
-
+    //툴 버튼 추가
     QToolButton *tool = new QToolButton();
 
     QMenu * Menu= new QMenu();
@@ -122,14 +54,11 @@ void Document::make_doc0(){
 
     QAction *TBAAddText = new QAction (Kor("텍스트"),boxLayout);
     connect(TBAAddText, SIGNAL(triggered()), this, SLOT(AddItemText()));
-    QAction *TBAAddTextarea = new QAction (Kor("글 상자"),boxLayout);
-    connect(TBAAddTextarea, SIGNAL(triggered()), this, SLOT(AddItemTextarea()));
-    QAction *TBAAddDropdown = new QAction (Kor("드롭 다운"),boxLayout);
-    connect(TBAAddDropdown, SIGNAL(triggered()), this, SLOT(AddItemDropdown()));
-    QAction *TBAAddDate = new QAction (Kor("날짜"),boxLayout);
-    connect(TBAAddDate, SIGNAL(triggered()), this, SLOT(AddItemDate()));
-    QAction *TBAAddImage = new QAction (Kor("이미지"),boxLayout);
-    connect(TBAAddImage, SIGNAL(triggered()), this, SLOT(AddItemImage()));
+    QAction *TBAAddTextarea = new QAction (Kor("글 상자"),box);
+    QAction *TBAAddDropdown = new QAction (Kor("드롭 다운"),box);
+    QAction *TBAAddDate = new QAction (Kor("날짜"),box);
+    QAction *TBAAddImage = new QAction (Kor("이미지"),box);
+
     Menu->addAction(TBADelete);
     Menu->addAction(TBAAdd);
 
