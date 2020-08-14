@@ -34,6 +34,47 @@ QPushButton#dm2{
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="1">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QTabWidget" name="docTab">
+        <property name="minimumSize">
+         <size>
+          <width>543</width>
+          <height>360</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::TabFocus</enum>
+        </property>
+        <property name="acceptDrops">
+         <bool>false</bool>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="currentIndex">
+         <number>-1</number>
+        </property>
+        <property name="usesScrollButtons">
+         <bool>false</bool>
+        </property>
+        <property name="documentMode">
+         <bool>false</bool>
+        </property>
+        <property name="tabsClosable">
+         <bool>false</bool>
+        </property>
+        <property name="movable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
     <item row="0" column="0">
      <widget class="QToolBox" name="toolBox">
       <property name="maximumSize">
@@ -229,47 +270,6 @@ QPushButton#dm2{
        </layout>
       </widget>
      </widget>
-    </item>
-    <item row="0" column="1">
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QTabWidget" name="docTab">
-        <property name="minimumSize">
-         <size>
-          <width>543</width>
-          <height>360</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::TabFocus</enum>
-        </property>
-        <property name="acceptDrops">
-         <bool>false</bool>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <property name="currentIndex">
-         <number>-1</number>
-        </property>
-        <property name="usesScrollButtons">
-         <bool>false</bool>
-        </property>
-        <property name="documentMode">
-         <bool>false</bool>
-        </property>
-        <property name="tabsClosable">
-         <bool>false</bool>
-        </property>
-        <property name="movable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </item>
    </layout>
   </widget>

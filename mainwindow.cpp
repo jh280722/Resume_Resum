@@ -84,6 +84,7 @@ void MainWindow::srtInit(int srtIdx) {
                                             Kor("항목추가")));
     srtPlusBtn[srtIdx] = docBtnList[srtIdx][docNum[srtIdx]];
     menu->layout()->addWidget(docBtnList[srtIdx][docNum[srtIdx]]);
+    menu->layout()->setAlignment(Qt::AlignTop);
 
     connect(docBtnList[srtIdx][docNum[srtIdx]], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
     connect(docBtnList[srtIdx][docNum[srtIdx]++], SIGNAL(clicked()), this, SLOT(connect_doc()));
