@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QToolButton>
+#include <QScrollArea>
 
 class Document : public QWidget
 {
@@ -15,7 +16,7 @@ public:
     ~Document();
     void init();
     QVBoxLayout* VBox;
-
+    QScrollArea* SA;
 signals:
 public slots:
     void make_doc0();

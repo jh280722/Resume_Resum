@@ -23,7 +23,8 @@ void Document::AddItemTextarea(){
     QLabel* name = new QLabel(Kor("捞 抚"),newWidget);
     QLabel* sep = new QLabel((" :"),newWidget);
     QTextEdit* textedit=new QTextEdit(newWidget);
-    textedit->setMinimumHeight(100);
+    textedit->setMinimumHeight(150);
+    textedit->setMaximumHeight(150);
 
     newLayout->addWidget(name);
     newLayout->addWidget(sep);
@@ -39,6 +40,9 @@ void Document::AddItemTextarea(){
     newLayout->setAlignment(name,Qt::AlignTop);
      newLayout->setAlignment(sep,Qt::AlignTop);
      newLayout->setAlignment(delButton,Qt::AlignTop);
+
+     QGroupBox* box = qobject_cast<QGroupBox*>(boxlayout->parent());
+     box->resize(1000,500);
 }
 void Document::AddItemImage(){
     QObject* item = QObject::sender();
@@ -179,8 +183,9 @@ void Document::make_doc0(){
     addressLayout->addWidget(delButton);
     connect(delButton,SIGNAL(clicked()),this,SLOT(deleteItem()));
 
-    box->setMinimumSize(600,200);
+    box->setMinimumSize(800,300);
     box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed));
+    boxLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 
     int n=box->parent()->children().size();
     layout->insertWidget(n-3,box);
@@ -235,13 +240,14 @@ void active_doc_select(){
 }
 
 Document::Document(QWidget* parent):QWidget(parent){
-    QScrollArea* SA=new QScrollArea(parent);
+    this->SA=new QScrollArea(parent);
     QVBoxLayout* VBox = new QVBoxLayout(parent);
     VBox->addWidget(SA);
 
     //技肺 胶农费官 积己
     SA->setWidgetResizable(1);
     SA->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+
     SA->setWidget(this);
     this->VBox = new QVBoxLayout();//VBox肺 积己
     this->setLayout( this->VBox );
