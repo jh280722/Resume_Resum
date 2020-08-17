@@ -19,19 +19,6 @@
   <property name="windowTitle">
    <string>ReRe</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true">QPushButton#dm0 { 
-	border:6px solid black;
-}
-
-QPushButton#dm1{
-	border:6px solid black;
-}
-QPushButton#dm2{
-	border:6px solid black;
-}
-</string>
-  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="1">

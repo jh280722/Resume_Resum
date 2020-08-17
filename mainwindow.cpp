@@ -5,6 +5,9 @@
 QString srtTitle[9]={Kor("인적 사항"), Kor("학력 사항"),Kor("경력 사항"),Kor("활동 및 수상 경력"),
                      Kor("자격증"),Kor("프로젝트"),Kor("자기소개서"),Kor("포트폴리오"), Kor("기타")};
 
+QSet<QWidget*> docList2[9];
+QVector<QWidget*> docList[9];
+QVector<QPushButton*> docBtnList[9];
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -32,6 +35,9 @@ MainWindow::MainWindow(QWidget* parent)
         docNum[i]=0;
         srtInit(i);
     }
+    //    this->setStyleSheet("#pushButton:hover { background-color: red; "
+    //                        "border-style: outset; border-width: 2px;border-radius: 10px; border-color: beige;"
+    //                        "font: bold 14px;min-width: 10em;padding: 6px; }");
 }
 
 MainWindow::~MainWindow()
@@ -55,24 +61,25 @@ void MainWindow::on_plus_clicked() {
     for(int i=0;i<9;i++){
         if(sel==srtPlusBtn[i]){
             srtIdx = i;
-            name = srtTitle[srtIdx] + QString::number(docNum[srtIdx]);
+            name = srtTitle[srtIdx] + QString::number(++docNum[srtIdx]);
             menu = ui->toolBox->findChild<QWidget*>("srt"+QString::number(srtIdx));
             break;
         }
     }
+    int sz=docBtnList[srtIdx].size();
 
     srtPlusBtn[srtIdx]->setText(name);
     disconnect(sel, SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
-    docBtnList[srtIdx].push_back(new_button("dm" + QString::number(srtIdx) + "_" + QString::number(docNum[srtIdx]), Kor("항목추가")));
-    srtPlusBtn[srtIdx] = docBtnList[srtIdx][docNum[srtIdx]];
-    menu->layout()->addWidget(docBtnList[srtIdx][docNum[srtIdx]]);
+
+    docBtnList[srtIdx].push_back(new_button("plusButton" + QString::number(srtIdx), Kor("항목추가")));
+    srtPlusBtn[srtIdx] = docBtnList[srtIdx][sz];
+    menu->layout()->addWidget(docBtnList[srtIdx][sz]);
 
     QWidget* new_tab = new QWidget();
-    add_box(new_tab);
+    add_box(new_tab, sz-1);
     docList[srtIdx].push_back(new_tab);
-
-    connect(docBtnList[srtIdx][docNum[srtIdx]], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
-    connect(docBtnList[srtIdx][docNum[srtIdx]++], SIGNAL(clicked()), this, SLOT(connect_doc()));
+    connect(docBtnList[srtIdx][sz], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
+    connect(docBtnList[srtIdx][sz], SIGNAL(clicked()), this, SLOT(connect_doc()));
 }
 
 void MainWindow::srtInit(int srtIdx) {
@@ -80,28 +87,15 @@ void MainWindow::srtInit(int srtIdx) {
 
     menu = ui->toolBox->findChild<QWidget*>("srt"+QString::number(srtIdx));
 
-    docBtnList[srtIdx].push_back(new_button("dm" + QString::number(srtIdx) + "_" + QString::number(docNum[srtIdx]),
-                                            Kor("항목추가")));
-    srtPlusBtn[srtIdx] = docBtnList[srtIdx][docNum[srtIdx]];
-    menu->layout()->addWidget(docBtnList[srtIdx][docNum[srtIdx]]);
+    int sz=docBtnList[srtIdx].size();
+    docBtnList[srtIdx].push_back(new_button("plusButton" + QString::number(srtIdx), Kor("항목추가")));
+
+    srtPlusBtn[srtIdx] = docBtnList[srtIdx][sz];
+    menu->layout()->addWidget(docBtnList[srtIdx][sz]);
     menu->layout()->setAlignment(Qt::AlignTop);
 
-    connect(docBtnList[srtIdx][docNum[srtIdx]], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
-    connect(docBtnList[srtIdx][docNum[srtIdx]++], SIGNAL(clicked()), this, SLOT(connect_doc()));
-    //    else if (flg == 1) {
-    //        flg = 2;
-    //        for (int i = 0; i < docNum[srtIdx]; i++)
-    //        {
-    //            docBtnList[srtIdx][i]->show();
-    //        }
-    //    }
-    //    else if (flg == 2) {
-    //        flg = 1;
-    //        for (int i = 0; i < docNum[srtIdx]; i++)
-    //        {
-    //            docBtnList[srtIdx][i]->hide();
-    //        }
-    //    }
+    connect(docBtnList[srtIdx][sz], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
+    connect(docBtnList[srtIdx][sz], SIGNAL(clicked()), this, SLOT(connect_doc()));
 }
 
 void MainWindow::connect_doc() {
@@ -139,6 +133,10 @@ void MainWindow::connect_doc() {
         add_docTab(subSrtIdx);
         ui->docTab->setCurrentIndex(ui->docTab->count() - 1);
     }
+}
+
+void MainWindow::deleteTab() {
+    ui->docTab->removeTab(ui->docTab->currentIndex());
 }
 
 void MainWindow::on_docTab_deleteTab(int idx) {

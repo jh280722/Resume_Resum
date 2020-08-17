@@ -12,9 +12,8 @@ class Document : public QWidget
     Q_OBJECT
 
 public:
-    Document(QWidget* parent = nullptr);
+    Document(QWidget* parent, int srtIdx, int listIdx);
     ~Document();
-    void init();
     QVBoxLayout* VBox;
     QScrollArea* SA;
 signals:
@@ -36,7 +35,12 @@ public slots:
     void AddItemDate();
     void AddItemDropdown();
 private slots:
+    void save_doc();
+    void delete_doc();
+    void preview_doc();
+    void active_doc_select();
 
 private:
+    int srtIdx,listIdx;
 };
 #endif // DOCUMENT_H

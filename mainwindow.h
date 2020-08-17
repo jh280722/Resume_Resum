@@ -28,22 +28,23 @@ namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 extern QString srtTitle[9];
-
+extern QVector<QWidget*> docList[9];
+extern QVector<QPushButton*> docBtnList[9];
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 
 public:
 	MainWindow(QWidget* parent = nullptr);
-	~MainWindow();
+    ~MainWindow();
 
 signals:
 private slots:
     void on_plus_clicked();
 	void connect_doc();
     void on_docTab_deleteTab(int);
-
     void on_toolBox_currentChanged(int index);
+    void deleteTab();
 
    // void on_textEdit_copyAvailable(bool b);
 
@@ -55,15 +56,13 @@ private:
     //QPLIST
     int docNum[9];
     QPushButton* srtPlusBtn[9];
-	QPushButton* new_button(QString name, QString str);
-    QList<QPushButton*> docBtnList[9];
+    QPushButton* new_button(QString name, QString str);
     void srtInit(int idx);
 
     //TABLIST
-	QPushButton* pBtn;
-    QList<QWidget*> docList[9];
-    void add_box(QWidget* docTab);
-	void add_docTab(int);
+    QPushButton* pBtn;
+    void add_box(QWidget* docTab, int listIdx);
+    void add_docTab(int);
 
 };
 
