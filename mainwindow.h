@@ -35,10 +35,10 @@ extern QVector<QWidget*> docList[9];
 extern QVector<QPushButton*> docBtnList[9];
 class MainWindow : public QMainWindow
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	MainWindow(QWidget* parent = nullptr);
+    MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
 signals:
@@ -46,21 +46,16 @@ private slots:
     //void on_plus_clicked();
     //void connect_doc();
     void on_docTab_deleteTab(int);
-    void on_toolBox_currentChanged(int index);
-    void deleteTab();
 
-   // void on_textEdit_copyAvailable(bool b);
+    // void on_textEdit_copyAvailable(bool b);
 
 private:
-	//UI
-	Ui::MainWindow* ui;
+    //UI
+    Ui::MainWindow* ui;
 
     int srtIdx = -1;
     //QPLIST
-    int docNum[9];
-    QPushButton* srtPlusBtn[9];
     QPushButton* new_button(QString name, QString str);
-    void srtInit(int idx);
 
     //TABLIST
     QPushButton* pBtn;

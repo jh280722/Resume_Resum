@@ -19,7 +19,6 @@ SOURCES += \
     document.cpp \
     main.cpp \
     mainwindow.cpp \
-    makeDoc.cpp \
     sortation.cpp
 
 HEADERS += \

@@ -4,6 +4,9 @@
 #include <QWidget>
 #include <QInputDialog>
 
+extern QVector<QWidget*> docList[9];
+extern QVector<QPushButton*> docBtnList[9];
+
 class Sortation : public QWidget
 {
     Q_OBJECT
@@ -15,12 +18,12 @@ public:
 private slots:
     void on_srtopen_clicked();
     void on_srtadd_clicked();
-
     void connect_doc();
+    void delete_tab();
 
 private:
     int srtIdx;
-    QList<QWidgetList> docList;
-    QList<QWidgetList> docBtnList;
+
+    void add_box(QWidget* docTab, int listIdx);
 };
 #endif // SORTATION_H
