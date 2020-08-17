@@ -19,6 +19,9 @@
 #include <QToolButton>
 #include <QToolBar>
 #include <QMenu>
+#include <QDateEdit>
+#include <QFileDialog>
+#include <QComboBox>
 #include <QTextEdit>
 #include "Document.h"
 #define Kor(str) QString::fromLocal8Bit(str)

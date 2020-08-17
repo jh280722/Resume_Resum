@@ -7,6 +7,7 @@
 #include <QToolButton>
 #include <QScrollArea>
 
+#include <QLabel>
 class Document : public QWidget
 {
     Q_OBJECT
@@ -28,6 +29,7 @@ public slots:
     void make_doc7();
     void make_doc8();
     void deleteItem();
+    void imageUpload();
     void deleteBox();
     void AddItemText();
     void AddItemTextarea();
