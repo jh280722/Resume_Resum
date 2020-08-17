@@ -14,6 +14,7 @@ class Sortation : public QWidget
 public:
     Sortation(QWidget *parent = nullptr);
     ~Sortation();
+    int srtIdx;
 
 private slots:
     void on_srtopen_clicked();
@@ -22,7 +23,6 @@ private slots:
     void delete_tab();
 
 private:
-    int srtIdx;
 
     void add_box(QWidget* docTab, int listIdx);
 };

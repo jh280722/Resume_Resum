@@ -8,6 +8,8 @@
 #include <QScrollArea>
 
 #include <QLabel>
+
+
 class Document : public QWidget
 {
     Q_OBJECT

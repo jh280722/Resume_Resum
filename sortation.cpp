@@ -221,13 +221,7 @@ void Sortation::on_srtadd_clicked()
         add_box(new_tab, sz);
         docList[srtIdx].push_back(new_tab);
         docBtnList[srtIdx].push_back(newDoc);
-
-        if (docBtn->height() < 31) {
-            docBtn->setFixedHeight(31);
-        }
-        else {
-            docBtn->setFixedHeight(docBtn->height()+30);
-        }
+        docBtn->setFixedHeight(docBtnList[srtIdx].size() >0 ? docBtnList[srtIdx].size()*30 + 1 : 11);
 
         if (docBtn->isHidden()) {
             open->setIcon(QIcon(":/images/minus_white.png"));
@@ -240,4 +234,6 @@ void Sortation::on_srtadd_clicked()
 void Sortation::delete_tab() {
     QTabWidget* docTab=parent()->findChild<QTabWidget*>("docTab");
     docTab->removeTab(docTab->currentIndex());
+    QWidget* docBtn = parent()->findChild<QWidget*>("srt"+QString::number(srtIdx)+"docList");
+    docBtn->setFixedHeight(docBtnList[srtIdx].size() >0 ? docBtnList[srtIdx].size()*30 + 1 : 11);
 }

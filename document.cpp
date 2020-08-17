@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "Document.h"
+#include "sortation.h"
 #include "ui_mainwindow.h"
+
+extern Sortation *sortation;
+
 void Document::AddItemText(){
     QObject* item = QObject::sender();
     QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
@@ -135,6 +139,9 @@ void Document::deleteBox(){
 }
 
 void Document::make_doc0(){
+}
+
+void Document::make_doc1(){
     QGroupBox* box = new QGroupBox("", this);
 
     QVBoxLayout* boxLayout = new QVBoxLayout(box);
@@ -219,10 +226,6 @@ void Document::make_doc0(){
     layout->insertWidget(n-3,box);
 }
 
-void Document::make_doc1(){
-
-}
-
 void Document::make_doc2(){
 
 }
@@ -281,6 +284,7 @@ void Document::save_doc(){
 
 
 void Document::delete_doc(){
+    sortation->srtIdx=srtIdx;
     delete(docBtnList[srtIdx][listIdx]);
     docList[srtIdx].remove(listIdx);
     docBtnList[srtIdx].remove(listIdx);
