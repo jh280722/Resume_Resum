@@ -19,11 +19,13 @@ SOURCES += \
     document.cpp \
     main.cpp \
     mainwindow.cpp \
-    makeDoc.cpp
+    makeDoc.cpp \
+    sortation.cpp
 
 HEADERS += \
     Document.h \
-    mainwindow.h
+    mainwindow.h \
+    sortation.h
 
 FORMS += \
     mainwindow.ui

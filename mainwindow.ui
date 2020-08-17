@@ -20,58 +20,52 @@
    <string>ReRe</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="1">
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QTabWidget" name="docTab">
-        <property name="minimumSize">
-         <size>
-          <width>543</width>
-          <height>360</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::TabFocus</enum>
-        </property>
-        <property name="acceptDrops">
-         <bool>false</bool>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <property name="currentIndex">
-         <number>-1</number>
-        </property>
-        <property name="usesScrollButtons">
-         <bool>false</bool>
-        </property>
-        <property name="documentMode">
-         <bool>false</bool>
-        </property>
-        <property name="tabsClosable">
-         <bool>false</bool>
-        </property>
-        <property name="movable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="0" column="0">
-     <widget class="QToolBox" name="toolBox">
-      <property name="maximumSize">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QScrollArea" name="srtArea">
+      <property name="minimumSize">
        <size>
-        <width>140</width>
-        <height>16777215</height>
+        <width>260</width>
+        <height>0</height>
        </size>
       </property>
-      <property name="contextMenuPolicy">
-       <enum>Qt::NoContextMenu</enum>
+      <property name="maximumSize">
+       <size>
+        <width>260</width>
+        <height>699</height>
+       </size>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOn</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="srtAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>237</width>
+         <height>697</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTabWidget" name="docTab">
+      <property name="minimumSize">
+       <size>
+        <width>800</width>
+        <height>700</height>
+       </size>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::TabFocus</enum>
       </property>
       <property name="acceptDrops">
        <bool>false</bool>
@@ -82,180 +76,21 @@
       <property name="autoFillBackground">
        <bool>false</bool>
       </property>
-      <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
-      </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>-1</number>
       </property>
-      <property name="tabSpacing">
-       <number>6</number>
+      <property name="usesScrollButtons">
+       <bool>false</bool>
       </property>
-      <widget class="QWidget" name="srt0">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>140</width>
-         <height>438</height>
-        </rect>
-       </property>
-       <attribute name="label">
-        <string>인적 사항</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <layout class="QVBoxLayout" name="srtBox0"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="srt1">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>140</width>
-         <height>438</height>
-        </rect>
-       </property>
-       <attribute name="label">
-        <string>학력 사항</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <layout class="QVBoxLayout" name="srtBox1"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="srt2">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>140</width>
-         <height>438</height>
-        </rect>
-       </property>
-       <attribute name="label">
-        <string>경력 사항</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
-         <layout class="QVBoxLayout" name="srtBox2"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="srt3">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>140</width>
-         <height>438</height>
-        </rect>
-       </property>
-       <attribute name="label">
-        <string>활동 및 수상 경력</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <layout class="QVBoxLayout" name="srtBox3"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="srt4">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>140</width>
-         <height>438</height>
-        </rect>
-       </property>
-       <attribute name="label">
-        <string>자격증</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_5">
-        <item>
-         <layout class="QVBoxLayout" name="srtBox4"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="srt5">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>140</width>
-         <height>438</height>
-        </rect>
-       </property>
-       <attribute name="label">
-        <string>프로젝트</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_6">
-        <item>
-         <layout class="QVBoxLayout" name="srtBox5"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="srt6">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>140</width>
-         <height>438</height>
-        </rect>
-       </property>
-       <attribute name="label">
-        <string>자기소개서</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_7">
-        <item>
-         <layout class="QVBoxLayout" name="srtBox6"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="srt7">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>140</width>
-         <height>438</height>
-        </rect>
-       </property>
-       <attribute name="label">
-        <string>포트폴리오</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_8">
-        <item>
-         <layout class="QVBoxLayout" name="srtBox7"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="srt8">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>140</width>
-         <height>438</height>
-        </rect>
-       </property>
-       <attribute name="label">
-        <string>기타</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_9">
-        <item>
-         <layout class="QVBoxLayout" name="srtBox8"/>
-        </item>
-       </layout>
-      </widget>
+      <property name="documentMode">
+       <bool>false</bool>
+      </property>
+      <property name="tabsClosable">
+       <bool>false</bool>
+      </property>
+      <property name="movable">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
    </layout>

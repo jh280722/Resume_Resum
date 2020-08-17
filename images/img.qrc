@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>portable-document-format.png</file>
+        <file>plus.png</file>
+        <file>plus_white.png</file>
+        <file>portable-document-format-white.png</file>
+        <file>minus.png</file>
+        <file>minus_white.png</file>
+    </qresource>
+</RCC>

@@ -178,13 +178,6 @@ void Document::make_doc0(){
     InputMenu->addAction(TBAAddDate);
     InputMenu->addAction(TBAAddImage);
 
-    //    connect(TBADelete,SIGNAL(triggered()),this,SLOT());
-    //    connect(TBAAddText,SIGNAL(triggered()),this,SLOT());
-    //    connect(TBAAddTextarea,SIGNAL(triggered()),this,SLOT());
-    //    connect(TBAAddDropdown,SIGNAL(triggered()),this,SLOT());
-    //    connect(TBAAddDate,SIGNAL(triggered()),this,SLOT());
-    //    connect(TBAAddImage,SIGNAL(triggered()),this,SLOT());
-
     TBAAdd->setMenu(InputMenu);
     tool->setMenu(Menu);
     tool->setPopupMode(QToolButton::InstantPopup);

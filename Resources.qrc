@@ -1,15 +1,12 @@
 <RCC>
     <qresource prefix="/">
-        <file>.gitignore</file>
-        <file>Dynamic_Portfolio.pro</file>
-        <file>Dynamic_Portfolio_ko_KR.ts</file>
-        <file>main.cpp</file>
-        <file>mainwindow.cpp</file>
-        <file>mainwindow.h</file>
-        <file>mainwindow.ui</file>
-        <file>README.md</file>
-        <file>Resources.qrc</file>
-        <file>img/tmp.jpg</file>
-        <file>img/Start.png</file>
+        <file>images/img.qrc</file>
+        <file>images/minus.png</file>
+        <file>images/minus_white.png</file>
+        <file>images/plus.png</file>
+        <file>images/plus_white.png</file>
+        <file>images/portable-document-format-white.png</file>
+        <file>images/portable-document-format.png</file>
+        <file>images/Start.png</file>
     </qresource>
 </RCC>

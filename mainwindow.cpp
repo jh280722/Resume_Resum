@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "Document.h"
+#include "sortation.h"
 #include "ui_mainwindow.h"
 
 QString srtTitle[9]={Kor("인적 사항"), Kor("학력 사항"),Kor("경력 사항"),Kor("활동 및 수상 경력"),
@@ -14,27 +15,29 @@ MainWindow::MainWindow(QWidget* parent)
 {
     ui->setupUi(this);
 
+    Sortation *sortation = new Sortation(ui->centralwidget);
     //    int w=ui->intro->width();
     //    int h=ui->intro->height();
     //    QPixmap pix(":/img/Start.png");
     //ui->intro->setPixmap(pix);
     //ui->intro->setPixmap(pix.scaled(w,h,Qt::KeepAspectRatio));
 
-    QMenu *pFileMenu;
-    QAction *pSlotNewFile = new QAction(Kor("저장"), this);
-    pSlotNewFile->setShortcut(Kor("Ctrl+S"));
-    pSlotNewFile->setStatusTip(Kor("수정사항을 저장합니다."));
-    //connect(pSlotNewFile, SIGNAL(triggered()), this, SLOT(Main_SlotTest1()));
-    pFileMenu = menuBar()->addMenu(Kor("파일"));
-    pFileMenu->addAction(pSlotNewFile); // 테스트
+//    QMenu *pFileMenu;
+//    QAction *pSlotNewFile = new QAction(Kor("저장"), this);
+//    pSlotNewFile->setShortcut(Kor("Ctrl+S"));
+//    pSlotNewFile->setStatusTip(Kor("수정사항을 저장합니다."));
+//    //connect(pSlotNewFile, SIGNAL(triggered()), this, SLOT(Main_SlotTest1()));
+//    pFileMenu = menuBar()->addMenu(Kor("파일"));
+//    pFileMenu->addAction(pSlotNewFile); // 테스트
 
 
-    ui->docTab->setTabsClosable(true);
-    connect(ui->docTab, SIGNAL(tabCloseRequested(int)), this, SLOT(on_docTab_deleteTab(int)));
-    for(int i=0;i<9;i++){
-        docNum[i]=0;
-        srtInit(i);
-    }
+//    ui->docTab->setTabsClosable(true);
+//    connect(ui->docTab, SIGNAL(tabCloseRequested(int)), this, SLOT(on_docTab_deleteTab(int)));
+//    for(int i=0;i<9;i++){
+//        docNum[i]=0;
+//        srtInit(i);
+//    }
+
     //    this->setStyleSheet("#pushButton:hover { background-color: red; "
     //                        "border-style: outset; border-width: 2px;border-radius: 10px; border-color: beige;"
     //                        "font: bold 14px;min-width: 10em;padding: 6px; }");
@@ -62,7 +65,7 @@ void MainWindow::on_plus_clicked() {
         if(sel==srtPlusBtn[i]){
             srtIdx = i;
             name = srtTitle[srtIdx] + QString::number(++docNum[srtIdx]);
-            menu = ui->toolBox->findChild<QWidget*>("srt"+QString::number(srtIdx));
+            menu = ui->srtArea->findChild<QWidget*>("srt"+QString::number(srtIdx));
             break;
         }
     }
@@ -80,12 +83,13 @@ void MainWindow::on_plus_clicked() {
     docList[srtIdx].push_back(new_tab);
     connect(docBtnList[srtIdx][sz], SIGNAL(clicked()), this, SLOT(on_plus_clicked()));
     connect(docBtnList[srtIdx][sz], SIGNAL(clicked()), this, SLOT(connect_doc()));
+
 }
 
 void MainWindow::srtInit(int srtIdx) {
     QWidget* menu = 0;
 
-    menu = ui->toolBox->findChild<QWidget*>("srt"+QString::number(srtIdx));
+    menu = ui->srtArea->findChild<QWidget*>("srt"+QString::number(srtIdx));
 
     int sz=docBtnList[srtIdx].size();
     docBtnList[srtIdx].push_back(new_button("plusButton" + QString::number(srtIdx), Kor("항목추가")));
