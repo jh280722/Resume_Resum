@@ -16,7 +16,11 @@ private slots:
     void on_srtopen_clicked();
     void on_srtadd_clicked();
 
+    void connect_doc();
+
 private:
+    int srtIdx;
     QList<QWidgetList> docList;
+    QList<QWidgetList> docBtnList;
 };
 #endif // SORTATION_H

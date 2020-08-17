@@ -43,8 +43,8 @@ public:
 
 signals:
 private slots:
-    void on_plus_clicked();
-	void connect_doc();
+    //void on_plus_clicked();
+    //void connect_doc();
     void on_docTab_deleteTab(int);
     void on_toolBox_currentChanged(int index);
     void deleteTab();
@@ -65,7 +65,6 @@ private:
     //TABLIST
     QPushButton* pBtn;
     void add_box(QWidget* docTab, int listIdx);
-    void add_docTab(int);
 
 };
 

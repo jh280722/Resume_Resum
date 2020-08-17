@@ -89,6 +89,35 @@ void Sortation::on_srtopen_clicked()
     }
 }
 
+
+void Sortation::connect_doc() {
+    QWidget* sel = (QWidget*)QObject::sender();
+    bool existList = false;
+    int tabIdx = -1;
+    int subSrtIdx = -1;
+    QTabWidget* docTab=parent()->findChild<QTabWidget*>("docTab");
+
+    QPushButton *selPB=(QPushButton*)(QObject::sender());
+
+    subSrtIdx= docBtnList[srtIdx].indexOf(sel);
+    for (int i = 0; i < docTab->count(); ++i) {
+        if (selPB->text() == docTab->tabText(i)) {
+            existList = true;
+            tabIdx = i;
+            break;
+        }
+    }
+    if (existList) {
+        docTab->setCurrentIndex(tabIdx);
+    }
+    else {
+        QWidget* new_tab = docList[srtIdx][subSrtIdx];
+        docTab->addTab(new_tab, selPB->text());
+        docTab->setCurrentIndex(docTab->count() - 1);
+    }
+}
+
+
 void Sortation::on_srtadd_clicked()
 {
     bool ok;
@@ -103,17 +132,14 @@ void Sortation::on_srtadd_clicked()
         QPushButton* open = srt->findChild<QPushButton*>(openName);
         QWidget* docList = srt->parent()->findChild<QWidget*>(docListName);
         QPushButton* newDoc = new QPushButton(docName, docList);
-        /*
-        QWidget* newDoc = new QWidget(srtAreaWidgetContents);
-        QHBoxLayout* srtLayout = new QHBoxLayout(srt);
-        QPushButton* open = new QPushButton(sortations.value(i).prepend(" "), srt);
-        QPushButton* active = new QPushButton(srt);
-        */
         newDoc->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         newDoc->setFixedHeight(31);
         newDoc->setStyleSheet("padding-left: 20px; text-align: left; font-family: Malgun Gothic; font-size: 12px;");
         newDoc->setFlat(true);
         docList->layout()->addWidget(newDoc);
+
+        //버튼 리스트에 추가 | connect 해주기
+        connect(newDoc, SIGNAL(clicked()), this, SLOT(connect_doc()));
 
         if (docList->height() < 31) {
             docList->setFixedHeight(31);
