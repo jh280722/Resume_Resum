@@ -6,8 +6,9 @@
 #include <QVBoxLayout>
 #include <QToolButton>
 #include <QScrollArea>
-
+#include <QPushButton>
 #include <QLabel>
+#include "docTab.h"
 
 
 class Document : public QWidget
@@ -15,29 +16,15 @@ class Document : public QWidget
     Q_OBJECT
 
 public:
-    Document(QWidget* parent, int srtIdx, int listIdx);
+    Document(QWidget* parent, int srtIdx);
     ~Document();
-    QVBoxLayout* VBox;
-    QScrollArea* SA;
+    QWidget* PBS;
+    DocTab* tab;
+    void add_box();
+
 signals:
 public slots:
-    void make_doc0();
-    void make_doc1();
-    void make_doc2();
-    void make_doc3();
-    void make_doc4();
-    void make_doc5();
-    void make_doc6();
-    void make_doc7();
-    void make_doc8();
-    void deleteItem();
-    void imageUpload();
-    void deleteBox();
-    void AddItemText();
-    void AddItemTextarea();
-    void AddItemImage();
-    void AddItemDate();
-    void AddItemDropdown();
+
 private slots:
     void save_doc();
     void delete_doc();
@@ -45,6 +32,7 @@ private slots:
     void active_doc_select();
 
 private:
-    int srtIdx,listIdx;
+    int srtIdx;
+    bool active;
 };
 #endif // DOCUMENT_H

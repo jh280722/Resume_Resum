@@ -31,8 +31,7 @@ namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 extern QString srtTitle[9];
-extern QVector<QWidget*> docList[9];
-extern QList<QWidget*> docBtnList[9];
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

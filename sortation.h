@@ -3,9 +3,7 @@
 
 #include <QWidget>
 #include <QInputDialog>
-
-extern QVector<QWidget*> docList[9];
-extern QList<QWidget*> docBtnList[9];
+#include "Document.h"
 
 class Sortation : public QWidget
 {
@@ -15,6 +13,8 @@ public:
     Sortation(QWidget *parent = nullptr);
     ~Sortation();
     void delete_tab(int srtIdx);
+    int srtIdx;
+    QVector<Document*> docList[9];
 
 private slots:
     void on_srtopen_clicked();
@@ -23,6 +23,6 @@ private slots:
     void on_docactive_clicked();
 
 private:
-    void add_box(QWidget* docTab, int srtIdx, int listIdx);
+
 };
 #endif // SORTATION_H
