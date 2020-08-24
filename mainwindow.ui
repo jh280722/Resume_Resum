@@ -87,8 +87,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>239</width>
-           <height>766</height>
+           <width>243</width>
+           <height>776</height>
           </rect>
          </property>
         </widget>
@@ -117,8 +117,11 @@
         <property name="currentIndex">
          <number>-1</number>
         </property>
+        <property name="elideMode">
+         <enum>Qt::ElideRight</enum>
+        </property>
         <property name="usesScrollButtons">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="documentMode">
          <bool>false</bool>
@@ -141,7 +144,7 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

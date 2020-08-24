@@ -5,6 +5,22 @@
 
 extern Sortation *sortation;
 
+//class Widget : public QWidget{
+//    Q_OBJECT
+
+//public:
+//    Widget(QWidget *parent = nullptr);
+//    ~Widget();
+//    void moussMoveEvent(QMouseEvent *ev);
+//    bool eventFilter(QObject *obj,QEvent *ev);
+//    void leaveEvent(QEvent *);
+//    void enterEvent(QEvent *event) override;
+//};
+
+//void Widget:: enterEvent(QEvent *event){
+
+//}
+
 void DocTab::AddItemText(){
     QObject* item = QObject::sender();
     QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
