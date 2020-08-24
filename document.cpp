@@ -47,12 +47,11 @@ void Document::AddItemTextarea(){
 }
 void Document::imageUpload(){
     QObject* item = QObject::sender();
-    //Qwidget* par = qobject_cast<QWidget*>(item->parent());
-    qDebug()<<item->parent()->objectName();
+    QLabel* path=item->parent()->findChild<QLabel*>("path");
     QFileDialog  dlg;
     QString filepath=dlg.getOpenFileName(this, "Load Image", "", "Image Files (*.png *.jpg *.bmp)");
     QString fileName = filepath.section("/", -1);
-    // par->setText(filepath);
+    path->setText(fileName);
 }
 
 void Document::AddItemImage(){
@@ -64,8 +63,9 @@ void Document::AddItemImage(){
     QLabel* name = new QLabel(Kor("이 름"),newWidget);
     QLabel* sep = new QLabel((" :"),newWidget);
     QLabel* path = new QLabel(Kor("경로"),newWidget);
+    path->setObjectName("path");
     QPushButton* addButton = new QPushButton(Kor("업로드"),newWidget);
-    path->setObjectName("123");
+    qDebug()<<addButton->parent()->objectName();
     newLayout->addWidget(name);
     newLayout->addWidget(sep);
     newLayout->addWidget(addButton);
