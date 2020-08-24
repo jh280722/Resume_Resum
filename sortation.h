@@ -5,7 +5,7 @@
 #include <QInputDialog>
 
 extern QVector<QWidget*> docList[9];
-extern QVector<QPushButton*> docBtnList[9];
+extern QList<QWidget*> docBtnList[9];
 
 class Sortation : public QWidget
 {
@@ -14,16 +14,15 @@ class Sortation : public QWidget
 public:
     Sortation(QWidget *parent = nullptr);
     ~Sortation();
-    int srtIdx;
+    void delete_tab(int srtIdx);
 
 private slots:
     void on_srtopen_clicked();
     void on_srtadd_clicked();
-    void connect_doc();
-    void delete_tab();
+    void on_docopen_clicked();
+    void on_docactive_clicked();
 
 private:
-
-    void add_box(QWidget* docTab, int listIdx);
+    void add_box(QWidget* docTab, int srtIdx, int listIdx);
 };
 #endif // SORTATION_H

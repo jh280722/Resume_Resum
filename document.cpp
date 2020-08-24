@@ -284,10 +284,11 @@ void Document::save_doc(){
 
 
 void Document::delete_doc(){
-    sortation->srtIdx=srtIdx;
-    delete(docBtnList[srtIdx][listIdx]);
+    //sortation->srtIdx=srtIdx;
+    delete(docBtnList[srtIdx].at(listIdx));
     docList[srtIdx].remove(listIdx);
-    docBtnList[srtIdx].remove(listIdx);
+    docBtnList[srtIdx].removeAt(listIdx);
+    sortation->delete_tab(srtIdx);
 }
 
 void Document::preview_doc(){

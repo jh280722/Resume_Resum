@@ -7,7 +7,7 @@ QString srtTitle[9]={Kor("인적 사항"), Kor("학력 사항"),Kor("경력 사항"),Kor("활
                      Kor("자격증"),Kor("프로젝트"),Kor("자기소개서"),Kor("포트폴리오"), Kor("기타")};
 
 QVector<QWidget*> docList[9];
-QVector<QPushButton*> docBtnList[9];
+QList<QWidget*> docBtnList[9];
 Sortation *sortation;
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     sortation = new Sortation(ui->centralwidget);
     //    int w=ui->intro->width();
-    //    int h=ui->intro->height();
+    //    int h=ui->intro->heighdelete_tabt();
     //    QPixmap pix(":/img/Start.png");
     //ui->intro->setPixmap(pix);
     //ui->intro->setPixmap(pix.scaled(w,h,Qt::KeepAspectRatio));

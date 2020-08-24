@@ -2,12 +2,13 @@
 #include "ui_mainwindow.h"
 #include "sortation.h"
 
+QStringList sortations = {Kor("인적 사항"), Kor("학력 사항"), Kor("경력 사항"), Kor("활동 및 수상경력"),
+        Kor("자격증"), Kor("프로젝트"), Kor("자기소개서"), Kor("포트폴리오"), Kor("기타")};
+int srtRange[11] = {0, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19};
+
 Sortation::Sortation(QWidget *parent)
     : QWidget(parent)
 {
-    QStringList sortations = {Kor("인적 사항"), Kor("학력 사항"), Kor("경력 사항"), Kor("활동 및 수상경력"),
-                              Kor("자격증"), Kor("프로젝트"), Kor("자기소개서"), Kor("포트폴리오"), Kor("기타")};
-
     QWidget* srtAreaWidgetContents = parent->findChild<QWidget*>("srtAreaWidgetContents");
     QVBoxLayout* srtAreaLayout = new QVBoxLayout(srtAreaWidgetContents);
 
@@ -44,18 +45,12 @@ Sortation::Sortation(QWidget *parent)
         srt->setLayout(srtLayout);
         srtAreaLayout->addWidget(srt);
 
+        QWidget* empty = new QWidget(srtAreaWidgetContents);
 
-        QWidget* docList = new QWidget(srtAreaWidgetContents);
-        QVBoxLayout* docListLayout = new QVBoxLayout(docList);
-
-        docListLayout->setSpacing(0);
-        docListLayout->setContentsMargins(0, 0, 0, 0);
-        docList->setObjectName("srt"+QString::number(i+1)+"docList");
-        //docList->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        docList->setMinimumHeight(11);
-        docList->setLayout(docListLayout);
-        srtAreaLayout->addWidget(docList);
-        docList->hide();
+        empty->setObjectName("srt"+QString::number(i+1)+"empty");
+        empty->setMinimumHeight(11);
+        srtAreaLayout->addWidget(empty);
+        empty->hide();
 
     }
 
@@ -76,49 +71,34 @@ void Sortation::on_srtopen_clicked()
     QObject* sel = QObject::sender();
     QPushButton* selBtn = (QPushButton*)sel;
     QWidget* srt = (QWidget*)sel->parent();
-    QString docListName = srt->objectName().append("docList");
-    QWidget* docList = srt->parent()->findChild<QWidget*>(docListName);
+    int srtIdx = srt->objectName().remove(0,3).toInt();
+    QString emptyName = srt->objectName().append("empty");
+    QWidget* empty = srt->parent()->findChild<QWidget*>(emptyName);
 
-    if (docList->isHidden()) {
+    if (empty->isHidden()) {
         selBtn->setIcon(QIcon(":/images/minus_white.png"));
-        docList->show();
+        empty->show();
+
+        QList<QWidget*>::iterator i;
+        for (i=docBtnList[srtIdx].begin(); i!=docBtnList[srtIdx].end(); i++) {
+            QWidget* doc = *i;
+            doc->show();
+        }
     }
     else {
         selBtn->setIcon(QIcon(":/images/plus_white.png"));
-        docList->hide();
-    }
-}
+        empty->hide();
 
-
-void Sortation::connect_doc() {
-    QWidget* sel = (QWidget*)QObject::sender();
-    bool existList = false;
-    int tabIdx = -1;
-    int subSrtIdx = -1;
-    QTabWidget* docTab=parent()->findChild<QTabWidget*>("docTab");
-
-    QPushButton *selPB=(QPushButton*)(QObject::sender());
-
-    subSrtIdx= docBtnList[srtIdx].indexOf(selPB);
-    for (int i = 0; i < docTab->count(); ++i) {
-        if (selPB->text() == docTab->tabText(i)) {
-            existList = true;
-            tabIdx = i;
-            break;
+        QList<QWidget*>::iterator i;
+        for (i=docBtnList[srtIdx].begin(); i!=docBtnList[srtIdx].end(); i++) {
+            QWidget* doc = *i;
+            doc->hide();
         }
-    }
-    if (existList) {
-        docTab->setCurrentIndex(tabIdx);
-    }
-    else {
-        QWidget* new_tab = docList[srtIdx][subSrtIdx];
-        docTab->addTab(new_tab, selPB->text());
-        docTab->setCurrentIndex(docTab->count() - 1);
     }
 }
 
 //문서 만들때 한 번 실행되는 함수
-void Sortation::add_box(QWidget* docTab, int listIdx) {
+void Sortation::add_box(QWidget* docTab, int srtIdx, int listIdx) {
 
     //스크롤 영역 위젯 생성
     Document* SAW=new Document(docTab, srtIdx, listIdx);
@@ -201,39 +181,116 @@ void Sortation::on_srtadd_clicked()
     if (ok && !docName.isEmpty()) {
         QObject* sel = QObject::sender();
         QWidget* srt = (QWidget*)sel->parent();
-        QString openName = srt->objectName().append("open");
-        QString docListName = srt->objectName().append("docList");
-        QPushButton* open = srt->findChild<QPushButton*>(openName);
-        QWidget* docBtn = srt->parent()->findChild<QWidget*>(docListName);
-        QPushButton* newDoc = new QPushButton(docName, docBtn);
-        newDoc->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        QWidget* srtAreaWidgetContents = srt->parentWidget();
+        QVBoxLayout* srtAreaLayout = (QVBoxLayout*)srtAreaWidgetContents->layout();
+        QString selOpenName = srt->objectName().append("open");
+        QPushButton* selOpen = srt->findChild<QPushButton*>(selOpenName);
+        int srtIdx = srt->objectName().remove(0,3).toInt();
+
+        QWidget* newDoc = new QWidget(srtAreaWidgetContents);
+        QHBoxLayout* newDocLayout = new QHBoxLayout(newDoc);
+        QPushButton* open = new QPushButton(docName, newDoc);
+        QPushButton* active = new QPushButton(newDoc);
+
+        open->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        open->setStyleSheet("padding-left: 20px; text-align: left; font-family: Malgun Gothic; font-size: 12px;");
+        open->setFlat(true);
+        connect(open, SIGNAL(clicked()), this, SLOT(on_docopen_clicked()));
+        active->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        active->setFixedWidth(41);
+        active->setFlat(true);
+        active->setIconSize(QSize(12, 12));
+        connect(active, SIGNAL(clicked()), this, SLOT(on_docactive_clicked()));
+
+        newDocLayout->setSpacing(0);
+        newDocLayout->setContentsMargins(0, 0, 0, 0);
+        newDocLayout->addWidget(open);
+        newDocLayout->addWidget(active);
+        //newDoc->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         newDoc->setFixedHeight(31);
-        newDoc->setStyleSheet("padding-left: 20px; text-align: left; font-family: Malgun Gothic; font-size: 12px;");
-        newDoc->setFlat(true);
-        docBtn->layout()->addWidget(newDoc);
+        newDoc->setLayout(newDocLayout);
+        srtAreaLayout->insertWidget(srtRange[srtIdx+1]-1, newDoc);
+        //srtAreaWidgetContents->layout()->addWidget(newDoc);
+        //newDoc->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
         //버튼 리스트에 추가 | connect 해주기
-        QString srtN=srt->objectName().remove(0,3);
-        srtIdx=srtN.toInt();
-        connect(newDoc, SIGNAL(clicked()), this, SLOT(connect_doc()));
         int sz=docList[srtIdx].size();
         QWidget* new_tab = new QWidget();
-        add_box(new_tab, sz);
+        add_box(new_tab, srtIdx, sz);
         docList[srtIdx].push_back(new_tab);
-        docBtnList[srtIdx].push_back(newDoc);
-        docBtn->setFixedHeight(docBtnList[srtIdx].size() >0 ? docBtnList[srtIdx].size()*30 + 1 : 11);
+        docBtnList[srtIdx].append(newDoc);
+        for (int i = srtIdx + 1; i < 11; i++){
+            srtRange[i]++;
+        }
 
-        if (docBtn->isHidden()) {
-            open->setIcon(QIcon(":/images/minus_white.png"));
-            docBtn->show();
+        QString emptyName = srt->objectName().append("empty");
+        QWidget* empty = srt->parent()->findChild<QWidget*>(emptyName);
+
+        if (empty->height() > 0) empty->setFixedHeight(0);
+        if (empty->isHidden()) {
+            empty->show();
+            selOpen->setIcon(QIcon(":/images/minus_white.png"));
         }
     }
 }
 
-
-void Sortation::delete_tab() {
+void Sortation::on_docopen_clicked() {
+    QObject* sel = QObject::sender();
+    QPushButton* selPB = (QPushButton*)sel;
+    QWidget* selDoc = (QWidget*)sel->parent();
+    bool existList = false;
+    int tabIdx = -1;
+    int srtIdx = -1;
+    int subSrtIdx = -1;
     QTabWidget* docTab=parent()->findChild<QTabWidget*>("docTab");
+
+    for (int i=0; i<9; i++) {
+        if (docBtnList[i].contains(selDoc)) {
+            srtIdx = i;
+            break;
+        }
+    }
+    subSrtIdx= docBtnList[srtIdx].indexOf(selDoc);
+
+    for (int i = 0; i < docTab->count(); ++i) {
+        if (selPB->text() == docTab->tabText(i)) {
+            existList = true;
+            tabIdx = i;
+            break;
+        }
+    }
+    if (existList) {
+        docTab->setCurrentIndex(tabIdx);
+    }
+    else {
+        QWidget* new_tab = docList[srtIdx][subSrtIdx];
+        docTab->addTab(new_tab, selPB->text());
+        docTab->setCurrentIndex(docTab->count() - 1);
+    }
+}
+
+void Sortation::on_docactive_clicked()
+{
+    QObject* sel = QObject::sender();
+    QPushButton* active = (QPushButton*)sel;
+
+    if (active->icon().isNull()) {
+        active->setIcon(QIcon(":/images/dot.png"));
+    }
+    else {
+        active->setIcon(QIcon());
+    }
+
+}
+
+void Sortation::delete_tab(int srtIdx) {
+    QTabWidget* docTab=parent()->findChild<QTabWidget*>("docTab");
+    QWidget* empty = parent()->findChild<QWidget*>("srt" + QString::number(srtIdx) + "empty");
     docTab->removeTab(docTab->currentIndex());
-    QWidget* docBtn = parent()->findChild<QWidget*>("srt"+QString::number(srtIdx)+"docList");
-    docBtn->setFixedHeight(docBtnList[srtIdx].size() >0 ? docBtnList[srtIdx].size()*30 + 1 : 11);
+    for (int i = srtIdx + 1; i < 11; i++){
+        srtRange[i]--;
+    }
+    if (docList[srtIdx].size() == 0) {
+        empty->setFixedHeight(11);
+    }
 }
