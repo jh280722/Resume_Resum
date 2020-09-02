@@ -25,9 +25,9 @@ protected:
         }
 
     }
-//    void mouseDoubleClickEvent(QMouseEvent *ev) override{
+    //    void mouseDoubleClickEvent(QMouseEvent *ev) override{
 
-//    }
+    //    }
 };
 
 //class DoubleClickedWidget : public QWidget{
@@ -46,8 +46,9 @@ protected:
 //};
 
 
-Document::Document(QWidget*parent, int srtIdx):QWidget(parent){
+Document::Document(QString name, int srtIdx):QWidget(){
     setObjectName("document");
+    this->name=name;
     this->srtIdx=srtIdx;
     add_box();
 }
@@ -79,7 +80,7 @@ void Document::add_box() {
     HBox->addWidget(PB);
     PB=new QPushButton(Kor("미리보기"),Par);
     PB->setObjectName("preview");
-    connect(PB, SIGNAL(clicked()), this, SLOT(preview_doc()));
+    connect(PB, SIGNAL(clicked()), this, SLOT(load_doc()));
     HBox->addWidget(PB);
     PB=new QPushButton(Kor("활성화"),Par);
     PB->setObjectName("active");
@@ -142,79 +143,71 @@ void Document::add_box() {
     }
 }
 
-DocTab* Document::load_add_box() {
+QVBoxLayout* Document::load_add_box() {
+    QGroupBox* box = new QGroupBox("", tab);
+    box->setObjectName("groupBox");
+    QVBoxLayout* boxLayout = new QVBoxLayout(box);
+    boxLayout->setObjectName("groupBoxLayout");
+    QVBoxLayout* layout = tab->boxArea;
+    QWidget* toolWidget = new QWidget(box);
 
-    //스크롤 영역 위젯 생성
-    tab=new DocTab(this,srtIdx);
-    tab->setObjectName("doctab");
-    //저장, 삭제, 미리보기, 활성화 버튼 생성
-    QWidget* Par = new QWidget(tab);
-    Par->setObjectName("docMenu");
-    QHBoxLayout* HBox = new QHBoxLayout(Par);
-    QPushButton* PB;
-    PB=new QPushButton(Kor("저장"),Par);
-    PB->setObjectName("save");
-    connect(PB, SIGNAL(clicked()), this, SLOT(save_doc()));
-    HBox->addWidget(PB);
-    PB=new QPushButton(Kor("삭제"),Par);
-    PB->setObjectName("delete");
-    connect(PB, SIGNAL(clicked()), this, SLOT(delete_doc()));
-    HBox->addWidget(PB);
-    PB=new QPushButton(Kor("미리보기"),Par);
-    PB->setObjectName("preview");
-    connect(PB, SIGNAL(clicked()), this, SLOT(preview_doc()));
-    HBox->addWidget(PB);
-    PB=new QPushButton(Kor("활성화"),Par);
-    PB->setObjectName("active");
-    connect(PB, SIGNAL(clicked()), this, SLOT(active_doc_select()));
-    HBox->addWidget(PB);
-    Par->setSizePolicy(QSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed));
+    QWidget* tmp=new QWidget();
+    Widget* nameWidget = new Widget(tmp);
+    Widget* ageWidget = new Widget(tmp);
+    Widget* addressWidget = new Widget(tmp);
 
-    tab->VLayout->addWidget(Par);
-    tab->VLayout->addWidget(tab->box);
+    QToolButton* tool = new QToolButton(toolWidget);
+    QHBoxLayout* toolLayout = new QHBoxLayout(toolWidget);
+    QMenu* Menu = new QMenu();
+    QMenu* InputMenu = new QMenu();
+    toolLayout->addStretch();
+    toolLayout->addWidget(tool, Qt::AlignRight);
+    //tool->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
 
-    Par = new QWidget(tab);
-    Par->setObjectName("addBoxButton");
-    QHBoxLayout* plusButton = new QHBoxLayout(Par);
-    PB=new QPushButton(Kor("추가"),Par);
-    PB->setObjectName("addBox");
-    plusButton->addStretch();
-    plusButton->addWidget(PB);
-    plusButton->setAlignment(Qt::AlignTop);
+    QAction* TBAAdd = new QAction(Kor("추가"), tool);
+    TBAAdd->setStatusTip(Kor("인적사항을 추가합니다."));
+    QAction* TBADelete = new QAction(Kor("삭제"), tool);
+    TBADelete->setStatusTip(Kor("인적사항을 삭제합니다."));
+    connect(TBADelete, SIGNAL(triggered()), this, SLOT(deleteBox()));
 
-    tab->VLayout->addWidget(Par);
 
-    switch(srtIdx){ //srt별로 양식 생성
-    //connect로 함수들 연결
-    case 0:
-        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc0()));
-        break;
-    case 1:
-        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc1()));
-        break;
-    case 2:
-        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc2()));
-        break;
-    case 3:
-        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc3()));
-        break;
-    case 4:
-        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc4()));
-        break;
-    case 5:
-        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc5()));
-        break;
-    case 6:
-        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc6()));
-        break;
-    case 7:
-        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc7()));
-        break;
-    case 8:
-        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc8()));
-        break;
-    }
-    return tab;
+    QAction* TBAAddText = new QAction(Kor("텍스트"), boxLayout);
+    connect(TBAAddText, SIGNAL(triggered()), this, SLOT(AddItemText()));
+    QAction* TBAAddTextarea = new QAction(Kor("글 상자"), boxLayout);
+    connect(TBAAddTextarea, SIGNAL(triggered()), this, SLOT(AddItemTextarea()));
+    QAction* TBAAddDropdown = new QAction(Kor("드롭 다운"), boxLayout);
+    connect(TBAAddDropdown, SIGNAL(triggered()), this, SLOT(AddItemDropdown()));
+    QAction* TBAAddDate = new QAction(Kor("날짜"), boxLayout);
+    connect(TBAAddDate, SIGNAL(triggered()), this, SLOT(AddItemDate()));
+    QAction* TBAAddImage = new QAction(Kor("이미지"), boxLayout);
+    connect(TBAAddImage, SIGNAL(triggered()), this, SLOT(AddItemImage()));
+
+    Menu->addAction(TBAAdd);
+    Menu->addAction(TBADelete);
+    InputMenu->addAction(TBAAddText);
+    InputMenu->addAction(TBAAddTextarea);
+    InputMenu->addAction(TBAAddDropdown);
+    InputMenu->addAction(TBAAddDate);
+    InputMenu->addAction(TBAAddImage);
+
+    TBAAdd->setMenu(InputMenu);
+    tool->setMenu(Menu);
+    tool->setPopupMode(QToolButton::InstantPopup);
+    toolWidget->setObjectName("tool");
+    nameWidget->setObjectName("text");
+    ageWidget->setObjectName("text");
+    addressWidget->setObjectName("text");
+
+    boxLayout->addWidget(toolWidget);
+
+
+    box->setMinimumSize(800, 800);
+    box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    boxLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+
+    layout->addWidget(box);
+
+    return boxLayout;
 }
 void Document::AddItemText() {
     QObject* item = QObject::sender();
@@ -521,7 +514,7 @@ void Document::deleteItem() {
 void Document::deleteBox() {
     QObject* item = QObject::sender();
     disconnect(item, SIGNAL(triggered()), this, SLOT(deleteBox()));
-    delete item->parent();
+    delete item->parent()->parent()->parent();
 }
 
 void Document::make_doc0() {
@@ -591,8 +584,8 @@ void Document::make_doc1() {
     QHBoxLayout* nameLayout = new QHBoxLayout(nameWidget);
 
     delButton = new QPushButton(nameWidget);
-//    DoubleClickedWidget * tmp2= new DoubleClickedWidget();
-//    connect(tmp2, SIGNAL(doubleClicked()), this, SLOT(onDoubleClicked()));
+    //    DoubleClickedWidget * tmp2= new DoubleClickedWidget();
+    //    connect(tmp2, SIGNAL(doubleClicked()), this, SLOT(onDoubleClicked()));
     QLabel * Label = new QLabel(Kor("이 름 : "));
     QLineEdit* LineEdit =new QLineEdit(nameWidget);
     Label->setObjectName("QLabel");
@@ -671,63 +664,85 @@ void Document::make_doc8() {
 }
 
 void Document::load_doc(){
+    dataList.clear();
     QString ApplicationPath=QApplication::applicationDirPath();
-    QDir Directory(ApplicationPath+"/Data"); // 폴더 지정
+    QDir Directory(ApplicationPath+"/Data/Srt"+QString::number(srtIdx)); // 폴더 지정
     if(!Directory.exists()) // 폴더가 존재하지 않을경우
     {
         Directory.mkdir(ApplicationPath+"/Data"); // 폴더 생성
+        Directory.mkdir(ApplicationPath+"/Data/Srt"+QString::number(srtIdx)); // 폴더 생성
     }
-    QFile File(ApplicationPath+"/Data/Save"+srtIdx+".data");
-    File.open(QFile::ReadOnly|QFile::Text); // 쓰기 전용, 텍스트, 이어쓰기
+    QFile File(ApplicationPath+"/Data/Srt"+QString::number(srtIdx)+"/"+name+".data");
+    File.open(QFile::ReadOnly|QFile::Text); // 쓰기 전용, 텍스트
     QTextStream in(&File);
     while(!in.atEnd())  // 파일 끝까지 읽어서
     {
         Data* data=new Data();
         data->type=in.readLine();
         data->name = in.readLine();
-        data->value = in.readLine();
+        data->valueLine=in.readLine().toInt();
+        data->value = "";
+        for(int i=0;i<data->valueLine;i++){
+            data->value+=in.readLine();
+            if(i+1!=data->valueLine)
+                data->value+='\n';
+        }
         data->date = in.readLine();
         data->path = in.readLine();
+
         dataList.push_back(data);
     }
     File.close(); // 파일닫기
-    DocTab* loadTab;
+
+    for(auto data:dataList){
+        qDebug()<<data->type<<'\n';
+        qDebug()<<data->name<<'\n';
+        qDebug()<<data->valueLine<<'\n';
+        qDebug()<<data->value<<'\n';
+        qDebug()<<data->date<<'\n';
+        qDebug()<<data->path<<'\n';
+    }
+    QVBoxLayout* loadBox;
     for(auto it: dataList){
         if(it->type=="box"){
-            loadTab=load_add_box();
+            loadBox=load_add_box();
         }
         else if(it->type=="text"){
-            AddItemText(it,loadTab->boxArea);
+            AddItemText(it,loadBox);
         }
         else if(it->type=="textArea"){
-            AddItemTextarea(it,loadTab->boxArea);
+            AddItemTextarea(it,loadBox);
         }
         else if(it->type=="image"){
-            AddItemImage(it,loadTab->boxArea);
+            AddItemImage(it,loadBox);
         }
         else if(it->type=="date"){
-            AddItemDate(it,loadTab->boxArea);
+            AddItemDate(it,loadBox);
         }
         else if(it->type=="dropDown"){
-            AddItemDropdown(it,loadTab->boxArea);
+            AddItemDropdown(it,loadBox);
         }
     }
 }
 
 void Document::save_doc(){
+    dataList.clear();
     QObjectList tabList = tab->box->children();
     for(auto it:tabList){
-        if(it->objectName()=="boxAreaLayout") continue;
+        if(it->objectName()=="boxAreaLayout") {
+            dataList.push_back(new Data("box"));
+        }
         QObjectList itemList = it->children();
         for(auto item: itemList){
             if(item->objectName()=="groupBoxLayout") continue;
             if(item->objectName()=="tool") continue;
             qDebug()<<item->objectName();
             QString type=item->objectName();
-            QString name="null";
-            QString value="null";
-            QString date="null";
-            QString path="null";
+            QString name="";
+            int valueLine=1;
+            QString value="";
+            QString date="";
+            QString path="";
             if(type=="text"){
                 name=item->findChild<QLabel*>("QLabel")->text();
                 value=item->findChild<QLineEdit*>("QLineEdit")->text();
@@ -735,6 +750,11 @@ void Document::save_doc(){
             else if(type=="textArea"){
                 name=item->findChild<QLabel*>("QLabel")->text();
                 value=item->findChild<QTextEdit*>("QTextEdit")->toPlainText();
+                for(int i=0;i<value.size();i++){
+                    if(value[i]=='\n'){
+                        valueLine++;
+                    }
+                }
             }
             else if(type=="image"){
                 name=item->findChild<QLabel*>("QLabel")->text();
@@ -746,23 +766,25 @@ void Document::save_doc(){
             else if(type=="dropDown"){
 
             }
-            dataList.push_back(new Data(name,value,date,path));
+            dataList.push_back(new Data(type, name, valueLine, value, date,path));
         }
     }
 
     QString ApplicationPath=QApplication::applicationDirPath();
     qDebug()<<ApplicationPath;
-    QDir Directory(ApplicationPath+"/Data"); // 폴더 지정
+    QDir Directory(ApplicationPath+"/Data/Srt"+QString::number(srtIdx)); // 폴더 지정
     if(!Directory.exists()) // 폴더가 존재하지 않을경우
     {
         Directory.mkdir(ApplicationPath+"/Data"); // 폴더 생성
+        Directory.mkdir(ApplicationPath+"/Data/Srt"+QString::number(srtIdx)); // 폴더 생성
     }
-    QFile File(ApplicationPath+"/Data/Save.data");
+    QFile File(ApplicationPath+"/Data/Srt"+QString::number(srtIdx)+"/"+name+".data");
     File.open(QFile::WriteOnly|QFile::Text); // 쓰기 전용, 텍스트, 이어쓰기
     QTextStream out(&File);
     for(auto data:dataList){
         out<<data->type<<'\n';
         out<<data->name<<'\n';
+        out<<data->valueLine<<'\n';
         out<<data->value<<'\n';
         out<<data->date<<'\n';
         out<<data->path<<'\n';
@@ -789,7 +811,3 @@ void Document::preview_doc(){
 void Document::active_doc_select(){
 
 }
-
-
-
-
