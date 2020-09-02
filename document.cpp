@@ -4,6 +4,7 @@
 #include "ui_mainwindow.h"
 #include "data.h"
 extern Sortation *sortation;
+
 class Widget : public QWidget{
 
 public:
@@ -24,7 +25,26 @@ protected:
         }
 
     }
+//    void mouseDoubleClickEvent(QMouseEvent *ev) override{
+
+//    }
 };
+
+//class DoubleClickedWidget : public QWidget{
+
+//public:
+//    DoubleClickedWidget(QWidget *parent=nullptr): QWidget(parent){
+//        this->installEventFilter(this);
+//    };
+//    signals:
+//    void doubleClicked();
+//protected:
+//    void mouseDoubleClickEvent(QMouseEvent *) {
+//        emit doubleClicked();
+//    }
+
+//};
+
 
 Document::Document(QWidget*parent, int srtIdx):QWidget(parent){
     setObjectName("document");
@@ -122,7 +142,80 @@ void Document::add_box() {
     }
 }
 
+DocTab* Document::load_add_box() {
 
+    //스크롤 영역 위젯 생성
+    tab=new DocTab(this,srtIdx);
+    tab->setObjectName("doctab");
+    //저장, 삭제, 미리보기, 활성화 버튼 생성
+    QWidget* Par = new QWidget(tab);
+    Par->setObjectName("docMenu");
+    QHBoxLayout* HBox = new QHBoxLayout(Par);
+    QPushButton* PB;
+    PB=new QPushButton(Kor("저장"),Par);
+    PB->setObjectName("save");
+    connect(PB, SIGNAL(clicked()), this, SLOT(save_doc()));
+    HBox->addWidget(PB);
+    PB=new QPushButton(Kor("삭제"),Par);
+    PB->setObjectName("delete");
+    connect(PB, SIGNAL(clicked()), this, SLOT(delete_doc()));
+    HBox->addWidget(PB);
+    PB=new QPushButton(Kor("미리보기"),Par);
+    PB->setObjectName("preview");
+    connect(PB, SIGNAL(clicked()), this, SLOT(preview_doc()));
+    HBox->addWidget(PB);
+    PB=new QPushButton(Kor("활성화"),Par);
+    PB->setObjectName("active");
+    connect(PB, SIGNAL(clicked()), this, SLOT(active_doc_select()));
+    HBox->addWidget(PB);
+    Par->setSizePolicy(QSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed));
+
+    tab->VLayout->addWidget(Par);
+    tab->VLayout->addWidget(tab->box);
+
+    Par = new QWidget(tab);
+    Par->setObjectName("addBoxButton");
+    QHBoxLayout* plusButton = new QHBoxLayout(Par);
+    PB=new QPushButton(Kor("추가"),Par);
+    PB->setObjectName("addBox");
+    plusButton->addStretch();
+    plusButton->addWidget(PB);
+    plusButton->setAlignment(Qt::AlignTop);
+
+    tab->VLayout->addWidget(Par);
+
+    switch(srtIdx){ //srt별로 양식 생성
+    //connect로 함수들 연결
+    case 0:
+        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc0()));
+        break;
+    case 1:
+        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc1()));
+        break;
+    case 2:
+        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc2()));
+        break;
+    case 3:
+        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc3()));
+        break;
+    case 4:
+        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc4()));
+        break;
+    case 5:
+        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc5()));
+        break;
+    case 6:
+        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc6()));
+        break;
+    case 7:
+        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc7()));
+        break;
+    case 8:
+        connect(PB, SIGNAL(clicked()), this, SLOT(make_doc8()));
+        break;
+    }
+    return tab;
+}
 void Document::AddItemText() {
     QObject* item = QObject::sender();
     QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
@@ -150,6 +243,31 @@ void Document::AddItemText() {
     LineEdit->setObjectName("QLineEdit");
     newWidget->setObjectName("text");
 }
+void Document::AddItemText(Data* item,QVBoxLayout * boxlayout) {
+    QWidget* tmp=new QWidget();
+    Widget* newWidget = new Widget(tmp);
+    QHBoxLayout* newLayout = new QHBoxLayout();
+    QPushButton* delButton = new QPushButton(newWidget);
+    QLabel* title=new QLabel(item->name,newWidget);
+    QLabel* sep = new QLabel((" :"), newWidget);
+    QLineEdit* LineEdit=new QLineEdit(item->value,newWidget);
+
+    newLayout->addWidget(delButton);
+    newLayout->addWidget(title);
+    newLayout->addWidget(sep);
+    newLayout->addWidget(LineEdit);
+    connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
+
+    newWidget->setLayout(newLayout);
+    boxlayout->addWidget(newWidget);
+
+    delButton->setFlat(1);
+
+    delButton->setObjectName("delButton");
+    title->setObjectName("QLabel");
+    LineEdit->setObjectName("QLineEdit");
+    newWidget->setObjectName("text");
+}
 void Document::AddItemTextarea() {
     QObject* item = QObject::sender();
     QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
@@ -160,6 +278,35 @@ void Document::AddItemTextarea() {
     QLabel* title = new QLabel(Kor("이 름"), newWidget);
     QLabel* sep = new QLabel((" :"), newWidget);
     QTextEdit* TextEdit = new QTextEdit(newWidget);
+    TextEdit->setMinimumHeight(150);
+    TextEdit->setMaximumHeight(150);
+
+    newLayout->addWidget(delButton);
+    newLayout->addWidget(title);
+    newLayout->addWidget(sep);
+    newLayout->addWidget(TextEdit);
+    connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
+    newWidget->setLayout(newLayout);
+    boxlayout->addWidget(newWidget);
+
+    newLayout->setAlignment(title, Qt::AlignTop);
+    newLayout->setAlignment(sep, Qt::AlignTop);
+    newLayout->setAlignment(delButton, Qt::AlignTop);
+
+    delButton->setFlat(1);
+    delButton->setObjectName("delButton");
+    title->setObjectName("QLabel");
+    TextEdit->setObjectName("QTextEdit");
+    newWidget->setObjectName("textArea");
+}
+void Document::AddItemTextarea(Data* item,QVBoxLayout * boxlayout) {
+    QWidget* tmp=new QWidget();
+    Widget* newWidget = new Widget(tmp);
+    QHBoxLayout* newLayout = new QHBoxLayout();
+    QPushButton* delButton = new QPushButton(newWidget);
+    QLabel* title = new QLabel(item->name, newWidget);
+    QLabel* sep = new QLabel((" :"), newWidget);
+    QTextEdit* TextEdit = new QTextEdit(item->value,newWidget);
     TextEdit->setMinimumHeight(150);
     TextEdit->setMaximumHeight(150);
 
@@ -221,6 +368,34 @@ void Document::AddItemImage() {
     path->setObjectName("path");
     newWidget->setObjectName("image");
 }
+void Document::AddItemImage(Data* item,QVBoxLayout * boxlayout) {
+    QWidget* tmp=new QWidget();
+    Widget* newWidget = new Widget(tmp);
+    QHBoxLayout* newLayout = new QHBoxLayout();
+    QPushButton* delButton = new QPushButton(newWidget);
+    QLabel* title = new QLabel(item->name, newWidget);
+    QLabel* sep = new QLabel((" :"), newWidget);
+    QPushButton* addButton = new QPushButton(Kor("업로드"), newWidget);
+    QLabel* path = new QLabel(item->path, newWidget);
+
+    newLayout->addWidget(delButton);
+    newLayout->addWidget(title);
+    newLayout->addWidget(sep);
+    newLayout->addWidget(addButton);
+    newLayout->addWidget(path);
+    newLayout->addStretch();
+    connect(addButton, SIGNAL(clicked()), this, SLOT(imageUpload()));
+    connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
+    newWidget->setLayout(newLayout);
+    boxlayout->addWidget(newWidget);
+
+
+    delButton->setFlat(1);
+    delButton->setObjectName("delButton");
+    title->setObjectName("QLabel");
+    path->setObjectName("path");
+    newWidget->setObjectName("image");
+}
 void Document::AddItemDate() {
     QObject* item = QObject::sender();
     QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
@@ -255,6 +430,38 @@ void Document::AddItemDate() {
     newdate->setObjectName("QDate");
     newWidget->setObjectName("date");
 }
+void Document::AddItemDate(Data* item,QVBoxLayout * boxlayout) {
+    QWidget* tmp=new QWidget();
+    Widget* newWidget = new Widget(tmp);
+    QHBoxLayout* newLayout = new QHBoxLayout();
+    QPushButton* delButton = new QPushButton(newWidget);
+    QLabel* title = new QLabel(item->name, newWidget);
+    QLabel* sep = new QLabel((" :"), newWidget);
+    QDateEdit* newdate = new QDateEdit();
+
+    newdate->setCalendarPopup(1);
+    newdate->setDate(QDate::currentDate());
+    newLayout->addWidget(delButton);
+    newLayout->addWidget(title);
+    newLayout->addWidget(sep);
+    newLayout->addWidget(newdate);
+    newLayout->addStretch();
+    delButton->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
+    newWidget->setLayout(newLayout);
+    boxlayout->addWidget(newWidget);
+    newLayout->setAlignment(title, Qt::AlignLeft);
+    newLayout->setAlignment(sep, Qt::AlignLeft);
+    newLayout->setAlignment(newdate, Qt::AlignLeft);
+    newLayout->setAlignment(delButton, Qt::AlignRight);
+
+
+    delButton->setFlat(1);
+    delButton->setObjectName("delButton");
+    title->setObjectName("QLabel");
+    newdate->setObjectName("QDate");
+    newWidget->setObjectName("date");
+}
 void Document::AddItemDropdown() {
     QObject* item = QObject::sender();
     QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
@@ -263,6 +470,29 @@ void Document::AddItemDropdown() {
     QHBoxLayout* newLayout = new QHBoxLayout();
     QPushButton* delButton = new QPushButton(newWidget);
     QLabel* title = new QLabel(Kor("이 름"), newWidget);
+    QLabel* sep = new QLabel((" :"), newWidget);
+    QComboBox* newdd = new QComboBox();
+    newLayout->addWidget(delButton);
+    newLayout->addWidget(title);
+    newLayout->addWidget(sep);
+    newLayout->addWidget(newdd);
+    newLayout->addStretch();
+    connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
+    newWidget->setLayout(newLayout);
+    boxlayout->addWidget(newWidget);
+
+    delButton->setFlat(1);
+    delButton->setObjectName("delButton");
+    title->setObjectName("QLabel");
+    newdd->setObjectName("QComboBox");
+    newWidget->setObjectName("dropDown");
+}
+void Document::AddItemDropdown(Data* item,QVBoxLayout * boxlayout) {
+    QWidget* tmp=new QWidget();
+    Widget* newWidget = new Widget(tmp);
+    QHBoxLayout* newLayout = new QHBoxLayout();
+    QPushButton* delButton = new QPushButton(newWidget);
+    QLabel* title = new QLabel(item->name, newWidget);
     QLabel* sep = new QLabel((" :"), newWidget);
     QComboBox* newdd = new QComboBox();
     newLayout->addWidget(delButton);
@@ -361,7 +591,8 @@ void Document::make_doc1() {
     QHBoxLayout* nameLayout = new QHBoxLayout(nameWidget);
 
     delButton = new QPushButton(nameWidget);
-
+//    DoubleClickedWidget * tmp2= new DoubleClickedWidget();
+//    connect(tmp2, SIGNAL(doubleClicked()), this, SLOT(onDoubleClicked()));
     QLabel * Label = new QLabel(Kor("이 름 : "));
     QLineEdit* LineEdit =new QLineEdit(nameWidget);
     Label->setObjectName("QLabel");
@@ -460,25 +691,25 @@ void Document::load_doc(){
         dataList.push_back(data);
     }
     File.close(); // 파일닫기
-
+    DocTab* loadTab;
     for(auto it: dataList){
         if(it->type=="box"){
-            add_box();
+            loadTab=load_add_box();
         }
         else if(it->type=="text"){
-            AddItemText();
+            AddItemText(it,loadTab->boxArea);
         }
         else if(it->type=="textArea"){
-            AddItemTextarea();
+            AddItemTextarea(it,loadTab->boxArea);
         }
         else if(it->type=="image"){
-            AddItemImage();
+            AddItemImage(it,loadTab->boxArea);
         }
         else if(it->type=="date"){
-            AddItemDate();
+            AddItemDate(it,loadTab->boxArea);
         }
         else if(it->type=="dropDown"){
-            AddItemDropdown();
+            AddItemDropdown(it,loadTab->boxArea);
         }
     }
 }

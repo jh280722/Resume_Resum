@@ -23,6 +23,7 @@ public:
     QWidget* PBS;
     DocTab* tab;
     void add_box();
+    DocTab* load_add_box();
 
 signals:
 public slots:
@@ -54,6 +55,11 @@ private slots:
     void AddItemDate();
     void AddItemDropdown();
     void deleteItem();
+    void AddItemText(Data*,QVBoxLayout*);
+    void AddItemTextarea(Data*,QVBoxLayout*);
+    void AddItemImage(Data*,QVBoxLayout*);
+    void AddItemDate(Data*,QVBoxLayout*);
+    void AddItemDropdown(Data*,QVBoxLayout*);
 
 private:
     int srtIdx;
