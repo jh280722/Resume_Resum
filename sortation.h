@@ -21,8 +21,9 @@ private slots:
     void on_srtadd_clicked();
     void on_docopen_clicked();
     void on_docactive_clicked();
+    void save_docList();
+    void load_docList();
 
 private:
-
 };
 #endif // SORTATION_H

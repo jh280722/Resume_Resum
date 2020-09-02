@@ -8,10 +8,11 @@ class Data
 {
 public:
     //type 0 box 1 text, 2 textarea, 3 image, 4 date, 5 dropdown
-    Data(QString type="null", QString name="null" ,QString value="null", QString date="null",QString path="null");
+    Data(QString type="", QString name="" ,int valueLine=1, QString value="", QString date="",QString path="");
     ~Data();
     QString type;
     QString name;
+    int valueLine;
     QString value;
     QString date;
     QString path;

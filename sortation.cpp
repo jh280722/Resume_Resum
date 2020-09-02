@@ -59,6 +59,8 @@ Sortation::Sortation(QWidget *parent)
     srtAreaLayout->setAlignment(Qt::AlignTop);
     srtAreaWidgetContents->setObjectName("srtAreaWidgetContents");
     srtAreaWidgetContents->setLayout(srtAreaLayout);
+
+    load_docList();
 }
 
 Sortation::~Sortation()
@@ -206,7 +208,7 @@ void Sortation::on_srtadd_clicked()
         //newDoc->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
         //버튼 리스트에 추가 | connect 해주기
-        Document* newDoc = new Document(nullptr,srtIdx);
+        Document* newDoc = new Document(docName, srtIdx);
         newDoc->PBS=newPBS;
         docList[srtIdx].push_back(newDoc);
 
@@ -251,4 +253,54 @@ void Sortation::delete_tab(int srtIdx) {
     if (docList[srtIdx].size() == 0) {
         empty->setFixedHeight(11);
     }
+}
+
+void Sortation::save_docList(){
+    QString ApplicationPath=QApplication::applicationDirPath();
+    qDebug()<<ApplicationPath;
+    QDir Directory(ApplicationPath+"/Data/Srt.ini"); // 폴더 지정
+    if(!Directory.exists()) // 폴더가 존재하지 않을경우
+    {
+        Directory.mkdir(ApplicationPath+"/Data"); // 폴더 생성
+    }
+    QFile File(ApplicationPath+"/Data/Srt.ini");
+    File.open(QFile::WriteOnly|QFile::Text); // 쓰기 전용, 텍스트, 이어쓰기
+    QTextStream out(&File);
+    for(int i=0;i<10;i++){
+        out<<i<<'\n';
+        out<<docList[i].size()<<'\n';
+        for(auto doc:docList[i]){
+            out<<doc->name<<'\n';
+            doc->save_doc();
+        }
+    }
+    File.close(); // 파일닫기
+}
+
+void Sortation::load_docList(){
+
+    QString ApplicationPath=QApplication::applicationDirPath();
+    QDir Directory(ApplicationPath+"/Data/Srt.ini"); // 폴더 지정
+    if(!Directory.exists()) // 폴더가 존재하지 않을경우
+    {
+        Directory.mkdir(ApplicationPath+"/Data"); // 폴더 생성
+    }
+    QFile File(ApplicationPath+"/Data/Srt.ini");
+    File.open(QFile::ReadOnly|QFile::Text); // 쓰기 전용, 텍스트
+    QTextStream in(&File);
+
+    while(!in.atEnd())  // 파일 끝까지 읽어서
+    {
+        int srtIdx,num;
+        srtIdx=in.readLine().toInt();
+        num=in.readLine().toInt();
+        for(int i=0;i<num;i++){
+            QString name;
+            name = in.readLine();
+            //Document* doc=new Document(name,srtIdx);
+            //doc->load_doc();
+            //docList[srtIdx].push_back(doc);
+        }
+    }
+    File.close(); // 파일닫기
 }

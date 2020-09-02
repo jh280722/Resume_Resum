@@ -18,19 +18,20 @@ class Document : public QWidget
     Q_OBJECT
 
 public:
-    Document(QWidget* parent, int srtIdx);
+    Document(QString name, int srtIdx);
     ~Document();
+    QString name;
     QWidget* PBS;
     DocTab* tab;
     void add_box();
-    DocTab* load_add_box();
+    QVBoxLayout* load_add_box();
 
 signals:
 public slots:
-
-private slots:
     void save_doc();
     void load_doc();
+
+private slots:
     void delete_doc();
     void preview_doc();
     void active_doc_select();
