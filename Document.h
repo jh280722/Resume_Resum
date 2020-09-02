@@ -8,7 +8,9 @@
 #include <QScrollArea>
 #include <QPushButton>
 #include <QLabel>
-#include "docTab.h"
+#include <vector>
+#include "doctab.h"
+#include "data.h"
 
 
 class Document : public QWidget
@@ -27,6 +29,7 @@ public slots:
 
 private slots:
     void save_doc();
+    void load_doc();
     void delete_doc();
     void preview_doc();
     void active_doc_select();
@@ -55,5 +58,6 @@ private slots:
 private:
     int srtIdx;
     bool active;
+    vector<Data> dataList;
 };
 #endif // DOCUMENT_H

@@ -15,8 +15,10 @@ class DocTab : public QWidget
 public:
     DocTab(QWidget* parent, int srtIdx);
     ~DocTab();
-    QVBoxLayout* VBox;
+    QVBoxLayout* VLayout;
+    QVBoxLayout* boxArea;
     QScrollArea* SA;
+    QWidget* box;
 signals:
 public slots:
 

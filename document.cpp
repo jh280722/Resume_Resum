@@ -6,7 +6,7 @@
 extern Sortation *sortation;
 
 Document::Document(QWidget*parent, int srtIdx):QWidget(parent){
-    //setObjectName("doc");
+    setObjectName("document");
     this->srtIdx=srtIdx;
     add_box();
 }
@@ -22,33 +22,43 @@ void Document::add_box() {
 
     //스크롤 영역 위젯 생성
     tab=new DocTab(this,srtIdx);
+    tab->setObjectName("doctab");
     //저장, 삭제, 미리보기, 활성화 버튼 생성
     QWidget* Par = new QWidget(tab);
-
+    Par->setObjectName("docMenu");
     QHBoxLayout* HBox = new QHBoxLayout(Par);
     QPushButton* PB;
     PB=new QPushButton(Kor("저장"),Par);
+    PB->setObjectName("save");
     connect(PB, SIGNAL(clicked()), this, SLOT(save_doc()));
     HBox->addWidget(PB);
     PB=new QPushButton(Kor("삭제"),Par);
+    PB->setObjectName("delete");
     connect(PB, SIGNAL(clicked()), this, SLOT(delete_doc()));
     HBox->addWidget(PB);
     PB=new QPushButton(Kor("미리보기"),Par);
+    PB->setObjectName("preview");
     connect(PB, SIGNAL(clicked()), this, SLOT(preview_doc()));
     HBox->addWidget(PB);
     PB=new QPushButton(Kor("활성화"),Par);
+    PB->setObjectName("active");
     connect(PB, SIGNAL(clicked()), this, SLOT(active_doc_select()));
     HBox->addWidget(PB);
     Par->setSizePolicy(QSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed));
 
-    tab->VBox->addWidget(Par);
+    tab->VLayout->addWidget(Par);
+    tab->VLayout->addWidget(tab->box);
 
     Par = new QWidget(tab);
+    Par->setObjectName("addBoxButton");
     QHBoxLayout* plusButton = new QHBoxLayout(Par);
     PB=new QPushButton(Kor("추가"),Par);
+    PB->setObjectName("addBox");
+    plusButton->addStretch();
     plusButton->addWidget(PB);
-    plusButton->setAlignment(Qt::AlignRight);
-    tab->VBox->addWidget(Par);
+    plusButton->setAlignment(Qt::AlignTop);
+
+    tab->VLayout->addWidget(Par);
 
     switch(srtIdx){ //srt별로 양식 생성
     //connect로 함수들 연결
@@ -91,30 +101,6 @@ void Document::add_box() {
     }
 }
 
-void Document::save_doc(){
-
-}
-
-void Document::delete_doc(){
-    sortation->srtIdx=srtIdx;
-    for(auto it : sortation->docList[srtIdx]){
-        if(it==this){
-            delete(it->PBS);
-            sortation->docList[srtIdx].removeOne(it);
-            break;
-        }
-    }
-    sortation->delete_tab(srtIdx);
-}
-
-void Document::preview_doc(){
-
-}
-
-void Document::active_doc_select(){
-
-}
-
 
 void Document::AddItemText() {
     QObject* item = QObject::sender();
@@ -129,6 +115,8 @@ void Document::AddItemText() {
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
+
+    newWidget->setObjectName("text");
 }
 void Document::AddItemTextarea() {
     QObject* item = QObject::sender();
@@ -155,6 +143,8 @@ void Document::AddItemTextarea() {
     newLayout->setAlignment(name, Qt::AlignTop);
     newLayout->setAlignment(sep, Qt::AlignTop);
     newLayout->setAlignment(delButton, Qt::AlignTop);
+
+    newWidget->setObjectName("textArea");
 }
 void Document::imageUpload() {
     QObject* item = QObject::sender();
@@ -187,6 +177,8 @@ void Document::AddItemImage() {
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
+
+    newWidget->setObjectName("image");
 }
 void Document::AddItemDate() {
     QObject* item = QObject::sender();
@@ -214,6 +206,8 @@ void Document::AddItemDate() {
     newLayout->setAlignment(sep, Qt::AlignLeft);
     newLayout->setAlignment(newdate, Qt::AlignLeft);
     newLayout->setAlignment(delButton, Qt::AlignRight);
+
+    newWidget->setObjectName("date");
 }
 void Document::AddItemDropdown() {
     QObject* item = QObject::sender();
@@ -234,6 +228,8 @@ void Document::AddItemDropdown() {
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
+
+    newWidget->setObjectName("dropDown");
 }
 
 void Document::deleteItem() {
@@ -253,14 +249,15 @@ void Document::make_doc0() {
 }
 
 void Document::make_doc1() {
-    QGroupBox* box = new QGroupBox("", this);
-
+    QGroupBox* box = new QGroupBox("", tab);
+    box->setObjectName("groupBox");
     QVBoxLayout* boxLayout = new QVBoxLayout(box);
-    QVBoxLayout* layout = tab->VBox;
+    boxLayout->setObjectName("groupBoxLayout");
+    QVBoxLayout* layout = tab->boxArea;
+    QWidget* toolWidget = new QWidget(box);
     QWidget* nameWidget = new QWidget(box);
     QWidget* ageWidget = new QWidget(box);
     QWidget* addressWidget = new QWidget(box);
-    QWidget* toolWidget = new QWidget(box);
 
     QToolButton* tool = new QToolButton(toolWidget);
     QHBoxLayout* toolLayout = new QHBoxLayout(toolWidget);
@@ -270,9 +267,9 @@ void Document::make_doc1() {
     toolLayout->addWidget(tool, Qt::AlignRight);
     //tool->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
 
-    QAction* TBAAdd = new QAction(Kor("추가"), box);
+    QAction* TBAAdd = new QAction(Kor("추가"), tool);
     TBAAdd->setStatusTip(Kor("인적사항을 추가합니다."));
-    QAction* TBADelete = new QAction(Kor("삭제"), box);
+    QAction* TBADelete = new QAction(Kor("삭제"), tool);
     TBADelete->setStatusTip(Kor("인적사항을 삭제합니다."));
     connect(TBADelete, SIGNAL(triggered()), this, SLOT(deleteBox()));
 
@@ -299,9 +296,12 @@ void Document::make_doc1() {
     TBAAdd->setMenu(InputMenu);
     tool->setMenu(Menu);
     tool->setPopupMode(QToolButton::InstantPopup);
+    toolWidget->setObjectName("tool");
+    nameWidget->setObjectName("text");
+    ageWidget->setObjectName("text");
+    addressWidget->setObjectName("text");
 
     boxLayout->addWidget(toolWidget);
-
     boxLayout->addWidget(nameWidget);
     boxLayout->addWidget(ageWidget);
     boxLayout->addWidget(addressWidget);
@@ -333,8 +333,7 @@ void Document::make_doc1() {
     box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     boxLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 
-    int n = box->parent()->children().size();
-    layout->insertWidget(n - 3, box);
+    layout->addWidget(box);
 }
 
 void Document::make_doc2() {
@@ -362,5 +361,59 @@ void Document::make_doc7() {
 }
 
 void Document::make_doc8() {
+
+}
+
+void Document::load_doc(){
+    for(auto it: dataList){
+        if(it.type==0){
+            add_box();
+        }
+        else if(it.type==1){
+            AddItemText();
+        }
+        else if(it.type==2){
+            AddItemTextarea();
+        }
+        else if(it.type==3){
+            AddItemImage();
+        }
+        else if(it.type==4){
+            AddItemDate();
+        }
+        else if(it.type==5){
+            AddItemDropdown();
+        }
+    }
+}
+
+void Document::save_doc(){
+    QObjectList tabList = tab->box->children();
+    for(auto it:tabList){
+        if(it->objectName()=="boxAreaLayout") continue;
+        QObjectList itemList = it->children();
+        for(auto item: itemList){
+            qDebug()<<item->objectName();
+        }
+    }
+}
+
+void Document::delete_doc(){
+    sortation->srtIdx=srtIdx;
+    for(auto it : sortation->docList[srtIdx]){
+        if(it==this){
+            delete(it->PBS);
+            sortation->docList[srtIdx].removeOne(it);
+            break;
+        }
+    }
+    sortation->delete_tab(srtIdx);
+}
+
+void Document::preview_doc(){
+
+}
+
+void Document::active_doc_select(){
 
 }
