@@ -139,19 +139,45 @@ void Sortation::on_docopen_clicked() {
 
 void Sortation::on_srtadd_clicked()
 {
+    QObject* sel = QObject::sender();
+    QWidget* srt = (QWidget*)sel->parent();
+    int srtIdx = srt->objectName().remove(0,3).toInt();
+
     bool ok;
 
     QString docName = QInputDialog::getText(this, Kor("새 문서"), Kor("이름을 입력하세요:"), QLineEdit::Normal, "", &ok);
 
+    QStringList currentNameList;
+    for (auto i : docList[srtIdx]) {
+        QPushButton* docOpen = i->PBS->findChildren<QPushButton*>().first();
+        currentNameList.append(docOpen->text());
+    }
+    qDebug() << currentNameList;
+
+    if (currentNameList.contains(docName)) {
+        int i = 2;
+        QString alterName = docName;
+        while(currentNameList.contains(alterName)) {
+            alterName = docName + " (" + QString::number(i++) + ")";
+        };
+        QMessageBox msgBox;
+        msgBox.setText("\"" + docName + Kor("\"에서 \"") + alterName + Kor("\"(으)로 이름을 변경하시겠습니까?"));
+        msgBox.setInformativeText(Kor("이 위치에 이름이 같은 문서가 있습니다."));
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msgBox.setDefaultButton(QMessageBox::Yes);
+        int ret = msgBox.exec();
+
+        if (ret == QMessageBox::No) return;
+        else docName = alterName;
+    }
+
     if (ok && !docName.isEmpty()) {
         QObject* sel = QObject::sender();
         QWidget* srt = (QWidget*)sel->parent();
-
         QWidget* srtAreaWidgetContents = srt->parentWidget();
         QVBoxLayout* srtAreaLayout = (QVBoxLayout*)srtAreaWidgetContents->layout();
         QString selOpenName = srt->objectName().append("open");
         QPushButton* selOpen = srt->findChild<QPushButton*>(selOpenName);
-        int srtIdx = srt->objectName().remove(0,3).toInt();
 
         QWidget* newPBS = new QWidget(srtAreaWidgetContents);
         QHBoxLayout* newPBSLayout = new QHBoxLayout(newPBS);
@@ -180,7 +206,6 @@ void Sortation::on_srtadd_clicked()
         //newDoc->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
         //버튼 리스트에 추가 | connect 해주기
-
         Document* newDoc = new Document(nullptr,srtIdx);
         newDoc->PBS=newPBS;
         docList[srtIdx].push_back(newDoc);

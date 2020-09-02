@@ -14,7 +14,7 @@ public:
     ~Sortation();
     void delete_tab(int srtIdx);
     int srtIdx;
-    QVector<Document*> docList[9];
+    QVector<Document*> docList[10];
 
 private slots:
     void on_srtopen_clicked();

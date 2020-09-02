@@ -23,6 +23,7 @@
 #include <QFileDialog>
 #include <QComboBox>
 #include <QTextEdit>
+#include <QMessageBox>
 #include "Document.h"
 #define Kor(str) QString::fromLocal8Bit(str)
 
