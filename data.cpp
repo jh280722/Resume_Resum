@@ -1,6 +1,6 @@
 #include "data.h"
 
-Data::Data(int type, string name ,string value, string date,string path){
+Data::Data(QString type, QString name ,QString value, QString date,QString path){
     this->type=type;
     this->name=name;
     this->value=value;

@@ -58,6 +58,6 @@ private slots:
 private:
     int srtIdx;
     bool active;
-    vector<Data> dataList;
+    QVector<Data*> dataList;
 };
 #endif // DOCUMENT_H

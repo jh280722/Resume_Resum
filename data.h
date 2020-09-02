@@ -4,18 +4,17 @@
 #include <QObject>
 #include <QWidget>
 #include <QDate>
-using namespace std;
 class Data
 {
 public:
     //type 0 box 1 text, 2 textarea, 3 image, 4 date, 5 dropdown
-    Data(int type, string name ,string value, string date="",string path="");
+    Data(QString type="null", QString name="null" ,QString value="null", QString date="null",QString path="null");
     ~Data();
-    int type;
-    string name;
-    string value;
-    string date;
-    string path;
+    QString type;
+    QString name;
+    QString value;
+    QString date;
+    QString path;
 };
 
 #endif // DATA_H

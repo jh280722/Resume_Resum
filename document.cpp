@@ -2,7 +2,7 @@
 #include "Document.h"
 #include "sortation.h"
 #include "ui_mainwindow.h"
-
+#include "data.h"
 extern Sortation *sortation;
 class Widget : public QWidget{
 
@@ -358,31 +358,48 @@ void Document::make_doc1() {
     boxLayout->addWidget(addressWidget);
 
     QPushButton* delButton;
-
     QHBoxLayout* nameLayout = new QHBoxLayout(nameWidget);
 
     delButton = new QPushButton(nameWidget);
+
+    QLabel * Label = new QLabel(Kor("이 름 : "));
+    QLineEdit* LineEdit =new QLineEdit(nameWidget);
+    Label->setObjectName("QLabel");
+    LineEdit->setObjectName("QLineEdit");
+
     nameLayout->addWidget(delButton);
-    nameLayout->addWidget(new QLabel(Kor("이 름 : ")));
-    nameLayout->addWidget(new QLineEdit(nameWidget));
+    nameLayout->addWidget(Label);
+    nameLayout->addWidget(LineEdit);
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
     delButton->setObjectName("delButton");
     delButton->setFlat(1);
 
     QHBoxLayout* ageLayout = new QHBoxLayout(ageWidget);
     delButton = new QPushButton(ageWidget);
+
+    Label = new QLabel(Kor("나 이 : "));
+    LineEdit =new QLineEdit(ageWidget);
+    Label->setObjectName("QLabel");
+    LineEdit->setObjectName("QLineEdit");
+
     ageLayout->addWidget(delButton);
-    ageLayout->addWidget(new QLabel(Kor("나 이 : ")));
-    ageLayout->addWidget(new QLineEdit(ageWidget));
+    ageLayout->addWidget(Label);
+    ageLayout->addWidget(LineEdit);
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
     delButton->setObjectName("delButton");
     delButton->setFlat(1);
 
     QHBoxLayout* addressLayout = new QHBoxLayout(addressWidget);
     delButton = new QPushButton(addressWidget);
+
+    Label = new QLabel(Kor("주 소 : "));
+    LineEdit =new QLineEdit(addressWidget);
+    Label->setObjectName("QLabel");
+    LineEdit->setObjectName("QLineEdit");
+
     addressLayout->addWidget(delButton);
-    addressLayout->addWidget(new QLabel(Kor("주 소 : ")));
-    addressLayout->addWidget(new QLineEdit(addressWidget));
+    addressLayout->addWidget(Label);
+    addressLayout->addWidget(LineEdit);
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
     delButton->setObjectName("delButton");
     delButton->setFlat(1);
@@ -423,23 +440,44 @@ void Document::make_doc8() {
 }
 
 void Document::load_doc(){
+    QString ApplicationPath=QApplication::applicationDirPath();
+    QDir Directory(ApplicationPath+"/Data"); // 폴더 지정
+    if(!Directory.exists()) // 폴더가 존재하지 않을경우
+    {
+        Directory.mkdir(ApplicationPath+"/Data"); // 폴더 생성
+    }
+    QFile File(ApplicationPath+"/Data/Save"+srtIdx+".data");
+    File.open(QFile::ReadOnly|QFile::Text); // 쓰기 전용, 텍스트, 이어쓰기
+    QTextStream in(&File);
+    while(!in.atEnd())  // 파일 끝까지 읽어서
+    {
+        Data* data=new Data();
+        data->type=in.readLine();
+        data->name = in.readLine();
+        data->value = in.readLine();
+        data->date = in.readLine();
+        data->path = in.readLine();
+        dataList.push_back(data);
+    }
+    File.close(); // 파일닫기
+
     for(auto it: dataList){
-        if(it.type==0){
+        if(it->type=="box"){
             add_box();
         }
-        else if(it.type==1){
+        else if(it->type=="text"){
             AddItemText();
         }
-        else if(it.type==2){
+        else if(it->type=="textArea"){
             AddItemTextarea();
         }
-        else if(it.type==3){
+        else if(it->type=="image"){
             AddItemImage();
         }
-        else if(it.type==4){
+        else if(it->type=="date"){
             AddItemDate();
         }
-        else if(it.type==5){
+        else if(it->type=="dropDown"){
             AddItemDropdown();
         }
     }
@@ -451,9 +489,54 @@ void Document::save_doc(){
         if(it->objectName()=="boxAreaLayout") continue;
         QObjectList itemList = it->children();
         for(auto item: itemList){
+            if(item->objectName()=="groupBoxLayout") continue;
+            if(item->objectName()=="tool") continue;
             qDebug()<<item->objectName();
+            QString type=item->objectName();
+            QString name="null";
+            QString value="null";
+            QString date="null";
+            QString path="null";
+            if(type=="text"){
+                name=item->findChild<QLabel*>("QLabel")->text();
+                value=item->findChild<QLineEdit*>("QLineEdit")->text();
+            }
+            else if(type=="textArea"){
+                name=item->findChild<QLabel*>("QLabel")->text();
+                value=item->findChild<QTextEdit*>("QTextEdit")->toPlainText();
+            }
+            else if(type=="image"){
+                name=item->findChild<QLabel*>("QLabel")->text();
+                value=item->findChild<QLabel*>("path")->text();
+            }
+            else if(type=="date"){
+
+            }
+            else if(type=="dropDown"){
+
+            }
+            dataList.push_back(new Data(name,value,date,path));
         }
     }
+
+    QString ApplicationPath=QApplication::applicationDirPath();
+    qDebug()<<ApplicationPath;
+    QDir Directory(ApplicationPath+"/Data"); // 폴더 지정
+    if(!Directory.exists()) // 폴더가 존재하지 않을경우
+    {
+        Directory.mkdir(ApplicationPath+"/Data"); // 폴더 생성
+    }
+    QFile File(ApplicationPath+"/Data/Save.data");
+    File.open(QFile::WriteOnly|QFile::Text); // 쓰기 전용, 텍스트, 이어쓰기
+    QTextStream out(&File);
+    for(auto data:dataList){
+        out<<data->type<<'\n';
+        out<<data->name<<'\n';
+        out<<data->value<<'\n';
+        out<<data->date<<'\n';
+        out<<data->path<<'\n';
+    }
+    File.close(); // 파일닫기
 }
 
 void Document::delete_doc(){
