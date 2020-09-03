@@ -91,7 +91,7 @@ void Sortation::on_srtopen_clicked()
         empty->hide();
         for (auto i : docList[srtIdx]) {
             QWidget* doc = i->PBS;
-            doc->show();
+            doc->hide();
         }
     }
 }
@@ -132,7 +132,7 @@ void Sortation::on_docopen_clicked() {
     else {
         QWidget* new_tab = docList[srtIdx][subSrtIdx];
 
-        docTab->tabBar()->setStyleSheet(QString("QTabBar::tab { width:100;; }").arg(100));
+        docTab->tabBar()->setStyleSheet(QString("QTabBar::tab { width:100; }").arg(100));
         docTab->addTab(new_tab, selPB->text());
         docTab->setCurrentIndex(docTab->count() - 1);
     }
@@ -227,7 +227,59 @@ void Sortation::on_srtadd_clicked()
     }
 }
 
+void Sortation::on_srtadd_clicked(QString docName, int srtIdx){
+    QWidget* srt = this->parent()->findChild<QWidget*>("srt"+QString::number(srtIdx));
+    QWidget* srtAreaWidgetContents = srt->parentWidget();
+    QVBoxLayout* srtAreaLayout = (QVBoxLayout*)srtAreaWidgetContents->layout();
+    QString selOpenName = srt->objectName().append("open");
+    QPushButton* selOpen = srt->findChild<QPushButton*>(selOpenName);
 
+    QWidget* newPBS = new QWidget(srtAreaWidgetContents);
+    QHBoxLayout* newPBSLayout = new QHBoxLayout(newPBS);
+    QPushButton* open = new QPushButton(docName, newPBS);
+    QPushButton* active = new QPushButton(newPBS);
+
+    open->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    open->setStyleSheet("padding-left: 20px; text-align: left; font-family: Malgun Gothic; font-size: 12px;");
+    open->setFlat(true);
+    connect(open, SIGNAL(clicked()), this, SLOT(on_docopen_clicked()));
+    active->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    active->setFixedWidth(41);
+    active->setFlat(true);
+    active->setIconSize(QSize(12, 12));
+    connect(active, SIGNAL(clicked()), this, SLOT(on_docactive_clicked()));
+
+    newPBSLayout->setSpacing(0);
+    newPBSLayout->setContentsMargins(0, 0, 0, 0);
+    newPBSLayout->addWidget(open);
+    newPBSLayout->addWidget(active);
+    //newDoc->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    newPBS->setFixedHeight(31);
+    newPBS->setLayout(newPBSLayout);
+    srtAreaLayout->insertWidget(srtRange[srtIdx+1]-1, newPBS);
+    //srtAreaWidgetContents->layout()->addWidget(newDoc);
+    //newDoc->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+
+    //버튼 리스트에 추가 | connect 해주기
+    Document* newDoc = new Document(docName, srtIdx);
+    newDoc->PBS=newPBS;
+    newDoc->load_doc();
+    docList[srtIdx].push_back(newDoc);
+
+
+    for (int i = srtIdx + 1; i < 11; i++){
+        srtRange[i]++;
+    }
+
+    QString emptyName = srt->objectName().append("empty");
+    QWidget* empty = srt->parent()->findChild<QWidget*>(emptyName);
+
+    if (empty->height() > 0) empty->setFixedHeight(0);
+    if (empty->isHidden()) {
+        empty->show();
+        selOpen->setIcon(QIcon(":/images/minus_white.png"));
+    }
+}
 void Sortation::on_docactive_clicked()
 {
     QObject* sel = QObject::sender();
@@ -297,9 +349,7 @@ void Sortation::load_docList(){
         for(int i=0;i<num;i++){
             QString name;
             name = in.readLine();
-            //Document* doc=new Document(name,srtIdx);
-            //doc->load_doc();
-            //docList[srtIdx].push_back(doc);
+            on_srtadd_clicked(name,srtIdx);
         }
     }
     File.close(); // 파일닫기

@@ -19,6 +19,7 @@ public:
 private slots:
     void on_srtopen_clicked();
     void on_srtadd_clicked();
+    void on_srtadd_clicked(QString docName, int srtIdx);
     void on_docopen_clicked();
     void on_docactive_clicked();
     void save_docList();

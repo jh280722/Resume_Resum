@@ -702,6 +702,12 @@ void Document::load_doc(){
         qDebug()<<data->date<<'\n';
         qDebug()<<data->path<<'\n';
     }
+    QObjectList tabList = tab->box->children();
+    for(auto it:tabList){
+        if(it->objectName()=="boxAreaLayout") continue;
+        delete it;
+    }
+
     QVBoxLayout* loadBox;
     for(auto it: dataList){
         if(it->type=="box"){
@@ -729,12 +735,13 @@ void Document::save_doc(){
     dataList.clear();
     QObjectList tabList = tab->box->children();
     for(auto it:tabList){
-        if(it->objectName()=="boxAreaLayout") {
-            dataList.push_back(new Data("box"));
-        }
+        if(it->objectName()=="boxAreaLayout") continue;
         QObjectList itemList = it->children();
         for(auto item: itemList){
-            if(item->objectName()=="groupBoxLayout") continue;
+            if(item->objectName()=="groupBoxLayout") {
+                dataList.push_back(new Data("box"));
+                continue;
+            }
             if(item->objectName()=="tool") continue;
             qDebug()<<item->objectName();
             QString type=item->objectName();
