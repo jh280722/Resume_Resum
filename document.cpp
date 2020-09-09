@@ -34,47 +34,46 @@ protected:
 class DoubleClickedWidget : public QLabel{
     Q_GADGET
 public:
-    DoubleClickedWidget(QWidget *parent=nullptr): QLabel(parent){
-        //this->setText(parent->text());
+    DoubleClickedWidget(QLabel *parent=nullptr): QLabel(parent){
+        this->setText(parent->text());
     };
     ~DoubleClickedWidget(){
 
     };
-    public slots:
-        void deletetext();
-    signals:
-        void doubleClicked();
+public slots:
+    void deletetext();
+signals:
+    void doubleClicked();
 
-    protected:
-        void mouseDoubleClickEvent(QMouseEvent *event)
-        {
-            emit doubleClicked();
-        }
+protected:
+    void mouseDoubleClickEvent(QMouseEvent *event)
+    {
+        emit doubleClicked();
+    }
 
-    };
-    void  DoubleClickedWidget::deletetext(){
-        QLabel* label=qobject_cast<QLabel*>(this->parent());
-        QString text=qobject_cast<QLabel*>(this)->text();
-        label->setText(text);
-        label->show();
-        delete this;
+};
+void  DoubleClickedWidget::deletetext(){
+    QLabel* label=qobject_cast<QLabel*>(this);
+    QLineEdit* edit=this->parent()->findChild<QLineEdit*>("lineEdit");
+    label->setText(edit->text());
+    label->show();
 
+    disconnect(edit,&QLineEdit::editingFinished,this,&DoubleClickedWidget::deletetext);
+//    delete edit;
 };
 void DoubleClickedWidget:: doubleClicked(){
 
     QString tmp= qobject_cast<QLabel*>(this)->text();
     QLabel* tmp1= qobject_cast<QLabel*>(this);
     QLineEdit * text= new QLineEdit(tmp,this);
-    qDebug()<<tmp;
     QHBoxLayout* tmp2= tmp1->parent()->findChild<QHBoxLayout*>("newlayer");
-    qDebug()<<tmp2;
 
     tmp2->insertWidget(1,text);
     tmp1->hide();
     //tmp2->removeWidget(tmp1);
     text->setFocus();
-    Widget* tmp4= new Widget();
-    connect(text,SIGNAL(editingFinished()),tmp4,SLOT(deletetext()));
+    text->setObjectName("lineEdit");
+    connect(text,&QLineEdit::editingFinished,this,&DoubleClickedWidget::deletetext);
 }
 
 Document::Document(QString name, int srtIdx):QWidget(){
