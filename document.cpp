@@ -12,6 +12,7 @@ public:
     Widget(QWidget *parent=nullptr): QWidget(parent){
         this->installEventFilter(this);
     };
+
 protected:
     bool eventFilter(QObject *obj,QEvent *ev) override{
         QPushButton * delButton= obj->findChild<QPushButton*>("delButton");
@@ -31,43 +32,51 @@ protected:
 };
 
 class DoubleClickedWidget : public QLabel{
-
+    Q_GADGET
 public:
     DoubleClickedWidget(QWidget *parent=nullptr): QLabel(parent){
+        //this->setText(parent->text());
     };
+    ~DoubleClickedWidget(){
+
+    };
+    public slots:
+        void deletetext();
     signals:
-    void doubleClicked(){
+        void doubleClicked();
 
-        QString tmp= qobject_cast<QLabel*>(this)->text();
-         QLabel* tmp1= qobject_cast<QLabel*>(this);
-        QLineEdit * text= new QLineEdit(tmp,this);
+    protected:
+        void mouseDoubleClickEvent(QMouseEvent *event)
+        {
+            emit doubleClicked();
+        }
 
-        QHBoxLayout* tmp2= tmp1->findChild<QHBoxLayout*>("newlayer");
-qDebug()<<tmp2->objectName();
-       // this->layout()->addWidget(text);
-
-
-        connect(text,SIGNAL(editingfinished()),this,SLOT(deletetext()));
-
-
-
-
-    }
-protected:
-    void mouseDoubleClickEvent(QMouseEvent *event)
-    {
-        emit doubleClicked();
-    }
+    };
+    void  DoubleClickedWidget::deletetext(){
+        QLabel* label=qobject_cast<QLabel*>(this->parent());
+        QString text=qobject_cast<QLabel*>(this)->text();
+        label->setText(text);
+        label->show();
+        delete this;
 
 };
+void DoubleClickedWidget:: doubleClicked(){
 
-void Document::deletetext(){
-    QLabel* label=qobject_cast<QLabel*>(this->parent());
-    QString text=qobject_cast<QLabel*>(this)->text();
-    label->setText(text);
-    delete this;
+    QString tmp= qobject_cast<QLabel*>(this)->text();
+    QLabel* tmp1= qobject_cast<QLabel*>(this);
+    QLineEdit * text= new QLineEdit(tmp,this);
+    qDebug()<<tmp;
+    QHBoxLayout* tmp2= tmp1->parent()->findChild<QHBoxLayout*>("newlayer");
+    qDebug()<<tmp2;
 
+    tmp2->insertWidget(1,text);
+    tmp1->hide();
+    //tmp2->removeWidget(tmp1);
+    text->setFocus();
+    Widget* tmp4= new Widget();
+    connect(text,SIGNAL(editingFinished()),tmp4,SLOT(deletetext()));
 }
+
 Document::Document(QString name, int srtIdx):QWidget(){
     setObjectName("document");
     this->name=name;
@@ -247,12 +256,11 @@ void Document::AddItemText() {
     Widget* newWidget = new Widget(tmp);
     QHBoxLayout* newLayout = new QHBoxLayout();
     QPushButton* delButton = new QPushButton(newWidget);
-   // QLabel* title=new QLabel(Kor("텍스트"),newWidget);
-    DoubleClickedWidget* tt = new DoubleClickedWidget();
+    QLabel* title=new QLabel(Kor("텍스트"));
+    DoubleClickedWidget* tt = new DoubleClickedWidget(title);
     QLabel* sep = new QLabel((" :"), newWidget);
     QLineEdit* LineEdit=new QLineEdit(newWidget);
 
-    tt->setText(Kor("텍스트"));
     newLayout->setObjectName("newlayer");
 
     newLayout->addWidget(delButton);

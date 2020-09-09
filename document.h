@@ -62,7 +62,6 @@ private slots:
     void AddItemImage(QVBoxLayout*,QString,QString);
     void AddItemDate(QVBoxLayout*,QString,QString);
     void AddItemDropdown(QVBoxLayout*,QString,QString);
-    void deletetext();
 
 private:
     int srtIdx;
