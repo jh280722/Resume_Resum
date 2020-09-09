@@ -28,13 +28,15 @@ MainWindow::MainWindow(QWidget* parent)
     pSlotNewFile->setStatusTip(Kor("수정사항을 저장합니다."));
     connect(pSlotNewFile, SIGNAL(triggered()), sortation, SLOT(save_docList()));
     pFileMenu = menuBar()->addMenu(Kor("파일"));
-    pFileMenu->addAction(pSlotNewFile); // 테스트
+    pFileMenu->addAction(pSlotNewFile); // 저장 옵션
 
-//    docTab1= new TabWidget(ui->docTab);
-//    docTab1->setObjectName("docTab");
-//    docTab1->setTabsClosable(true);
+    pSlotNewFile = new QAction(Kor("다른 이름으로 저장"), this);
+    pSlotNewFile->setShortcut(Kor("Ctrl+Shift+S"));
+    pSlotNewFile->setStatusTip(Kor("다른 이름으로 저장합니다."));
+    connect(pSlotNewFile, SIGNAL(triggered()), sortation, SLOT(save_pdf()));
+    pFileMenu->addAction(pSlotNewFile); // pdf 저장
+
     ui->docTab->setTabsClosable(true);
-//    connect(docTab1, SIGNAL(tabCloseRequested(int)), this, SLOT(on_docTab_deleteTab(int)));
     connect(ui->docTab, SIGNAL(tabCloseRequested(int)), this, SLOT(on_docTab_deleteTab(int)));
 
     //    this->setStyleSheet("#pushButton:hover { background-color: red; "

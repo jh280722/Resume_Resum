@@ -24,6 +24,7 @@ private slots:
     void on_docactive_clicked();
     void save_docList();
     void load_docList();
+    void save_pdf();
 
 private:
 };
