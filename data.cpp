@@ -71,19 +71,19 @@ void Document::load_doc(){
             loadBox=load_add_box();
         }
         else if(it->type=="text"){
-            AddItemText(it,loadBox);
+            AddItemText(loadBox,it->name,it->value);
         }
         else if(it->type=="textArea"){
-            AddItemTextarea(it,loadBox);
+            AddItemTextarea(loadBox,it->name,it->value);
         }
         else if(it->type=="image"){
-            AddItemImage(it,loadBox);
+            AddItemImage(loadBox,it->name,it->path);
         }
         else if(it->type=="date"){
-            AddItemDate(it,loadBox);
+            AddItemDate(loadBox,it->name,it->date);
         }
-        else if(it->type=="dropDown"){
-            AddItemDropdown(it,loadBox);
+        else if(it->type=="dropDown"){//setting value
+            AddItemDropdown(loadBox,it->name,it->value);
         }
     }
 }
@@ -129,7 +129,7 @@ void Document::save_doc(){
                 date=item->findChild<QDateEdit*>("QDate")->text();
             }
             else if(type=="dropDown"){
-
+                name=item->findChild<QLabel*>("QLabel")->text();
             }
             dataList.push_back(new Data(type, name, valueLine, value, date,path));
         }

@@ -236,14 +236,14 @@ void Document::AddItemText() {
     LineEdit->setObjectName("QLineEdit");
     newWidget->setObjectName("text");
 }
-void Document::AddItemText(Data* item,QVBoxLayout * boxlayout) {
+void Document::AddItemText(QVBoxLayout * boxlayout,QString name,QString value) {
     QWidget* tmp=new QWidget();
     Widget* newWidget = new Widget(tmp);
     QHBoxLayout* newLayout = new QHBoxLayout();
     QPushButton* delButton = new QPushButton(newWidget);
-    QLabel* title=new QLabel(item->name,newWidget);
+    QLabel* title=new QLabel(name,newWidget);
     QLabel* sep = new QLabel((" :"), newWidget);
-    QLineEdit* LineEdit=new QLineEdit(item->value,newWidget);
+    QLineEdit* LineEdit=new QLineEdit(value,newWidget);
 
     newLayout->addWidget(delButton);
     newLayout->addWidget(title);
@@ -292,15 +292,15 @@ void Document::AddItemTextarea() {
     TextEdit->setObjectName("QTextEdit");
     newWidget->setObjectName("textArea");
 }
-void Document::AddItemTextarea(Data* item,QVBoxLayout * boxlayout) {
+void Document::AddItemTextarea(QVBoxLayout * boxlayout,QString name,QString value) {
     QWidget* tmp=new QWidget();
     Widget* newWidget = new Widget(tmp);
     QHBoxLayout* newLayout = new QHBoxLayout();
     QPushButton* delButton = new QPushButton(newWidget);
-    QLabel* title = new QLabel(item->name, newWidget);
+    QLabel* title = new QLabel(name, newWidget);
     QLabel* sep = new QLabel((" :"), newWidget);
-    QTextEdit* TextEdit = new QTextEdit(item->value,newWidget);
-    TextEdit->setPlainText(item->value);
+    QTextEdit* TextEdit = new QTextEdit(value,newWidget);
+    TextEdit->setPlainText(value);
     TextEdit->setMinimumHeight(150);
     TextEdit->setMaximumHeight(150);
 
@@ -362,21 +362,21 @@ void Document::AddItemImage() {
     path->setObjectName("path");
     newWidget->setObjectName("image");
 }
-void Document::AddItemImage(Data* item,QVBoxLayout * boxlayout) {
+void Document::AddItemImage(QVBoxLayout * boxlayout,QString name,QString path) {
     QWidget* tmp=new QWidget();
     Widget* newWidget = new Widget(tmp);
     QHBoxLayout* newLayout = new QHBoxLayout();
     QPushButton* delButton = new QPushButton(newWidget);
-    QLabel* title = new QLabel(item->name, newWidget);
+    QLabel* title = new QLabel(name, newWidget);
     QLabel* sep = new QLabel((" :"), newWidget);
     QPushButton* addButton = new QPushButton(Kor("업로드"), newWidget);
-    QLabel* path = new QLabel(item->path, newWidget);
+    QLabel* newpath = new QLabel(path, newWidget);
 
     newLayout->addWidget(delButton);
     newLayout->addWidget(title);
     newLayout->addWidget(sep);
     newLayout->addWidget(addButton);
-    newLayout->addWidget(path);
+    newLayout->addWidget(newpath);
     newLayout->addStretch();
     connect(addButton, SIGNAL(clicked()), this, SLOT(imageUpload()));
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
@@ -387,7 +387,7 @@ void Document::AddItemImage(Data* item,QVBoxLayout * boxlayout) {
     delButton->setFlat(1);
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
-    path->setObjectName("path");
+    newpath->setObjectName("path");
     newWidget->setObjectName("image");
 }
 void Document::AddItemDate() {
@@ -424,17 +424,17 @@ void Document::AddItemDate() {
     newdate->setObjectName("QDate");
     newWidget->setObjectName("date");
 }
-void Document::AddItemDate(Data* item,QVBoxLayout * boxlayout) {
+void Document::AddItemDate(QVBoxLayout * boxlayout,QString name,QString date) {
     QWidget* tmp=new QWidget();
     Widget* newWidget = new Widget(tmp);
     QHBoxLayout* newLayout = new QHBoxLayout();
     QPushButton* delButton = new QPushButton(newWidget);
-    QLabel* title = new QLabel(item->name, newWidget);
+    QLabel* title = new QLabel(name, newWidget);
     QLabel* sep = new QLabel((" :"), newWidget);
     QDateEdit* newdate = new QDateEdit();
 
     newdate->setCalendarPopup(1);
-    newdate->setDate(QDate::fromString(item->date,"yyyy-MM-dd"));
+    newdate->setDate(QDate::fromString(date,"yyyy-MM-dd"));
     newLayout->addWidget(delButton);
     newLayout->addWidget(title);
     newLayout->addWidget(sep);
@@ -481,12 +481,12 @@ void Document::AddItemDropdown() {
     newdd->setObjectName("QComboBox");
     newWidget->setObjectName("dropDown");
 }
-void Document::AddItemDropdown(Data* item,QVBoxLayout * boxlayout) {
+void Document::AddItemDropdown(QVBoxLayout * boxlayout,QString name,QString setting) {
     QWidget* tmp=new QWidget();
     Widget* newWidget = new Widget(tmp);
     QHBoxLayout* newLayout = new QHBoxLayout();
     QPushButton* delButton = new QPushButton(newWidget);
-    QLabel* title = new QLabel(item->name, newWidget);
+    QLabel* title = new QLabel(name, newWidget);
     QLabel* sep = new QLabel((" :"), newWidget);
     QComboBox* newdd = new QComboBox();
     newLayout->addWidget(delButton);
@@ -582,18 +582,21 @@ void Document::make_doc1() {
     boxLayout->addWidget(addressWidget);
 
     QPushButton* delButton;
+    QLabel* sep;
     QHBoxLayout* nameLayout = new QHBoxLayout(nameWidget);
 
     delButton = new QPushButton(nameWidget);
     //    DoubleClickedWidget * tmp2= new DoubleClickedWidget();
     //    connect(tmp2, SIGNAL(doubleClicked()), this, SLOT(onDoubleClicked()));
-    QLabel * Label = new QLabel(Kor("이 름 : "));
+    QLabel * Label = new QLabel(Kor("이 름 "));
+    sep = new QLabel((" :"), nameWidget);
     QLineEdit* LineEdit =new QLineEdit(nameWidget);
     Label->setObjectName("QLabel");
     LineEdit->setObjectName("QLineEdit");
 
     nameLayout->addWidget(delButton);
     nameLayout->addWidget(Label);
+    nameLayout->addWidget(sep);
     nameLayout->addWidget(LineEdit);
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
     delButton->setObjectName("delButton");
@@ -602,13 +605,15 @@ void Document::make_doc1() {
     QHBoxLayout* ageLayout = new QHBoxLayout(ageWidget);
     delButton = new QPushButton(ageWidget);
 
-    Label = new QLabel(Kor("나 이 : "));
+    Label = new QLabel(Kor("나 이 "));
+    sep = new QLabel((" :"), ageWidget);
     LineEdit =new QLineEdit(ageWidget);
     Label->setObjectName("QLabel");
     LineEdit->setObjectName("QLineEdit");
 
     ageLayout->addWidget(delButton);
     ageLayout->addWidget(Label);
+    ageLayout->addWidget(sep);
     ageLayout->addWidget(LineEdit);
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
     delButton->setObjectName("delButton");
@@ -617,13 +622,15 @@ void Document::make_doc1() {
     QHBoxLayout* addressLayout = new QHBoxLayout(addressWidget);
     delButton = new QPushButton(addressWidget);
 
-    Label = new QLabel(Kor("주 소 : "));
+    Label = new QLabel(Kor("주 소 "));
+    sep = new QLabel((" :"), addressWidget);
     LineEdit =new QLineEdit(addressWidget);
     Label->setObjectName("QLabel");
     LineEdit->setObjectName("QLineEdit");
 
     addressLayout->addWidget(delButton);
     addressLayout->addWidget(Label);
+    addressLayout->addWidget(sep);
     addressLayout->addWidget(LineEdit);
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
     delButton->setObjectName("delButton");

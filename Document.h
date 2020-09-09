@@ -56,11 +56,11 @@ private slots:
     void AddItemDate();
     void AddItemDropdown();
     void deleteItem();
-    void AddItemText(Data*,QVBoxLayout*);
-    void AddItemTextarea(Data*,QVBoxLayout*);
-    void AddItemImage(Data*,QVBoxLayout*);
-    void AddItemDate(Data*,QVBoxLayout*);
-    void AddItemDropdown(Data*,QVBoxLayout*);
+    void AddItemText(QVBoxLayout*,QString,QString);
+    void AddItemTextarea(QVBoxLayout*,QString,QString);
+    void AddItemImage(QVBoxLayout*,QString,QString);
+    void AddItemDate(QVBoxLayout*,QString,QString);
+    void AddItemDropdown(QVBoxLayout*,QString,QString);
 
 private:
     int srtIdx;
