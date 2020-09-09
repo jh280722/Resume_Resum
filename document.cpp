@@ -216,7 +216,7 @@ void Document::AddItemText() {
     Widget* newWidget = new Widget(tmp);
     QHBoxLayout* newLayout = new QHBoxLayout();
     QPushButton* delButton = new QPushButton(newWidget);
-    QLabel* title=new QLabel(Kor("이 름"),newWidget);
+    QLabel* title=new QLabel(Kor("텍스트"),newWidget);
     QLabel* sep = new QLabel((" :"), newWidget);
     QLineEdit* LineEdit=new QLineEdit(newWidget);
 
@@ -268,7 +268,7 @@ void Document::AddItemTextarea() {
     Widget* newWidget = new Widget(tmp);
     QHBoxLayout* newLayout = new QHBoxLayout();
     QPushButton* delButton = new QPushButton(newWidget);
-    QLabel* title = new QLabel(Kor("이 름"), newWidget);
+    QLabel* title = new QLabel(Kor("글 상자"), newWidget);
     QLabel* sep = new QLabel((" :"), newWidget);
     QTextEdit* TextEdit = new QTextEdit(newWidget);
     TextEdit->setMinimumHeight(150);
@@ -338,7 +338,7 @@ void Document::AddItemImage() {
     Widget* newWidget = new Widget(tmp);
     QHBoxLayout* newLayout = new QHBoxLayout();
     QPushButton* delButton = new QPushButton(newWidget);
-    QLabel* title = new QLabel(Kor("이 름"), newWidget);
+    QLabel* title = new QLabel(Kor("이미지"), newWidget);
     QLabel* sep = new QLabel((" :"), newWidget);
     QPushButton* addButton = new QPushButton(Kor("업로드"), newWidget);
     QLabel* path = new QLabel(Kor("경로"), newWidget);
@@ -397,7 +397,7 @@ void Document::AddItemDate() {
     Widget* newWidget = new Widget(tmp);
     QHBoxLayout* newLayout = new QHBoxLayout();
     QPushButton* delButton = new QPushButton(newWidget);
-    QLabel* title = new QLabel(Kor("이 름"), newWidget);
+    QLabel* title = new QLabel(Kor("날 짜"), newWidget);
     QLabel* sep = new QLabel((" :"), newWidget);
     QDateEdit* newdate = new QDateEdit();
 
@@ -463,7 +463,7 @@ void Document::AddItemDropdown() {
     Widget* newWidget = new Widget(tmp);
     QHBoxLayout* newLayout = new QHBoxLayout();
     QPushButton* delButton = new QPushButton(newWidget);
-    QLabel* title = new QLabel(Kor("이 름"), newWidget);
+    QLabel* title = new QLabel(Kor("드롭 다운"), newWidget);
     QLabel* sep = new QLabel((" :"), newWidget);
     QComboBox* newdd = new QComboBox();
     newLayout->addWidget(delButton);
