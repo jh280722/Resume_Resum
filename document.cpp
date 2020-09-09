@@ -51,6 +51,14 @@ Document::Document(QString name, int srtIdx):QWidget(){
     setObjectName("document");
     this->name=name;
     this->srtIdx=srtIdx;
+    docPath=srtPath+QString::number(srtIdx) +"/"+this->name+"/";
+    QDir Directory(docPath); // 폴더 지정
+    if(!Directory.exists()) // 폴더가 존재하지 않을경우
+    {
+        Directory.mkdir(AppPath+"/Data"); // 폴더 생성
+        Directory.mkdir(srtPath+QString::number(srtIdx)); // 폴더 생성
+        Directory.mkdir(docPath); // 폴더 생성
+    }
     add_box();
 }
 
@@ -330,8 +338,14 @@ void Document::imageUpload() {
     QString filepath = dlg.getOpenFileName(this, "Load Image", "", "Image Files (*.png *.jpg *.bmp)");
     QString fileName = filepath.section("/", -1);
     path->setText(fileName);
-
-    QString newName = srtPath+QString::number(srtIdx) +"/"+ fileName;
+    QObjectList box=item->parent()->parent()->children();
+    int idx=0;
+    for(;idx<box.size();idx++){
+        if(box[idx]==item->parent()){
+            break;
+        }
+    }
+    QString newName = docPath + QString::number(idx)+"_"+fileName;
     QFile::copy ( filepath, newName );
 }
 

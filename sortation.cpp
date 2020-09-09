@@ -130,6 +130,7 @@ void Sortation::on_docopen_clicked() {
         docTab->setCurrentIndex(tabIdx);
     }
     else {
+        docList[srtIdx][subSrtIdx]->load_doc();
         QWidget* new_tab = docList[srtIdx][subSrtIdx];
 
         docTab->tabBar()->setStyleSheet(QString("QTabBar::tab { width:100; }"));
