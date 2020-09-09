@@ -59,7 +59,7 @@ Document::Document(QString name, int srtIdx):QWidget(){
         Directory.mkdir(srtPath+QString::number(srtIdx)); // 폴더 생성
         Directory.mkdir(docPath); // 폴더 생성
     }
-    add_box();
+    init_docTab();
 }
 
 Document::~Document(){
@@ -69,7 +69,7 @@ Document::~Document(){
 }
 
 //문서 만들때 한 번 실행되는 함수
-void Document::add_box() {
+void Document::init_docTab() {
 
     //스크롤 영역 위젯 생성
     tab=new DocTab(this,srtIdx);
@@ -150,6 +150,7 @@ void Document::add_box() {
         connect(PB, SIGNAL(clicked()), this, SLOT(make_doc8()));
         break;
     }
+    this->save_doc();
 }
 
 QVBoxLayout* Document::load_add_box() {

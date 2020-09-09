@@ -24,7 +24,7 @@ public:
     QString docPath;
     QWidget* PBS;
     DocTab* tab;
-    void add_box();
+    void init_docTab();
     QVBoxLayout* load_add_box();
 
 signals:
