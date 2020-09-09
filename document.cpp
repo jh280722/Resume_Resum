@@ -17,36 +17,55 @@ protected:
         QPushButton * delButton= obj->findChild<QPushButton*>("delButton");
         this->show();
         if(ev->type()==QEvent::Enter){
+            delButton->setAutoFillBackground(0);
             delButton->setFlat(0);
             return false;
         }
         else if(ev->type()==QEvent::Leave){
+            delButton->setAutoFillBackground(0);
             delButton->setFlat(1);
-            return true;
+            return false;
         }
 
     }
-    //    void mouseDoubleClickEvent(QMouseEvent *ev) override{
-
-    //    }
 };
 
-//class DoubleClickedWidget : public QWidget{
+class DoubleClickedWidget : public QLabel{
 
-//public:
-//    DoubleClickedWidget(QWidget *parent=nullptr): QWidget(parent){
-//        this->installEventFilter(this);
-//    };
-//    signals:
-//    void doubleClicked();
-//protected:
-//    void mouseDoubleClickEvent(QMouseEvent *) {
-//        emit doubleClicked();
-//    }
+public:
+    DoubleClickedWidget(QWidget *parent=nullptr): QLabel(parent){
+    };
+    signals:
+    void doubleClicked(){
 
-//};
+        QString tmp= qobject_cast<QLabel*>(this)->text();
+
+        QLineEdit * text= new QLineEdit(tmp,this);
+        QHBoxLayout * tmplayout = new QHBoxLayout();
+        this->layout()->addWidget(text);
+        //tmplayout->addWidget(text);
+        qDebug()<<1;
+        connect(text,SIGNAL(editingfinished()),this,SLOT(deleteItem()));
 
 
+
+
+    }
+protected:
+    void mouseDoubleClickEvent(QMouseEvent *event)
+    {
+        emit doubleClicked();
+    }
+
+};
+
+void Document::deletetext(){
+    QLabel* label=qobject_cast<QLabel*>(this->parent());
+    QString text=qobject_cast<QLabel*>(this)->text();
+    label->setText(text);
+    delete this;
+
+}
 Document::Document(QString name, int srtIdx):QWidget(){
     setObjectName("document");
     this->name=name;
@@ -217,12 +236,14 @@ void Document::AddItemText() {
     Widget* newWidget = new Widget(tmp);
     QHBoxLayout* newLayout = new QHBoxLayout();
     QPushButton* delButton = new QPushButton(newWidget);
-    QLabel* title=new QLabel(Kor("텍스트"),newWidget);
+   // QLabel* title=new QLabel(Kor("텍스트"),newWidget);
+    DoubleClickedWidget* tt = new DoubleClickedWidget();
     QLabel* sep = new QLabel((" :"), newWidget);
     QLineEdit* LineEdit=new QLineEdit(newWidget);
 
+    tt->setText(Kor("텍스트"));
     newLayout->addWidget(delButton);
-    newLayout->addWidget(title);
+    newLayout->addWidget(tt);
     newLayout->addWidget(sep);
     newLayout->addWidget(LineEdit);
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
@@ -233,7 +254,7 @@ void Document::AddItemText() {
     delButton->setFlat(1);
 
     delButton->setObjectName("delButton");
-    title->setObjectName("QLabel");
+    //title->setObjectName("QLabel");
     LineEdit->setObjectName("QLineEdit");
     newWidget->setObjectName("text");
 }
