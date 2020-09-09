@@ -1,8 +1,9 @@
 #include "mainwindow.h"
-#include "Document.h"
+#include "document.h"
 #include "sortation.h"
 #include "ui_mainwindow.h"
 #include "data.h"
+#include <QFile>
 extern Sortation *sortation;
 
 class Widget : public QWidget{
@@ -329,6 +330,9 @@ void Document::imageUpload() {
     QString filepath = dlg.getOpenFileName(this, "Load Image", "", "Image Files (*.png *.jpg *.bmp)");
     QString fileName = filepath.section("/", -1);
     path->setText(fileName);
+
+    QString newName = srtPath+QString::number(srtIdx) +"/"+ fileName;
+    QFile::copy ( filepath, newName );
 }
 
 void Document::AddItemImage() {
@@ -342,7 +346,6 @@ void Document::AddItemImage() {
     QLabel* sep = new QLabel((" :"), newWidget);
     QPushButton* addButton = new QPushButton(Kor("업로드"), newWidget);
     QLabel* path = new QLabel(Kor("경로"), newWidget);
-
     newLayout->addWidget(delButton);
     newLayout->addWidget(title);
     newLayout->addWidget(sep);

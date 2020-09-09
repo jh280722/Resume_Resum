@@ -1,5 +1,5 @@
 #include "data.h"
-#include "Document.h"
+#include "document.h"
 #include "mainwindow.h"
 #include "sortation.h"
 #include <QApplication>
@@ -51,14 +51,14 @@ void Document::load_doc(){
     }
     File.close(); // ÆÄÀÏ´Ý±â
 
-    for(auto data:dataList){
-        qDebug()<<data->type<<'\n';
-        qDebug()<<data->name<<'\n';
-        qDebug()<<data->valueLine<<'\n';
-        qDebug()<<data->value<<'\n';
-        qDebug()<<data->date<<'\n';
-        qDebug()<<data->path<<'\n';
-    }
+//    for(auto data:dataList){
+//        qDebug()<<data->type<<'\n';
+//        qDebug()<<data->name<<'\n';
+//        qDebug()<<data->valueLine<<'\n';
+//        qDebug()<<data->value<<'\n';
+//        qDebug()<<data->date<<'\n';
+//        qDebug()<<data->path<<'\n';
+//    }
     QObjectList tabList = tab->box->children();
     for(auto it:tabList){
         if(it->objectName()=="boxAreaLayout") continue;

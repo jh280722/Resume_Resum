@@ -25,9 +25,9 @@ SOURCES += \
     sortation.cpp
 
 HEADERS += \
-    Document.h \
     data.h \
     doctab.h \
+    document.h \
     mainwindow.h \
     sortation.h
 

@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "Document.h"
+#include "document.h"
 #include "sortation.h"
 #include "ui_mainwindow.h"
 
@@ -9,11 +9,16 @@ QString srtTitle[9]={Kor("인적 사항"), Kor("학력 사항"),Kor("경력 사항"),Kor("활
 QVector<QWidget*> docList[9];
 QVector<QPushButton*> docBtnList[9];
 Sortation *sortation;
+QString AppPath=QApplication::applicationDirPath();
+QString srtPath = AppPath+"/Data/Srt";
+
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    AppPath=QApplication::applicationDirPath();
+    srtPath = AppPath+"/Data/Srt";
 
     sortation = new Sortation(ui->centralwidget);
     //    int w=ui->intro->width();

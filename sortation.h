@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QInputDialog>
-#include "Document.h"
+#include "document.h"
 
 class Sortation : public QWidget
 {

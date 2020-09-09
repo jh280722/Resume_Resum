@@ -24,7 +24,7 @@
 #include <QComboBox>
 #include <QTextEdit>
 #include <QMessageBox>
-#include "Document.h"
+#include "document.h"
 #define Kor(str) QString::fromLocal8Bit(str)
 
 QT_BEGIN_NAMESPACE
@@ -32,6 +32,8 @@ namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 extern QString srtTitle[9];
+extern QString AppPath;
+extern QString srtPath;
 
 class MainWindow : public QMainWindow
 {
@@ -43,11 +45,7 @@ public:
 
 signals:
 private slots:
-    //void on_plus_clicked();
-    //void connect_doc();
     void on_docTab_deleteTab(int);
-
-    // void on_textEdit_copyAvailable(bool b);
 
 private:
     //UI
