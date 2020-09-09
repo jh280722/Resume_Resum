@@ -39,13 +39,15 @@ public:
     void doubleClicked(){
 
         QString tmp= qobject_cast<QLabel*>(this)->text();
-
+         QLabel* tmp1= qobject_cast<QLabel*>(this);
         QLineEdit * text= new QLineEdit(tmp,this);
-        QHBoxLayout * tmplayout = new QHBoxLayout();
-        this->layout()->addWidget(text);
-        //tmplayout->addWidget(text);
-        qDebug()<<1;
-        connect(text,SIGNAL(editingfinished()),this,SLOT(deleteItem()));
+
+        QHBoxLayout* tmp2= tmp1->findChild<QHBoxLayout*>("newlayer");
+qDebug()<<tmp2->objectName();
+       // this->layout()->addWidget(text);
+
+
+        connect(text,SIGNAL(editingfinished()),this,SLOT(deletetext()));
 
 
 
@@ -251,6 +253,8 @@ void Document::AddItemText() {
     QLineEdit* LineEdit=new QLineEdit(newWidget);
 
     tt->setText(Kor("ÅØ½ºÆ®"));
+    newLayout->setObjectName("newlayer");
+
     newLayout->addWidget(delButton);
     newLayout->addWidget(tt);
     newLayout->addWidget(sep);
