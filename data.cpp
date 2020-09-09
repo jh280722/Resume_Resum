@@ -169,6 +169,6 @@ void Sortation::save_pdf(){
 
     QTextDocument doc;
     doc.setHtml("<h1>Hello, World!</h1>\n<p>Lorem ipsum dolor sit amet, consectitur adipisci elit.</p>");
-    doc.setPageSize(printer.pageRect().size()); // This is necessary if you want to hide the page number
+    //doc.setPageSize(printer.pageRect().size()); // This is necessary if you want to hide the page number
     doc.print(&printer);
 }

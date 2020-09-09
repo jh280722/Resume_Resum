@@ -21,9 +21,10 @@ public:
     Document(QString name, int srtIdx);
     ~Document();
     QString name;
+    QString docPath;
     QWidget* PBS;
     DocTab* tab;
-    void add_box();
+    void init_docTab();
     QVBoxLayout* load_add_box();
 
 signals:
