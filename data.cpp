@@ -125,7 +125,8 @@ void Document::save_doc(){
                 path=item->findChild<QLabel*>("path")->text();
             }
             else if(type=="date"){
-
+                name=item->findChild<QLabel*>("QLabel")->text();
+                date=item->findChild<QDateEdit*>("QDate")->text();
             }
             else if(type=="dropDown"){
 

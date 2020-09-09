@@ -434,7 +434,7 @@ void Document::AddItemDate(Data* item,QVBoxLayout * boxlayout) {
     QDateEdit* newdate = new QDateEdit();
 
     newdate->setCalendarPopup(1);
-    newdate->setDate(QDate::currentDate());
+    newdate->setDate(QDate::fromString(item->date,"yyyy-MM-dd"));
     newLayout->addWidget(delButton);
     newLayout->addWidget(title);
     newLayout->addWidget(sep);
