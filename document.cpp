@@ -300,6 +300,7 @@ void Document::AddItemTextarea(Data* item,QVBoxLayout * boxlayout) {
     QLabel* title = new QLabel(item->name, newWidget);
     QLabel* sep = new QLabel((" :"), newWidget);
     QTextEdit* TextEdit = new QTextEdit(item->value,newWidget);
+    TextEdit->setPlainText(item->value);
     TextEdit->setMinimumHeight(150);
     TextEdit->setMaximumHeight(150);
 
@@ -765,7 +766,7 @@ void Document::save_doc(){
             }
             else if(type=="image"){
                 name=item->findChild<QLabel*>("QLabel")->text();
-                value=item->findChild<QLabel*>("path")->text();
+                path=item->findChild<QLabel*>("path")->text();
             }
             else if(type=="date"){
 
