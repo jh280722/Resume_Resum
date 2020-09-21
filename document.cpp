@@ -273,13 +273,14 @@ void Document::AddItemText() {
     titleEdit->hide();
     newLayout->addWidget(sep);
     newLayout->addWidget(LineEdit);
+
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
 
     connect(titleEdit,&QLineEdit::editingFinished,title,&DoubleClickedWidget::hideText);
 
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
-
+    delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
 
     delButton->setObjectName("delButton");
@@ -313,7 +314,7 @@ void Document::AddItemText(QVBoxLayout * boxlayout,QString name,QString value) {
     connect(titleEdit,&QLineEdit::editingFinished,title,&DoubleClickedWidget::hideText);
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
-
+    delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
 
     delButton->setObjectName("delButton");
@@ -364,6 +365,7 @@ void Document::AddItemTextarea() {
     newLayout->setAlignment(sep, Qt::AlignTop);
     newLayout->setAlignment(delButton, Qt::AlignTop);
 
+    delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
@@ -403,6 +405,7 @@ void Document::AddItemTextarea(QVBoxLayout * boxlayout,QString name,QString valu
     newLayout->setAlignment(sep, Qt::AlignTop);
     newLayout->setAlignment(delButton, Qt::AlignTop);
 
+    delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
@@ -467,7 +470,7 @@ void Document::AddItemImage() {
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
 
-
+    delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
@@ -503,7 +506,7 @@ void Document::AddItemImage(QVBoxLayout * boxlayout,QString name,QString path) {
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
 
-
+    delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
@@ -552,7 +555,7 @@ void Document::AddItemDate() {
     newLayout->setAlignment(newdate, Qt::AlignLeft);
     newLayout->setAlignment(delButton, Qt::AlignRight);
 
-
+    delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
@@ -595,7 +598,7 @@ void Document::AddItemDate(QVBoxLayout * boxlayout,QString name,QString date) {
     newLayout->setAlignment(newdate, Qt::AlignLeft);
     newLayout->setAlignment(delButton, Qt::AlignRight);
 
-
+    delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
@@ -637,6 +640,7 @@ void Document::AddItemDropdown() {
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
 
+    delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
@@ -673,6 +677,7 @@ void Document::AddItemDropdown(QVBoxLayout * boxlayout,QString name,QString sett
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
 
+    delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
@@ -751,7 +756,6 @@ void Document::make_doc1() {
     box->setMinimumSize(800, 800);
     box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     boxLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
-
     layout->addWidget(box);
 }
 
