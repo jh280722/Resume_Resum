@@ -9,6 +9,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <vector>
+#include <QSplitter>
 #include "doctab.h"
 #include "data.h"
 

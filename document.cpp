@@ -285,10 +285,14 @@ void Document::AddItemText(QVBoxLayout * boxlayout,QString name,QString value) {
     QLabel* sep = new QLabel((" :"), newWidget);
     QLineEdit* LineEdit=new QLineEdit(value,newWidget);
 
+    QSplitter* split = new QSplitter();
+
+    split->addWidget(title);
+    split->addWidget(sep);
+    split->addWidget(LineEdit);
+
     newLayout->addWidget(delButton);
-    newLayout->addWidget(title);
-    newLayout->addWidget(sep);
-    newLayout->addWidget(LineEdit);
+    newLayout->addWidget(split);
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
 
     newWidget->setLayout(newLayout);
@@ -577,25 +581,18 @@ void Document::make_doc1() {
     QVBoxLayout* layout = tab->boxArea;
     QWidget* toolWidget = new QWidget(box);
 
-    QWidget* tmp=new QWidget();
-    Widget* nameWidget = new Widget(tmp);
-    Widget* ageWidget = new Widget(tmp);
-    Widget* addressWidget = new Widget(tmp);
-
     QToolButton* tool = new QToolButton(toolWidget);
     QHBoxLayout* toolLayout = new QHBoxLayout(toolWidget);
     QMenu* Menu = new QMenu();
     QMenu* InputMenu = new QMenu();
     toolLayout->addStretch();
     toolLayout->addWidget(tool, Qt::AlignRight);
-    //tool->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
 
     QAction* TBAAdd = new QAction(Kor("추가"), tool);
     TBAAdd->setStatusTip(Kor("인적사항을 추가합니다."));
     QAction* TBADelete = new QAction(Kor("삭제"), tool);
     TBADelete->setStatusTip(Kor("인적사항을 삭제합니다."));
     connect(TBADelete, SIGNAL(triggered()), this, SLOT(deleteBox()));
-
 
     QAction* TBAAddText = new QAction(Kor("텍스트"), boxLayout);
     connect(TBAAddText, SIGNAL(triggered()), this, SLOT(AddItemText()));
@@ -620,69 +617,13 @@ void Document::make_doc1() {
     tool->setMenu(Menu);
     tool->setPopupMode(QToolButton::InstantPopup);
     toolWidget->setObjectName("tool");
-    nameWidget->setObjectName("text");
-    ageWidget->setObjectName("text");
-    addressWidget->setObjectName("text");
+
 
     boxLayout->addWidget(toolWidget);
-    boxLayout->addWidget(nameWidget);
-    boxLayout->addWidget(ageWidget);
-    boxLayout->addWidget(addressWidget);
 
-    QPushButton* delButton;
-    QLabel* sep;
-    QHBoxLayout* nameLayout = new QHBoxLayout(nameWidget);
-
-    delButton = new QPushButton(nameWidget);
-    //    DoubleClickedWidget * tmp2= new DoubleClickedWidget();
-    //    connect(tmp2, SIGNAL(doubleClicked()), this, SLOT(onDoubleClicked()));
-    QLabel * Label = new QLabel(Kor("이 름 "));
-    sep = new QLabel((" :"), nameWidget);
-    QLineEdit* LineEdit =new QLineEdit(nameWidget);
-    Label->setObjectName("QLabel");
-    LineEdit->setObjectName("QLineEdit");
-
-    nameLayout->addWidget(delButton);
-    nameLayout->addWidget(Label);
-    nameLayout->addWidget(sep);
-    nameLayout->addWidget(LineEdit);
-    connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
-    delButton->setObjectName("delButton");
-    delButton->setFlat(1);
-
-    QHBoxLayout* ageLayout = new QHBoxLayout(ageWidget);
-    delButton = new QPushButton(ageWidget);
-
-    Label = new QLabel(Kor("나 이 "));
-    sep = new QLabel((" :"), ageWidget);
-    LineEdit =new QLineEdit(ageWidget);
-    Label->setObjectName("QLabel");
-    LineEdit->setObjectName("QLineEdit");
-
-    ageLayout->addWidget(delButton);
-    ageLayout->addWidget(Label);
-    ageLayout->addWidget(sep);
-    ageLayout->addWidget(LineEdit);
-    connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
-    delButton->setObjectName("delButton");
-    delButton->setFlat(1);
-
-    QHBoxLayout* addressLayout = new QHBoxLayout(addressWidget);
-    delButton = new QPushButton(addressWidget);
-
-    Label = new QLabel(Kor("주 소 "));
-    sep = new QLabel((" :"), addressWidget);
-    LineEdit =new QLineEdit(addressWidget);
-    Label->setObjectName("QLabel");
-    LineEdit->setObjectName("QLineEdit");
-
-    addressLayout->addWidget(delButton);
-    addressLayout->addWidget(Label);
-    addressLayout->addWidget(sep);
-    addressLayout->addWidget(LineEdit);
-    connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
-    delButton->setObjectName("delButton");
-    delButton->setFlat(1);
+    AddItemText(boxLayout, Kor("이름"),"");
+    AddItemText(boxLayout, Kor("나이"),"");
+    AddItemText(boxLayout, Kor("주소"),"");
 
     box->setMinimumSize(800, 800);
     box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
