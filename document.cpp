@@ -27,7 +27,6 @@ protected:
             delButton->setFlat(1);
             return false;
         }
-
     }
 };
 
@@ -41,7 +40,7 @@ public:
 
     };
 public slots:
-    void deletetext();
+    void hideText();
 signals:
     void doubleClicked();
 
@@ -52,26 +51,22 @@ protected:
     }
 
 };
-void  DoubleClickedWidget::deletetext(){
+void  DoubleClickedWidget::hideText(){
     QLabel* label=qobject_cast<QLabel*>(this);
-    QLineEdit* edit=this->parent()->findChild<QLineEdit*>("lineEdit");
+    QLineEdit* edit=this->parent()->findChild<QLineEdit*>("titleEdit");
     label->setText(edit->text());
     label->show();
     edit->hide();
 };
 void DoubleClickedWidget:: doubleClicked(){
 
-    QString tmp= qobject_cast<QLabel*>(this)->text();
-    QLabel* tmp1= qobject_cast<QLabel*>(this);
-    QLineEdit * text= new QLineEdit(tmp,this);
-    QHBoxLayout* tmp2= tmp1->parent()->findChild<QHBoxLayout*>("newlayer");
+    QLabel* label= qobject_cast<QLabel*>(this);
+    QLineEdit * text= label->parent()->findChild<QLineEdit*>("titleEdit");
 
-    tmp2->insertWidget(1,text);
-    tmp1->hide();
-    //tmp2->removeWidget(tmp1);
+    text->setText(label->text());
+    text->show();
+    label->hide();
     text->setFocus();
-    text->setObjectName("lineEdit");
-    connect(text,&QLineEdit::editingFinished,this,&DoubleClickedWidget::deletetext);
 }
 
 Document::Document(QString name, int srtIdx):QWidget(){
@@ -253,18 +248,24 @@ void Document::AddItemText() {
     Widget* newWidget = new Widget(tmp);
     QHBoxLayout* newLayout = new QHBoxLayout();
     QPushButton* delButton = new QPushButton(newWidget);
-    QLabel* title=new QLabel(Kor("텍스트"));
-    DoubleClickedWidget* tt = new DoubleClickedWidget(title);
+    QLabel* titleLabel=new QLabel(Kor("텍스트"));
+    QLineEdit* titleEdit=new QLineEdit(newWidget);
+    DoubleClickedWidget* title = new DoubleClickedWidget(titleLabel);
     QLabel* sep = new QLabel((" :"), newWidget);
     QLineEdit* LineEdit=new QLineEdit(newWidget);
 
     newLayout->setObjectName("newlayer");
+    titleEdit->setObjectName("titleEdit");
 
     newLayout->addWidget(delButton);
-    newLayout->addWidget(tt);
+    newLayout->addWidget(title);
+    newLayout->addWidget(titleEdit);
+    titleEdit->hide();
     newLayout->addWidget(sep);
     newLayout->addWidget(LineEdit);
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
+
+    connect(titleEdit,&QLineEdit::editingFinished,title,&DoubleClickedWidget::hideText);
 
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
@@ -276,7 +277,7 @@ void Document::AddItemText() {
     LineEdit->setObjectName("QLineEdit");
     newWidget->setObjectName("text");
 }
-void Document::AddItemText(QVBoxLayout * boxlayout,QString name,QString value) {
+void Document::AddItemText(QVBoxLayout * boxlayout,QString name="default",QString value="as") {
     QWidget* tmp=new QWidget();
     Widget* newWidget = new Widget(tmp);
     QHBoxLayout* newLayout = new QHBoxLayout();
