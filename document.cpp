@@ -57,9 +57,7 @@ void  DoubleClickedWidget::deletetext(){
     QLineEdit* edit=this->parent()->findChild<QLineEdit*>("lineEdit");
     label->setText(edit->text());
     label->show();
-
-    disconnect(edit,&QLineEdit::editingFinished,this,&DoubleClickedWidget::deletetext);
-//    delete edit;
+    edit->hide();
 };
 void DoubleClickedWidget:: doubleClicked(){
 
