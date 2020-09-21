@@ -274,7 +274,7 @@ void Document::AddItemText() {
     delButton->setFlat(1);
 
     delButton->setObjectName("delButton");
-    //title->setObjectName("QLabel");
+    title->setObjectName("QLabel");
     LineEdit->setObjectName("QLineEdit");
     newWidget->setObjectName("text");
 }
