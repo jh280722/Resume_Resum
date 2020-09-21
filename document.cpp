@@ -37,7 +37,7 @@ public:
         this->setText(parent->text());
         this->setMaximumWidth(200);
         this->setFixedWidth(100);
-        this->setAlignment(Qt::AlignCenter | Qt::AlignRight);
+        this->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
 
     };
     ~DoubleClickedWidget(){
@@ -223,16 +223,17 @@ void Document::AddItemText() {
     newLayout->addWidget(delButton);
     newLayout->addWidget(title);
     newLayout->addWidget(titleEdit);
-    titleEdit->hide();
     newLayout->addWidget(sep);
     newLayout->addWidget(LineEdit);
 
-    connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
 
+    titleEdit->hide();
+    connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
     connect(titleEdit,&QLineEdit::editingFinished,title,&DoubleClickedWidget::hideText);
 
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
+
     delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
 
@@ -251,6 +252,8 @@ void Document::AddItemText(QVBoxLayout * boxlayout,QString name,QString value) {
     DoubleClickedWidget* title = new DoubleClickedWidget(titleLabel);
     QLabel* sep = new QLabel((" :"), newWidget);
     QLineEdit* LineEdit=new QLineEdit(value,newWidget);
+
+    newLayout->setObjectName("newlayer");
     titleEdit->setObjectName("titleEdit");
 
     titleEdit->setMaxLength(10);
@@ -260,13 +263,16 @@ void Document::AddItemText(QVBoxLayout * boxlayout,QString name,QString value) {
     newLayout->addWidget(delButton);
     newLayout->addWidget(title);
     newLayout->addWidget(titleEdit);
-    titleEdit->hide();
     newLayout->addWidget(sep);
     newLayout->addWidget(LineEdit);
+
+    titleEdit->hide();
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
     connect(titleEdit,&QLineEdit::editingFinished,title,&DoubleClickedWidget::hideText);
+
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
+
     delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
 
@@ -287,27 +293,24 @@ void Document::AddItemTextarea() {
     DoubleClickedWidget* title = new DoubleClickedWidget(titleLabel);
     QLabel* sep = new QLabel((" :"), newWidget);
     QTextEdit* TextEdit = new QTextEdit(newWidget);
+
     TextEdit->setMinimumHeight(150);
-    TextEdit->setMaximumHeight(150);
 
     newLayout->setObjectName("newlayer");
     titleEdit->setObjectName("titleEdit");
 
-
     titleEdit->setMaxLength(10);
     titleEdit->setFixedWidth(100);
     titleEdit->setAlignment(Qt::AlignTop|Qt::AlignRight);
-
-
 
     newLayout->addWidget(delButton);
     newLayout->addWidget(title);
     newLayout->addWidget(titleEdit);
     newLayout->addWidget(sep);
     newLayout->addWidget(TextEdit);
+
     titleEdit->hide();
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
-    connect(titleEdit,&QLineEdit::editingFinished,title,&DoubleClickedWidget::hideText);
     connect(titleEdit,&QLineEdit::editingFinished,title,&DoubleClickedWidget::hideText);
 
     newWidget->setLayout(newLayout);
@@ -320,6 +323,7 @@ void Document::AddItemTextarea() {
 
     delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
+
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
     TextEdit->setObjectName("QTextEdit");
@@ -335,9 +339,12 @@ void Document::AddItemTextarea(QVBoxLayout * boxlayout,QString name,QString valu
     DoubleClickedWidget* title = new DoubleClickedWidget(titleLabel);
     QLabel* sep = new QLabel((" :"), newWidget);
     QTextEdit* TextEdit = new QTextEdit(value,newWidget);
+
     TextEdit->setPlainText(value);
     TextEdit->setMinimumHeight(150);
-    TextEdit->setMaximumHeight(150);
+
+    newLayout->setObjectName("newlayer");
+    titleEdit->setObjectName("titleEdit");
 
     titleEdit->setMaxLength(10);
     titleEdit->setFixedWidth(100);
@@ -345,8 +352,10 @@ void Document::AddItemTextarea(QVBoxLayout * boxlayout,QString name,QString valu
 
     newLayout->addWidget(delButton);
     newLayout->addWidget(title);
+    newLayout->addWidget(titleEdit);
     newLayout->addWidget(sep);
     newLayout->addWidget(TextEdit);
+
     titleEdit->hide();
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
     connect(titleEdit,&QLineEdit::editingFinished,title,&DoubleClickedWidget::hideText);
@@ -356,10 +365,12 @@ void Document::AddItemTextarea(QVBoxLayout * boxlayout,QString name,QString valu
 
     newLayout->setAlignment(title, Qt::AlignTop);
     newLayout->setAlignment(sep, Qt::AlignTop);
+    newLayout->setAlignment(titleEdit, Qt::AlignTop|Qt::AlignRight);
     newLayout->setAlignment(delButton, Qt::AlignTop);
 
     delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
+
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
     TextEdit->setObjectName("QTextEdit");
@@ -404,7 +415,6 @@ void Document::AddItemImage() {
     titleEdit->setFixedWidth(100);
     titleEdit->setAlignment(Qt::AlignRight);
 
-
     newLayout->addWidget(delButton);
     newLayout->addWidget(title);
     newLayout->addWidget(titleEdit);
@@ -425,6 +435,7 @@ void Document::AddItemImage() {
 
     delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
+
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
     path->setObjectName("path");
@@ -442,6 +453,9 @@ void Document::AddItemImage(QVBoxLayout * boxlayout,QString name,QString path) {
     QPushButton* addButton = new QPushButton(Kor("¾÷·Îµå"), newWidget);
     QLabel* newpath = new QLabel(path, newWidget);
 
+    newLayout->setObjectName("newlayer");
+    titleEdit->setObjectName("titleEdit");
+
     titleEdit->setMaxLength(10);
     titleEdit->setFixedWidth(100);
     titleEdit->setAlignment(Qt::AlignRight);
@@ -453,14 +467,17 @@ void Document::AddItemImage(QVBoxLayout * boxlayout,QString name,QString path) {
     newLayout->addWidget(newpath);
     newLayout->addStretch();
     titleEdit->hide();
+
     connect(addButton, SIGNAL(clicked()), this, SLOT(imageUpload()));
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
     connect(titleEdit,&QLineEdit::editingFinished,title,&DoubleClickedWidget::hideText);
+
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
 
     delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
+
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
     newpath->setObjectName("path");
@@ -497,12 +514,13 @@ void Document::AddItemDate() {
 
     titleEdit->hide();
 
-    delButton->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    //delButton->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
     connect(titleEdit,&QLineEdit::editingFinished,title,&DoubleClickedWidget::hideText);
 
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
+
     newLayout->setAlignment(title, Qt::AlignLeft);
     newLayout->setAlignment(sep, Qt::AlignLeft);
     newLayout->setAlignment(newdate, Qt::AlignLeft);
@@ -510,6 +528,7 @@ void Document::AddItemDate() {
 
     delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
+
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
     newdate->setObjectName("QDate");
@@ -541,11 +560,14 @@ void Document::AddItemDate(QVBoxLayout * boxlayout,QString name,QString date) {
     newLayout->addWidget(newdate);
     newLayout->addStretch();
     titleEdit->hide();
-    delButton->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+
+    //delButton->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
     connect(titleEdit,&QLineEdit::editingFinished,title,&DoubleClickedWidget::hideText);
+
     newWidget->setLayout(newLayout);
     boxlayout->addWidget(newWidget);
+
     newLayout->setAlignment(title, Qt::AlignLeft);
     newLayout->setAlignment(sep, Qt::AlignLeft);
     newLayout->setAlignment(newdate, Qt::AlignLeft);
@@ -553,6 +575,7 @@ void Document::AddItemDate(QVBoxLayout * boxlayout,QString name,QString date) {
 
     delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
+
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
     newdate->setObjectName("QDate");
@@ -595,6 +618,7 @@ void Document::AddItemDropdown() {
 
     delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
+
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
     newdd->setObjectName("QComboBox");
@@ -625,6 +649,7 @@ void Document::AddItemDropdown(QVBoxLayout * boxlayout,QString name,QString sett
     newLayout->addWidget(newdd);
     newLayout->addStretch();
     titleEdit->hide();
+
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
     connect(titleEdit,&QLineEdit::editingFinished,title,&DoubleClickedWidget::hideText);
     newWidget->setLayout(newLayout);
@@ -632,6 +657,7 @@ void Document::AddItemDropdown(QVBoxLayout * boxlayout,QString name,QString sett
 
     delButton->setFocusPolicy(Qt::NoFocus);
     delButton->setFlat(1);
+
     delButton->setObjectName("delButton");
     title->setObjectName("QLabel");
     newdd->setObjectName("QComboBox");
