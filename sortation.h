@@ -3,6 +3,10 @@
 
 #include <QWidget>
 #include <QInputDialog>
+#include <QMouseEvent>
+#include <QDrag>
+#include <QPainter>
+#include <QMimeData>
 #include "document.h"
 
 class Sortation : public QWidget
@@ -16,6 +20,12 @@ public:
     int srtIdx;
     QVector<Document*> docList[10];
 
+protected:
+    //void dragEnterEvent(QDragEnterEvent *event) override;
+    //void dragLeaveEvent(QDragLeaveEvent *event) override;
+    //void dragMoveEvent(QDragMoveEvent *event) override;
+    //void dropEvent(QDropEvent *event) override;
+
 private slots:
     void on_srtopen_clicked();
     void on_srtadd_clicked();
@@ -27,5 +37,6 @@ private slots:
     void save_pdf();
 
 private:
+    bool eventFilter(QObject *object, QEvent *event);
 };
 #endif // SORTATION_H
