@@ -670,6 +670,123 @@ void Document::AddItemDropdown(QVBoxLayout * boxlayout,QString name,QString sett
     newWidget->setObjectName("dropDown");
 }
 
+void Document::AddItemPeriod() {
+    QObject* item = QObject::sender();
+    QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
+    QWidget* tmp=new QWidget();
+    Widget* newWidget = new Widget(tmp);
+    QHBoxLayout* newLayout = new QHBoxLayout();
+    QPushButton* delButton = new QPushButton(newWidget);
+    QLabel* titleLabel=new QLabel(Kor("날 짜"));
+    QLineEdit* titleEdit=new QLineEdit(newWidget);
+    DoubleClickedWidget* title = new DoubleClickedWidget(titleLabel);
+    QLabel* sep = new QLabel((" :"), newWidget);
+    QDateEdit* stdate = new QDateEdit();
+    QDateEdit* eddate = new QDateEdit();
+
+    newLayout->setObjectName("newlayer");
+    titleEdit->setObjectName("titleEdit");
+
+    titleEdit->setMaxLength(10);
+    titleEdit->setFixedWidth(100);
+    titleEdit->setAlignment(Qt::AlignRight);
+
+    stdate->setCalendarPopup(1);
+    stdate->setDate(QDate::currentDate());
+    eddate->setCalendarPopup(1);
+    eddate->setDate(QDate::currentDate());
+
+    newLayout->addWidget(delButton);
+    newLayout->addWidget(title);
+    newLayout->addWidget(titleEdit);
+    newLayout->addWidget(sep);
+    newLayout->addWidget(stdate);
+    newLayout->addWidget(eddate);
+    newLayout->addStretch();
+
+    titleEdit->hide();
+
+    //delButton->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
+    connect(titleEdit,&QLineEdit::editingFinished,title,&DoubleClickedWidget::hideText);
+
+    newWidget->setLayout(newLayout);
+    boxlayout->addWidget(newWidget);
+
+    newLayout->setAlignment(title, Qt::AlignLeft);
+    newLayout->setAlignment(sep, Qt::AlignLeft);
+    newLayout->setAlignment(stdate, Qt::AlignLeft);
+    newLayout->setAlignment(eddate, Qt::AlignLeft);
+    newLayout->setAlignment(delButton, Qt::AlignRight);
+
+    delButton->setFocusPolicy(Qt::NoFocus);
+    delButton->setFlat(1);
+
+    delButton->setObjectName("delButton");
+    title->setObjectName("QLabel");
+    stdate->setObjectName("QPeriodSt");
+    eddate->setObjectName("QPeriodEd");
+    newWidget->setObjectName("date");
+}
+
+void Document::AddItemPeriod(QVBoxLayout*,QString name,QString st,QString ed) {
+    QObject* item = QObject::sender();
+    QVBoxLayout* boxlayout = qobject_cast<QVBoxLayout*>(item->parent());
+    QWidget* tmp=new QWidget();
+    Widget* newWidget = new Widget(tmp);
+    QHBoxLayout* newLayout = new QHBoxLayout();
+    QPushButton* delButton = new QPushButton(newWidget);
+    QLabel* titleLabel=new QLabel(Kor("날 짜"));
+    QLineEdit* titleEdit=new QLineEdit(newWidget);
+    DoubleClickedWidget* title = new DoubleClickedWidget(titleLabel);
+    QLabel* sep = new QLabel((" :"), newWidget);
+    QDateEdit* stdate = new QDateEdit();
+    QDateEdit* eddate = new QDateEdit();
+
+    newLayout->setObjectName("newlayer");
+    titleEdit->setObjectName("titleEdit");
+
+    titleEdit->setMaxLength(10);
+    titleEdit->setFixedWidth(100);
+    titleEdit->setAlignment(Qt::AlignRight);
+
+    stdate->setCalendarPopup(1);
+    stdate->setDate(QDate::fromString(st,"yyyy-MM-dd"));
+    eddate->setCalendarPopup(1);
+    eddate->setDate(QDate::fromString(ed,"yyyy-MM-dd"));
+
+    newLayout->addWidget(delButton);
+    newLayout->addWidget(title);
+    newLayout->addWidget(titleEdit);
+    newLayout->addWidget(sep);
+    newLayout->addWidget(stdate);
+    newLayout->addWidget(eddate);
+    newLayout->addStretch();
+
+    titleEdit->hide();
+
+    //delButton->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
+    connect(titleEdit,&QLineEdit::editingFinished,title,&DoubleClickedWidget::hideText);
+
+    newWidget->setLayout(newLayout);
+    boxlayout->addWidget(newWidget);
+
+    newLayout->setAlignment(title, Qt::AlignLeft);
+    newLayout->setAlignment(sep, Qt::AlignLeft);
+    newLayout->setAlignment(stdate, Qt::AlignLeft);
+    newLayout->setAlignment(eddate, Qt::AlignLeft);
+    newLayout->setAlignment(delButton, Qt::AlignRight);
+
+    delButton->setFocusPolicy(Qt::NoFocus);
+    delButton->setFlat(1);
+
+    delButton->setObjectName("delButton");
+    title->setObjectName("QLabel");
+    stdate->setObjectName("QPeriodSt");
+    eddate->setObjectName("QPeriodEd");
+    newWidget->setObjectName("date");
+}
 void Document::add_tool_option(QGroupBox* box, QVBoxLayout * boxLayout){
     QWidget* toolWidget = new QWidget(box);
 
@@ -694,6 +811,8 @@ void Document::add_tool_option(QGroupBox* box, QVBoxLayout * boxLayout){
     connect(TBAAddDropdown, SIGNAL(triggered()), this, SLOT(AddItemDropdown()));
     QAction* TBAAddDate = new QAction(Kor("날짜"), boxLayout);
     connect(TBAAddDate, SIGNAL(triggered()), this, SLOT(AddItemDate()));
+    QAction* TBAAddPeriod = new QAction(Kor("기간"), boxLayout);
+    connect(TBAAddPeriod, SIGNAL(triggered()), this, SLOT(AddItemPeriod()));
     QAction* TBAAddImage = new QAction(Kor("이미지"), boxLayout);
     connect(TBAAddImage, SIGNAL(triggered()), this, SLOT(AddItemImage()));
 
@@ -703,6 +822,7 @@ void Document::add_tool_option(QGroupBox* box, QVBoxLayout * boxLayout){
     InputMenu->addAction(TBAAddTextarea);
     InputMenu->addAction(TBAAddDropdown);
     InputMenu->addAction(TBAAddDate);
+    InputMenu->addAction(TBAAddPeriod);
     InputMenu->addAction(TBAAddImage);
 
     TBAAdd->setMenu(InputMenu);
