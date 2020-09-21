@@ -19,13 +19,13 @@ class Document : public QWidget
     Q_OBJECT
 
 public:
-    Document(QString name, int srtIdx);
+    Document(QString name, int srtIdx, bool load=0);
     ~Document();
     QString name;
     QString docPath;
     QWidget* PBS;
     DocTab* tab;
-    void init_docTab();
+    void init_docTab(bool load);
     QVBoxLayout* load_add_box();
 
 signals:

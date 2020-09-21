@@ -262,7 +262,7 @@ void Sortation::on_srtadd_clicked(QString docName, int srtIdx){
     //newDoc->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     //버튼 리스트에 추가 | connect 해주기
-    Document* newDoc = new Document(docName, srtIdx);
+    Document* newDoc = new Document(docName, srtIdx, 1);
     newDoc->PBS=newPBS;
     newDoc->load_doc();
     docList[srtIdx].push_back(newDoc);

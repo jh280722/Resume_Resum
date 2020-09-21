@@ -30,7 +30,7 @@ void Document::load_doc(){
         Directory.mkdir(ApplicationPath+"/Data/Srt"+QString::number(srtIdx)); // 폴더 생성
     }
     QFile File(ApplicationPath+"/Data/Srt"+QString::number(srtIdx)+"/"+name+".data");
-    File.open(QFile::ReadOnly|QFile::Text); // 쓰기 전용, 텍스트
+    File.open(QFile::ReadOnly|QFile::Text); // 읽기 전용, 텍스트
     QTextStream in(&File);
     while(!in.atEnd())  // 파일 끝까지 읽어서
     {
@@ -59,12 +59,13 @@ void Document::load_doc(){
 //        qDebug()<<data->date<<'\n';
 //        qDebug()<<data->path<<'\n';
 //    }
-    QObjectList tabList = tab->box->children();
-    for(auto it:tabList){
-        if(it->objectName()=="boxAreaLayout") continue;
-        delete it;
+    if(tab){
+        QObjectList tabList = tab->box->children();
+        for(auto it:tabList){
+            if(it->objectName()=="boxAreaLayout") continue;
+            delete it;
+        }
     }
-
     QVBoxLayout* loadBox;
     for(auto it: dataList){
         if(it->type=="box"){

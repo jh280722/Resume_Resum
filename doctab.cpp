@@ -45,10 +45,6 @@ DocTab::DocTab(QWidget* parent, int srtIdx):QWidget(parent){
 }
 
 DocTab::~DocTab(){
-    delete this->VLayout;
-    delete this->boxArea;
-    delete this->SA;
-    delete this;
 }
 
 

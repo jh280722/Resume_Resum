@@ -69,7 +69,7 @@ void DoubleClickedWidget:: doubleClicked(){
     text->setFocus();
 }
 
-Document::Document(QString name, int srtIdx):QWidget(){
+Document::Document(QString name, int srtIdx, bool load):QWidget(){
     setObjectName("document");
     this->name=name;
     this->srtIdx=srtIdx;
@@ -81,7 +81,7 @@ Document::Document(QString name, int srtIdx):QWidget(){
         Directory.mkdir(srtPath+QString::number(srtIdx)); // 폴더 생성
         Directory.mkdir(docPath); // 폴더 생성
     }
-    init_docTab();
+    init_docTab(load);
 }
 
 Document::~Document(){
@@ -91,7 +91,7 @@ Document::~Document(){
 }
 
 //문서 만들때 한 번 실행되는 함수
-void Document::init_docTab() {
+void Document::init_docTab(bool load) {
 
     //스크롤 영역 위젯 생성
     tab=new DocTab(this,srtIdx);
@@ -172,7 +172,8 @@ void Document::init_docTab() {
         connect(PB, SIGNAL(clicked()), this, SLOT(make_doc8()));
         break;
     }
-    this->save_doc();
+    if(!load)
+        this->save_doc();
 }
 
 QVBoxLayout* Document::load_add_box() {
@@ -286,14 +287,10 @@ void Document::AddItemText(QVBoxLayout * boxlayout,QString name="default",QStrin
     QLabel* sep = new QLabel((" :"), newWidget);
     QLineEdit* LineEdit=new QLineEdit(value,newWidget);
 
-    QSplitter* split = new QSplitter();
-
-    split->addWidget(title);
-    split->addWidget(sep);
-    split->addWidget(LineEdit);
-
     newLayout->addWidget(delButton);
-    newLayout->addWidget(split);
+    newLayout->addWidget(title);
+    newLayout->addWidget(sep);
+    newLayout->addWidget(LineEdit);
     connect(delButton, SIGNAL(clicked()), this, SLOT(deleteItem()));
 
     newWidget->setLayout(newLayout);
