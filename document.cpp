@@ -187,61 +187,14 @@ QVBoxLayout* Document::load_add_box() {
     QVBoxLayout* boxLayout = new QVBoxLayout(box);
     boxLayout->setObjectName("groupBoxLayout");
     QVBoxLayout* layout = tab->boxArea;
-    QWidget* toolWidget = new QWidget(box);
 
-    QWidget* tmp=new QWidget();
-    Widget* nameWidget = new Widget(tmp);
-    Widget* ageWidget = new Widget(tmp);
-    Widget* addressWidget = new Widget(tmp);
+    add_tool_option(box,boxLayout);
 
-    QToolButton* tool = new QToolButton(toolWidget);
-    QHBoxLayout* toolLayout = new QHBoxLayout(toolWidget);
-    QMenu* Menu = new QMenu();
-    QMenu* InputMenu = new QMenu();
-    toolLayout->addStretch();
-    toolLayout->addWidget(tool, Qt::AlignRight);
-    //tool->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-
-    QAction* TBAAdd = new QAction(Kor("추가"), tool);
-    TBAAdd->setStatusTip(Kor("인적사항을 추가합니다."));
-    QAction* TBADelete = new QAction(Kor("삭제"), tool);
-    TBADelete->setStatusTip(Kor("인적사항을 삭제합니다."));
-    connect(TBADelete, SIGNAL(triggered()), this, SLOT(deleteBox()));
-
-
-    QAction* TBAAddText = new QAction(Kor("텍스트"), boxLayout);
-    connect(TBAAddText, SIGNAL(triggered()), this, SLOT(AddItemText()));
-    QAction* TBAAddTextarea = new QAction(Kor("글 상자"), boxLayout);
-    connect(TBAAddTextarea, SIGNAL(triggered()), this, SLOT(AddItemTextarea()));
-    QAction* TBAAddDropdown = new QAction(Kor("드롭 다운"), boxLayout);
-    connect(TBAAddDropdown, SIGNAL(triggered()), this, SLOT(AddItemDropdown()));
-    QAction* TBAAddDate = new QAction(Kor("날짜"), boxLayout);
-    connect(TBAAddDate, SIGNAL(triggered()), this, SLOT(AddItemDate()));
-    QAction* TBAAddImage = new QAction(Kor("이미지"), boxLayout);
-    connect(TBAAddImage, SIGNAL(triggered()), this, SLOT(AddItemImage()));
-
-    Menu->addAction(TBAAdd);
-    Menu->addAction(TBADelete);
-    InputMenu->addAction(TBAAddText);
-    InputMenu->addAction(TBAAddTextarea);
-    InputMenu->addAction(TBAAddDropdown);
-    InputMenu->addAction(TBAAddDate);
-    InputMenu->addAction(TBAAddImage);
-
-    TBAAdd->setMenu(InputMenu);
-    tool->setMenu(Menu);
-    tool->setPopupMode(QToolButton::InstantPopup);
-    toolWidget->setObjectName("tool");
-    nameWidget->setObjectName("text");
-    ageWidget->setObjectName("text");
-    addressWidget->setObjectName("text");
-
-    boxLayout->addWidget(toolWidget);
-
-
+    box->setAlignment(Qt::AlignTop);
     box->setMinimumSize(800, 800);
     box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     boxLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+    boxLayout->setAlignment(Qt::AlignTop);
 
     layout->addWidget(box);
 
@@ -685,28 +638,7 @@ void Document::AddItemDropdown(QVBoxLayout * boxlayout,QString name,QString sett
     newWidget->setObjectName("dropDown");
 }
 
-void Document::deleteItem() {
-
-    QObject* item = QObject::sender();
-    disconnect(item, SIGNAL(clicked()), this, SLOT(deleteItem()));
-    delete item->parent();
-}
-
-void Document::deleteBox() {
-    QObject* item = QObject::sender();
-    disconnect(item, SIGNAL(triggered()), this, SLOT(deleteBox()));
-    delete item->parent()->parent()->parent();
-}
-
-void Document::make_doc0() {
-}
-
-void Document::make_doc1() {
-    QGroupBox* box = new QGroupBox("", tab);
-    box->setObjectName("groupBox");
-    QVBoxLayout* boxLayout = new QVBoxLayout(box);
-    boxLayout->setObjectName("groupBoxLayout");
-    QVBoxLayout* layout = tab->boxArea;
+void Document::add_tool_option(QGroupBox* box, QVBoxLayout * boxLayout){
     QWidget* toolWidget = new QWidget(box);
 
     QToolButton* tool = new QToolButton(toolWidget);
@@ -746,45 +678,184 @@ void Document::make_doc1() {
     tool->setPopupMode(QToolButton::InstantPopup);
     toolWidget->setObjectName("tool");
 
-
     boxLayout->addWidget(toolWidget);
+}
 
+void Document::deleteItem() {
+
+    QObject* item = QObject::sender();
+    disconnect(item, SIGNAL(clicked()), this, SLOT(deleteItem()));
+    delete item->parent();
+}
+
+void Document::deleteBox() {
+    QObject* item = QObject::sender();
+    disconnect(item, SIGNAL(triggered()), this, SLOT(deleteBox()));
+    delete item->parent()->parent()->parent();
+}
+
+void Document::make_doc0() {
+    QGroupBox* box = new QGroupBox("", tab);
+    box->setObjectName("groupBox");
+    QVBoxLayout* boxLayout = new QVBoxLayout(box);
+    boxLayout->setObjectName("groupBoxLayout");
+    QVBoxLayout* layout = tab->boxArea;
+
+    add_tool_option(box, boxLayout);
+
+    box->setAlignment(Qt::AlignTop);
+    box->setMinimumSize(800, 800);
+    box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    boxLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+    boxLayout->setAlignment(Qt::AlignTop);
+
+    layout->addWidget(box);
+}
+
+void Document::make_doc1() {
+    QGroupBox* box = new QGroupBox("", tab);
+    box->setObjectName("groupBox");
+    QVBoxLayout* boxLayout = new QVBoxLayout(box);
+    boxLayout->setObjectName("groupBoxLayout");
+    QVBoxLayout* layout = tab->boxArea;
+
+    add_tool_option(box, boxLayout);
     AddItemText(boxLayout, Kor("이름"),"");
     AddItemText(boxLayout, Kor("나이"),"");
     AddItemText(boxLayout, Kor("주소"),"");
 
+    box->setAlignment(Qt::AlignTop);
     box->setMinimumSize(800, 800);
     box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     boxLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+
     layout->addWidget(box);
 }
 
 void Document::make_doc2() {
+    QGroupBox* box = new QGroupBox("", tab);
+    box->setObjectName("groupBox");
+    QVBoxLayout* boxLayout = new QVBoxLayout(box);
+    boxLayout->setObjectName("groupBoxLayout");
+    QVBoxLayout* layout = tab->boxArea;
 
+    add_tool_option(box, boxLayout);
+
+    box->setAlignment(Qt::AlignTop);
+    box->setMinimumSize(800, 800);
+    box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    boxLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+    boxLayout->setAlignment(Qt::AlignTop);
+
+    layout->addWidget(box);
 }
 
 void Document::make_doc3() {
+    QGroupBox* box = new QGroupBox("", tab);
+    box->setObjectName("groupBox");
+    QVBoxLayout* boxLayout = new QVBoxLayout(box);
+    boxLayout->setObjectName("groupBoxLayout");
+    QVBoxLayout* layout = tab->boxArea;
 
+    add_tool_option(box, boxLayout);
+
+    box->setAlignment(Qt::AlignTop);
+    box->setMinimumSize(800, 800);
+    box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    boxLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+    boxLayout->setAlignment(Qt::AlignTop);
+
+    layout->addWidget(box);
 }
 
 void Document::make_doc4() {
+    QGroupBox* box = new QGroupBox("", tab);
+    box->setObjectName("groupBox");
+    QVBoxLayout* boxLayout = new QVBoxLayout(box);
+    boxLayout->setObjectName("groupBoxLayout");
+    QVBoxLayout* layout = tab->boxArea;
 
+    add_tool_option(box, boxLayout);
+
+    box->setAlignment(Qt::AlignTop);
+    box->setMinimumSize(800, 800);
+    box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    boxLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+    boxLayout->setAlignment(Qt::AlignTop);
+
+    layout->addWidget(box);
 }
 
 void Document::make_doc5() {
+    QGroupBox* box = new QGroupBox("", tab);
+    box->setObjectName("groupBox");
+    QVBoxLayout* boxLayout = new QVBoxLayout(box);
+    boxLayout->setObjectName("groupBoxLayout");
+    QVBoxLayout* layout = tab->boxArea;
 
+    add_tool_option(box, boxLayout);
+
+    box->setAlignment(Qt::AlignTop);
+    box->setMinimumSize(800, 800);
+    box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    boxLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+    boxLayout->setAlignment(Qt::AlignTop);
+
+    layout->addWidget(box);
 }
 
 void Document::make_doc6() {
+    QGroupBox* box = new QGroupBox("", tab);
+    box->setObjectName("groupBox");
+    QVBoxLayout* boxLayout = new QVBoxLayout(box);
+    boxLayout->setObjectName("groupBoxLayout");
+    QVBoxLayout* layout = tab->boxArea;
 
+    add_tool_option(box, boxLayout);
+
+    box->setAlignment(Qt::AlignTop);
+    box->setMinimumSize(800, 800);
+    box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    boxLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+    boxLayout->setAlignment(Qt::AlignTop);
+
+    layout->addWidget(box);
 }
 
 void Document::make_doc7() {
+    QGroupBox* box = new QGroupBox("", tab);
+    box->setObjectName("groupBox");
+    QVBoxLayout* boxLayout = new QVBoxLayout(box);
+    boxLayout->setObjectName("groupBoxLayout");
+    QVBoxLayout* layout = tab->boxArea;
 
+    add_tool_option(box, boxLayout);
+
+    box->setAlignment(Qt::AlignTop);
+    box->setMinimumSize(800, 800);
+    box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    boxLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+    boxLayout->setAlignment(Qt::AlignTop);
+
+    layout->addWidget(box);
 }
 
 void Document::make_doc8() {
+    QGroupBox* box = new QGroupBox("", tab);
+    box->setObjectName("groupBox");
+    QVBoxLayout* boxLayout = new QVBoxLayout(box);
+    boxLayout->setObjectName("groupBoxLayout");
+    QVBoxLayout* layout = tab->boxArea;
 
+    add_tool_option(box, boxLayout);
+
+    box->setAlignment(Qt::AlignTop);
+    box->setMinimumSize(800, 800);
+    box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+    boxLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+    boxLayout->setAlignment(Qt::AlignTop);
+
+    layout->addWidget(box);
 }
 
 void Document::delete_doc(){

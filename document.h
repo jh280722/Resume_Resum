@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QGroupBox>
 #include <QVBoxLayout>
 #include <QToolButton>
 #include <QScrollArea>
@@ -27,6 +28,10 @@ public:
     DocTab* tab;
     void init_docTab(bool load);
     QVBoxLayout* load_add_box();
+
+
+private:
+    void add_tool_option(QGroupBox* box, QVBoxLayout * boxLayout);
 
 signals:
 public slots:
