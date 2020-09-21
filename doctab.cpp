@@ -41,6 +41,7 @@ DocTab::DocTab(QWidget* parent, int srtIdx):QWidget(parent){
     this->box->setObjectName("boxAreaWidget");
     this->boxArea=new QVBoxLayout(box);
     this->boxArea->setObjectName("boxAreaLayout");
+    boxArea->setAlignment(Qt::AlignTop);
     box->setLayout(boxArea);
 }
 

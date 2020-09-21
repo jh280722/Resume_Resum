@@ -130,9 +130,15 @@ void Document::init_docTab(bool load) {
     Par = new QWidget(tab);
     Par->setObjectName("addBoxButton");
     QHBoxLayout* plusButton = new QHBoxLayout(Par);
+
+    plusButton->addStretch();
+    PB=new QPushButton(Kor("표 추가"),Par);
+    PB->setObjectName("addTable");
+    connect(PB, SIGNAL(clicked()), this, SLOT(add_table_box()));
+
+    plusButton->addWidget(PB);
     PB=new QPushButton(Kor("추가"),Par);
     PB->setObjectName("addBox");
-    plusButton->addStretch();
     plusButton->addWidget(PB);
     plusButton->setAlignment(Qt::AlignTop);
 
@@ -754,6 +760,7 @@ void Document::make_doc1() {
     box->setMinimumSize(800, 800);
     box->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     boxLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+    boxLayout->setAlignment(Qt::AlignTop);
 
     layout->addWidget(box);
 }
