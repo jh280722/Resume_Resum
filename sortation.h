@@ -29,7 +29,6 @@ protected:
 private slots:
     void on_srtopen_clicked();
     void on_srtadd_clicked();
-    void on_srtadd_clicked(QString docName, int srtIdx);
     void on_docopen_clicked();
     void on_docactive_clicked();
     void save_docList();
@@ -38,5 +37,6 @@ private slots:
 
 private:
     bool eventFilter(QObject *object, QEvent *event);
+    void make_docBtn(QString docName, int srtIdx, bool isLoad);
 };
 #endif // SORTATION_H

@@ -27,6 +27,8 @@ Sortation::Sortation(QWidget *parent)
         open->setIcon(QIcon(":/images/plus_white.png"));
         open->setIconSize(QSize(16, 16));
         open->setFlat(true);
+        open->setAcceptDrops(true); //hahahahahaha
+        //open->installEventFilter(this);
         connect(open, SIGNAL(clicked()), this, SLOT(on_srtopen_clicked()));
         add->setObjectName("srt"+QString::number(i+1)+"add");
         add->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -34,6 +36,8 @@ Sortation::Sortation(QWidget *parent)
         add->setIcon(QIcon(":/images/portable-document-format-white.png"));
         add->setIconSize(QSize(16, 16));
         add->setFlat(true);
+        add->setAcceptDrops(true); //hahahahahaha
+        add->installEventFilter(this);
         connect(add, SIGNAL(clicked()), this, SLOT(on_srtadd_clicked()));
 
         srtLayout->setSpacing(0);
@@ -178,60 +182,11 @@ void Sortation::on_srtadd_clicked()
     }
 
     if (ok && !docName.isEmpty()) {
-        QObject* sel = QObject::sender();
-        QWidget* srt = (QWidget*)sel->parent();
-        QWidget* srtAreaWidgetContents = srt->parentWidget();
-        QVBoxLayout* srtAreaLayout = (QVBoxLayout*)srtAreaWidgetContents->layout();
-        QString selOpenName = srt->objectName().append("open");
-        QPushButton* selOpen = srt->findChild<QPushButton*>(selOpenName);
-
-        QWidget* newPBS = new QWidget(srtAreaWidgetContents);
-        QHBoxLayout* newPBSLayout = new QHBoxLayout(newPBS);
-        QPushButton* open = new QPushButton(docName, newPBS);
-        QPushButton* active = new QPushButton(newPBS);
-
-        open->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        open->setStyleSheet("padding-left: 20px; text-align: left; font-family: Malgun Gothic; font-size: 12px;");
-        open->setFlat(true);
-        connect(open, SIGNAL(clicked()), this, SLOT(on_docopen_clicked()));
-        active->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        active->setFixedWidth(41);
-        active->setFlat(true);
-        active->setIconSize(QSize(12, 12));
-        connect(active, SIGNAL(clicked()), this, SLOT(on_docactive_clicked()));
-
-        newPBSLayout->setSpacing(0);
-        newPBSLayout->setContentsMargins(0, 0, 0, 0);
-        newPBSLayout->addWidget(open);
-        newPBSLayout->addWidget(active);
-        //newDoc->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        newPBS->setFixedHeight(31);
-        newPBS->setLayout(newPBSLayout);
-        srtAreaLayout->insertWidget(srtRange[srtIdx+1]-1, newPBS);
-        //srtAreaWidgetContents->layout()->addWidget(newDoc);
-        //newDoc->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-
-        //버튼 리스트에 추가 | connect 해주기
-        Document* newDoc = new Document(docName, srtIdx);
-        newDoc->PBS=newPBS;
-        docList[srtIdx].push_back(newDoc);
-
-        for (int i = srtIdx + 1; i < 11; i++){
-            srtRange[i]++;
-        }
-
-        QString emptyName = srt->objectName().append("empty");
-        QWidget* empty = srt->parent()->findChild<QWidget*>(emptyName);
-
-        if (empty->height() > 0) empty->setFixedHeight(0);
-        if (empty->isHidden()) {
-            empty->show();
-            selOpen->setIcon(QIcon(":/images/minus_white.png"));
-        }
+        make_docBtn(docName, srtIdx, false);
     }
 }
 
-void Sortation::on_srtadd_clicked(QString docName, int srtIdx){
+void Sortation::make_docBtn(QString docName, int srtIdx, bool isLoad){
     QWidget* srt = this->parent()->findChild<QWidget*>("srt"+QString::number(srtIdx));
     QWidget* srtAreaWidgetContents = srt->parentWidget();
     QVBoxLayout* srtAreaLayout = (QVBoxLayout*)srtAreaWidgetContents->layout();
@@ -247,10 +202,13 @@ void Sortation::on_srtadd_clicked(QString docName, int srtIdx){
     open->setStyleSheet("padding-left: 20px; text-align: left; font-family: Malgun Gothic; font-size: 12px;");
     open->setFlat(true);
     open->installEventFilter(this);
+    open->setAcceptDrops(true);
     connect(open, SIGNAL(clicked()), this, SLOT(on_docopen_clicked()));
     active->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     active->setFixedWidth(41);
     active->setFlat(true);
+    active->installEventFilter(this);
+    active->setAcceptDrops(true);
     active->setIconSize(QSize(12, 12));
     connect(active, SIGNAL(clicked()), this, SLOT(on_docactive_clicked()));
 
@@ -268,7 +226,7 @@ void Sortation::on_srtadd_clicked(QString docName, int srtIdx){
     //버튼 리스트에 추가 | connect 해주기
     Document* newDoc = new Document(docName, srtIdx, 1);
     newDoc->PBS=newPBS;
-    newDoc->load_doc();
+    if(isLoad) newDoc->load_doc();
     docList[srtIdx].push_back(newDoc);
 
 
@@ -354,7 +312,7 @@ void Sortation::load_docList(){
         for(int i=0;i<num;i++){
             QString name;
             name = in.readLine();
-            on_srtadd_clicked(name,srtIdx);
+            make_docBtn(name, srtIdx, true);
         }
     }
     File.close(); // 파일닫기
@@ -362,9 +320,12 @@ void Sortation::load_docList(){
 
 bool Sortation::eventFilter(QObject *object, QEvent *event)
 {
+    if (event->type() == QEvent::MouseMove) {
+        //qDebug() << "sdf";
+    }
     if (event->type() == QEvent::MouseButtonPress) {
         QMouseEvent *MouseEvent = static_cast<QMouseEvent *>(event);
-        if (MouseEvent->button() != Qt::LeftButton)
+        if (MouseEvent->button() != Qt::RightButton)
             return false;
 
         QPushButton *targetBtn = qobject_cast<QPushButton*>(object);
@@ -383,10 +344,13 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
         p.setOpacity(0.5);
         p.drawPixmap(0, 0, *widgetPixmap);
         p.end();
+
         drag->setMimeData(mimeData);
         drag->setPixmap(*resultPixmap);
+        drag->setHotSpot(MouseEvent->pos() - target->rect().topLeft());
 
-        Qt::DropAction dropAction = drag->exec();
+        drag->exec();
+        //Qt::DropAction dropAction = drag->exec();
 
         return true;
     }

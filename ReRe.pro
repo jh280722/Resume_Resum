@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     data.cpp \
+    docbutton.cpp \
     doctab.cpp \
     document.cpp \
     document_item.cpp \
@@ -29,6 +30,7 @@ SOURCES += \
 
 HEADERS += \
     data.h \
+    docbutton.h \
     doctab.h \
     document.h \
     mainwindow.h \
