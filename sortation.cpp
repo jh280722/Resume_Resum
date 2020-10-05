@@ -9,6 +9,8 @@ int srtRange[11] = {0, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19};
 Sortation::Sortation(QWidget *parent)
     : QWidget(parent)
 {
+    setAcceptDrops(true);
+
     QWidget* srtAreaWidgetContents = parent->findChild<QWidget*>("srtAreaWidgetContents");
     QVBoxLayout* srtAreaLayout = new QVBoxLayout(srtAreaWidgetContents);
 
@@ -43,6 +45,7 @@ Sortation::Sortation(QWidget *parent)
         srt->setFixedHeight(41);
         srt->setStyleSheet("background-color: rgb(44, 62, 80);");
         srt->setLayout(srtLayout);
+        srt->installEventFilter(this);
         srtAreaLayout->addWidget(srt);
 
         QWidget* empty = new QWidget(srtAreaWidgetContents);
@@ -243,6 +246,7 @@ void Sortation::on_srtadd_clicked(QString docName, int srtIdx){
     open->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     open->setStyleSheet("padding-left: 20px; text-align: left; font-family: Malgun Gothic; font-size: 12px;");
     open->setFlat(true);
+    open->installEventFilter(this);
     connect(open, SIGNAL(clicked()), this, SLOT(on_docopen_clicked()));
     active->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     active->setFixedWidth(41);
@@ -354,4 +358,42 @@ void Sortation::load_docList(){
         }
     }
     File.close(); // ÆÄÀÏ´Ý±â
+}
+
+bool Sortation::eventFilter(QObject *object, QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress) {
+        QMouseEvent *MouseEvent = static_cast<QMouseEvent *>(event);
+        if (MouseEvent->button() != Qt::LeftButton)
+            return false;
+
+        QPushButton *targetBtn = qobject_cast<QPushButton*>(object);
+        QWidget *target = (QWidget*)targetBtn->parent();
+        QDrag *drag = new QDrag(this);
+        QMimeData *mimeData = new QMimeData;
+
+        mimeData->setText(targetBtn->text());
+
+        QPixmap *widgetPixmap = new QPixmap(target->size());
+        target->render(widgetPixmap);
+        QPixmap *resultPixmap = new QPixmap(target->size());
+        resultPixmap->fill(Qt::transparent);
+        QPainter p;
+        p.begin(resultPixmap);
+        p.setOpacity(0.5);
+        p.drawPixmap(0, 0, *widgetPixmap);
+        p.end();
+        drag->setMimeData(mimeData);
+        drag->setPixmap(*resultPixmap);
+
+        Qt::DropAction dropAction = drag->exec();
+
+        return true;
+    }
+
+    if (event->type() == QEvent::Drop) {
+        qDebug() << "qer";
+    }
+
+    return false;
 }
