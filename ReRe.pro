@@ -33,6 +33,7 @@ HEADERS += \
     docbutton.h \
     doctab.h \
     document.h \
+    doubleclickedwidget.h \
     mainwindow.h \
     sortation.h
 

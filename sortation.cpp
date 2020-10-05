@@ -127,7 +127,7 @@ void Sortation::on_docopen_clicked() {
     }
 
     for (int i = 0; i < docTab->count(); ++i) {
-        if (selPB->text() == docTab->tabText(i)) {
+        if (QString::number(srtIdx)+'_'+ selPB->text() == docTab->tabText(i)) {
             existList = true;
             tabIdx = i;
             break;
@@ -141,7 +141,7 @@ void Sortation::on_docopen_clicked() {
         QWidget* new_tab = docList[srtIdx][subSrtIdx];
 
         docTab->tabBar()->setStyleSheet(QString("QTabBar::tab { width:100; }"));
-        docTab->addTab(new_tab, selPB->text());
+        docTab->addTab(new_tab, QString::number(srtIdx)+'_'+ selPB->text());
         docTab->setCurrentIndex(docTab->count() - 1);
     }
 }

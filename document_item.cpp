@@ -3,58 +3,10 @@
 #include "sortation.h"
 #include "ui_mainwindow.h"
 #include "data.h"
+#include "doubleclickedwidget.h"
 #include <QFile>
 
 
-class Widget : public QWidget{
-
-public:
-    Widget(QWidget *parent=nullptr): QWidget(parent){
-        this->installEventFilter(this);
-    };
-
-protected:
-    bool eventFilter(QObject *obj,QEvent *ev) override{
-        QPushButton * delButton= obj->findChild<QPushButton*>("delButton");
-        this->show();
-        if(ev->type()==QEvent::Enter){
-            delButton->setAutoFillBackground(0);
-            delButton->setFlat(0);
-            return false;
-        }
-        else if(ev->type()==QEvent::Leave){
-            delButton->setAutoFillBackground(0);
-            delButton->setFlat(1);
-            return false;
-        }
-    }
-};
-
-class DoubleClickedWidget : public QLabel{
-    Q_GADGET
-public:
-    DoubleClickedWidget(QLabel *parent=nullptr): QLabel(parent){
-        this->setText(parent->text());
-        this->setMaximumWidth(200);
-        this->setFixedWidth(100);
-        this->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-
-    };
-    ~DoubleClickedWidget(){
-
-    };
-public slots:
-    void hideText();
-signals:
-    void doubleClicked();
-
-protected:
-    void mouseDoubleClickEvent(QMouseEvent *event)
-    {
-        emit doubleClicked();
-    }
-
-};
 void  DoubleClickedWidget::hideText(){
     QLabel* label=qobject_cast<QLabel*>(this);
     QLineEdit* edit=this->parent()->findChild<QLineEdit*>("titleEdit");
@@ -666,9 +618,9 @@ void Document::add_tool_option(QGroupBox* box, QLayout * boxLayout){
     toolLayout->addWidget(tool, Qt::AlignRight);
 
     QAction* TBAAdd = new QAction(Kor("추가"), tool);
-    TBAAdd->setStatusTip(Kor("인적사항을 추가합니다."));
+    TBAAdd->setStatusTip(Kor("아이템을 추가합니다."));
     QAction* TBADelete = new QAction(Kor("삭제"), tool);
-    TBADelete->setStatusTip(Kor("인적사항을 삭제합니다."));
+    TBADelete->setStatusTip(Kor("박스를 삭제합니다."));
     connect(TBADelete, SIGNAL(triggered()), this, SLOT(deleteBox()));
 
     QAction* TBAAddText = new QAction(Kor("텍스트"), boxLayout);

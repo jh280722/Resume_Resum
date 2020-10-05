@@ -32,6 +32,7 @@ public:
 
 private:
     void add_tool_option(QGroupBox* box, QLayout * boxLayout);
+    void add_table_tool_option(QGroupBox* box, QLayout * boxLayout);
 
 signals:
 public slots:
@@ -44,7 +45,6 @@ private slots:
     void active_doc_select();
 
     //box
-    void add_table_box();
     void make_doc0();
     void make_doc1();
     void make_doc2();
@@ -72,6 +72,10 @@ private slots:
     void AddItemDropdown(QLayout*,QString,QString);
     void AddItemPeriod(QLayout*,QString,QString,QString);
 
+    //table
+    void add_table_box();
+    void add_row();
+    void add_col();
 private:
     int srtIdx;
     bool active;
