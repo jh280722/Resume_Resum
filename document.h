@@ -31,7 +31,7 @@ public:
 
 
 private:
-    void add_tool_option(QGroupBox* box, QVBoxLayout * boxLayout);
+    void add_tool_option(QGroupBox* box, QLayout * boxLayout);
 
 signals:
 public slots:
@@ -44,6 +44,7 @@ private slots:
     void active_doc_select();
 
     //box
+    void add_table_box();
     void make_doc0();
     void make_doc1();
     void make_doc2();
@@ -64,12 +65,12 @@ private slots:
     void AddItemPeriod();
     void AddItemDropdown();
     void deleteItem();
-    void AddItemText(QVBoxLayout*,QString,QString);
-    void AddItemTextarea(QVBoxLayout*,QString,QString);
-    void AddItemImage(QVBoxLayout*,QString,QString);
-    void AddItemDate(QVBoxLayout*,QString,QString);
-    void AddItemDropdown(QVBoxLayout*,QString,QString);
-    void AddItemPeriod(QVBoxLayout*,QString,QString,QString);
+    void AddItemText(QLayout*,QString,QString);
+    void AddItemTextarea(QLayout*,QString,QString);
+    void AddItemImage(QLayout*,QString,QString);
+    void AddItemDate(QLayout*,QString,QString);
+    void AddItemDropdown(QLayout*,QString,QString);
+    void AddItemPeriod(QLayout*,QString,QString,QString);
 
 private:
     int srtIdx;

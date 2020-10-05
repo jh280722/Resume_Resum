@@ -20,6 +20,9 @@ SOURCES += \
     data.cpp \
     doctab.cpp \
     document.cpp \
+    document_item.cpp \
+    document_make_doc.cpp \
+    document_table_box.cpp \
     main.cpp \
     mainwindow.cpp \
     sortation.cpp
