@@ -34,6 +34,7 @@ QT_END_NAMESPACE
 extern QString srtTitle[9];
 extern QString AppPath;
 extern QString srtPath;
+extern float DPI;
 
 class MainWindow : public QMainWindow
 {
