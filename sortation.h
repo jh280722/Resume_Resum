@@ -38,5 +38,11 @@ private slots:
 private:
     bool eventFilter(QObject *object, QEvent *event);
     void make_docBtn(QString docName, int srtIdx, bool isLoad);
+//    void dropEvent(QDropEvent *event)override;
+//    void dragEnterEvent(QDragEnterEvent * event)override;
+//    void mouseMoveEvent(QMouseEvent* event)override;
+//    void mousePressEvent(QMouseEvent* event)override;
+    QPoint startpos;
+
 };
 #endif // SORTATION_H

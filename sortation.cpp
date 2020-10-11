@@ -3,7 +3,7 @@
 #include "sortation.h"
 
 QStringList sortations = {Kor("인적 사항"), Kor("학력 사항"), Kor("경력 사항"), Kor("활동 및 수상경력"),
-        Kor("자격증"), Kor("프로젝트"), Kor("자기소개서"), Kor("포트폴리오"), Kor("기타")};
+                          Kor("자격증"), Kor("프로젝트"), Kor("자기소개서"), Kor("포트폴리오"), Kor("기타")};
 int srtRange[11] = {0, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19};
 
 Sortation::Sortation(QWidget *parent)
@@ -37,7 +37,7 @@ Sortation::Sortation(QWidget *parent)
         add->setIconSize(QSize(16, 16));
         add->setFlat(true);
         add->setAcceptDrops(true); //hahahahahaha
-        add->installEventFilter(this);
+        //add->installEventFilter(this);
         connect(add, SIGNAL(clicked()), this, SLOT(on_srtadd_clicked()));
 
         srtLayout->setSpacing(0);
@@ -49,7 +49,7 @@ Sortation::Sortation(QWidget *parent)
         srt->setFixedHeight(41);
         srt->setStyleSheet("background-color: rgb(44, 62, 80);");
         srt->setLayout(srtLayout);
-        srt->installEventFilter(this);
+        //srt->installEventFilter(this);
         srtAreaLayout->addWidget(srt);
 
         QWidget* empty = new QWidget(srtAreaWidgetContents);
@@ -320,44 +320,184 @@ void Sortation::load_docList(){
 
 bool Sortation::eventFilter(QObject *object, QEvent *event)
 {
-    if (event->type() == QEvent::MouseMove) {
-        //qDebug() << "sdf";
-    }
     if (event->type() == QEvent::MouseButtonPress) {
-        QMouseEvent *MouseEvent = static_cast<QMouseEvent *>(event);
-        if (MouseEvent->button() != Qt::RightButton)
-            return false;
+        //        QMouseEvent *MouseEvent = static_cast<QMouseEvent *>(event);
+        //        if (MouseEvent->button() != Qt::RightButton)
+        //            return false;
 
-        QPushButton *targetBtn = qobject_cast<QPushButton*>(object);
-        QWidget *target = (QWidget*)targetBtn->parent();
-        QDrag *drag = new QDrag(this);
-        QMimeData *mimeData = new QMimeData;
+        //        QPushButton *targetBtn = qobject_cast<QPushButton*>(object);
+        //        QWidget *target = (QWidget*)targetBtn->parent();
+        //        QDrag *drag = new QDrag(this);
+        //        QMimeData *mimeData = new QMimeData;
+        //        QByteArray itemData;
+        //        QDataStream dataStream(&itemData, QIODevice::WriteOnly);
 
-        mimeData->setText(targetBtn->text());
+        //        mimeData->setData("application/x-qtcustomitem", itemData);
+        //        mimeData->setText(targetBtn->text());
 
-        QPixmap *widgetPixmap = new QPixmap(target->size());
-        target->render(widgetPixmap);
-        QPixmap *resultPixmap = new QPixmap(target->size());
-        resultPixmap->fill(Qt::transparent);
-        QPainter p;
-        p.begin(resultPixmap);
-        p.setOpacity(0.5);
-        p.drawPixmap(0, 0, *widgetPixmap);
-        p.end();
+        //        QPixmap *widgetPixmap = new QPixmap(target->size());
+        //        target->render(widgetPixmap);
+        //        QPixmap *resultPixmap = new QPixmap(target->size());
+        //        resultPixmap->fill(Qt::transparent);
+        //        QPainter p;
+        //        p.begin(resultPixmap);
+        //        p.setOpacity(0.5);
+        //        p.drawPixmap(0, 0, *widgetPixmap);
+        //        p.end();
 
-        drag->setMimeData(mimeData);
-        drag->setPixmap(*resultPixmap);
-        drag->setHotSpot(MouseEvent->pos() - target->rect().topLeft());
+        //        drag->setMimeData(mimeData);
+        //        drag->setPixmap(*resultPixmap);
+        //        drag->setHotSpot(MouseEvent->pos() - target->rect().topLeft());
 
-        drag->exec();
-        //Qt::DropAction dropAction = drag->exec();
-
+        //        drag->exec();
+        //        //Qt::DropAction dropAction = drag->exec();
+        QMouseEvent*e= static_cast<QMouseEvent *>(event);
+        if(e->button() == Qt::LeftButton)
+            startpos = e->pos();
         return true;
     }
 
     if (event->type() == QEvent::Drop) {
-        qDebug() << "qer";
+        QDropEvent*e= static_cast<QDropEvent *>(event);
+        if(e->mimeData()->hasFormat("application/x-qtcustomitem")) {
+            QByteArray itemData = e->mimeData()->data("application/x-qtcustomitem");
+            QDataStream dataStream(&itemData, QIODevice::ReadOnly);
+
+            QPixmap pixmap;
+            QPoint offset;
+            dataStream >> pixmap >> offset;
+            qDebug()<<pixmap;
+            qDebug()<<e->mimeData()->text();
+
+            if(e->source() == this) {
+                e->setDropAction(Qt::MoveAction);
+                e->accept();
+            } else {
+                e->setDropAction(Qt::CopyAction);
+            }
+        } else {
+            e->ignore();
+        }
+    }
+    if(event->type()==QEvent::DragEnter){
+        QDragEnterEvent*e= static_cast<QDragEnterEvent *>(event);
+        qDebug() << "Possible actions : " << e->possibleActions();
+        if(e->mimeData()->hasFormat("application/x-qtcustomitem")) {
+            if(e->source() == this) {
+                e->setDropAction(Qt::MoveAction);
+                e->accept();
+            } else {
+                e->acceptProposedAction();
+            }
+        } else {
+            e->ignore();
+        }
+    }
+    if(event->type()==QEvent::MouseMove){
+        QMouseEvent*e= static_cast<QMouseEvent *>(event);
+        if(e->buttons() & Qt::LeftButton) {
+            int distance = (e->pos() - startpos).manhattanLength();
+            if(distance >= QApplication::startDragDistance())
+            {
+                QDrag * drag = new QDrag(this);
+                QMimeData * mimeData = new QMimeData;
+                QByteArray itemData;
+                QDataStream dataStream(&itemData, QIODevice::WriteOnly);
+                //QPixmap pixmap;
+
+                QPushButton *targetBtn = qobject_cast<QPushButton*>(object);
+                QWidget *target = (QWidget*)targetBtn->parent();
+                QPixmap *widgetPixmap = new QPixmap(target->size());
+                target->render(widgetPixmap);
+                QPixmap *resultPixmap = new QPixmap(target->size());
+                resultPixmap->fill(Qt::transparent);
+                QPainter p;
+                p.begin(resultPixmap);
+                p.setOpacity(0.5);
+                p.drawPixmap(0, 0, *widgetPixmap);
+                p.end();
+
+                drag->setHotSpot(e->pos() - target->rect().topLeft());
+
+
+                dataStream << resultPixmap << QPoint(e->pos() - startpos);
+
+                mimeData->setData("application/x-qtcustomitem", itemData);
+                mimeData->setText(targetBtn->text());
+                drag->setMimeData(mimeData);
+                drag->setPixmap(*resultPixmap);
+                drag->exec();
+            }
+        }
     }
 
     return false;
 }
+//void Sortation::dropEvent(QDropEvent *event){
+//    qDebug() << "Dropping data";
+//    if(event->mimeData()->hasFormat("application/x-qtcustomitem")) {
+//        QByteArray itemData = event->mimeData()->data("application/x-qtcustomitem");
+//        QDataStream dataStream(&itemData, QIODevice::ReadOnly);
+
+//        QPixmap pixmap;
+//        QPoint offset;
+//        dataStream >> pixmap >> offset;
+
+//        if(event->source() == this) {
+//            event->setDropAction(Qt::MoveAction);
+//            event->accept();
+//        } else {
+//            event->setDropAction(Qt::CopyAction);
+//        }
+//    } else {
+//        event->ignore();
+//    }
+//}
+//void Sortation::dragEnterEvent(QDragEnterEvent * event)
+//{
+//    qDebug() << "Possible actions : " << event->possibleActions();
+//    if(event->mimeData()->hasFormat("application/x-qtcustomitem")) {
+//        if(event->source() == this) {
+//            event->setDropAction(Qt::MoveAction);
+//            event->accept();
+//        } else {
+//            event->acceptProposedAction();
+//        }
+//    } else {
+//        event->ignore();
+//    }
+//}
+//void Sortation::mouseMoveEvent(QMouseEvent* event)
+//{
+//    if(event->buttons() & Qt::LeftButton) {
+//        int distance = (event->pos() - startpos).manhattanLength();
+//        if(distance >= QApplication::startDragDistance())
+//        {
+//            QDrag * drag = new QDrag(this);
+//            QMimeData * mimeData = new QMimeData;
+//            qDebug()<<2;
+//            drag->setMimeData(mimeData);
+//            QByteArray itemData;
+//            QDataStream dataStream(&itemData, QIODevice::WriteOnly);
+//            QPixmap pixmap;
+
+//            dataStream << pixmap << QPoint(event->pos() - startpos);
+
+//            mimeData->setData("application/x-qtcustomitem", itemData);
+
+//            drag->setMimeData(mimeData);
+//            drag->setPixmap(pixmap);
+//            drag->exec();
+//        }
+//    }
+
+//    QWidget::mouseMoveEvent(event);
+//}
+//void Sortation::mousePressEvent(QMouseEvent* event)
+//{
+//    qDebug()<<startpos;
+//    if(event->button() == Qt::LeftButton)
+//        startpos = event->pos();
+
+//    QWidget::mousePressEvent(event);
+//}
