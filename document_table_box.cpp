@@ -39,7 +39,13 @@ void Document::add_table_box() {
     table->resizeColumnsToContents();
     table->resizeRowsToContents();
 
-    int h = table->horizontalHeader()->height()+68;
+    int h = table->horizontalHeader()->height() + 68;
+    if(DPI==1.25){
+        h+=13;
+    }
+    else if(DPI==1.5){
+        h+=27;
+    }
     //헤더 높이 + 툴 버튼 30 + 마진 9씩(툴 18, table 18) 36 + box margin 2 = 68
     for(int i=0;i<table->rowCount();i++){
         h += table->rowHeight(i);
@@ -62,7 +68,13 @@ void Document::add_row(){
     table->setRowCount(table->rowCount()+1);
     table->resizeRowsToContents();
 
-    int h = table->horizontalHeader()->height()+68;
+    int h = table->horizontalHeader()->height() + 68;
+    if(DPI==1.25){
+        h+=13;
+    }
+    else if(DPI==1.5){
+        h+=27;
+    }
     //헤더 높이 + 툴 버튼 30 + 마진 9씩(툴 18, table 18) 36 + box margin 2 = 68
     for(int i=0;i<table->rowCount();i++){
         h += table->rowHeight(i);
@@ -79,6 +91,12 @@ void Document::add_col(){
     table->resizeRowsToContents();
 
     int h = table->horizontalHeader()->height()+68;
+    if(DPI==1.25){
+        h+=13;
+    }
+    else if(DPI==1.5){
+        h+=27;
+    }
     //헤더 높이 + 툴 버튼 30 + 마진 9씩(툴 18, table 18) 36 + box margin 2 = 68
     for(int i=0;i<table->rowCount();i++){
         h += table->rowHeight(i);
