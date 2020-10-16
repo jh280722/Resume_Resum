@@ -52,17 +52,4 @@ MainWindow::MainWindow(QWidget* parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-
-}
-
-QPushButton* MainWindow::new_button(QString name, QString str)
-{
-    QPushButton* button = new QPushButton(str);
-    button->setObjectName(name);
-    return button;
-}
-
-
-void MainWindow::on_docTab_deleteTab(int idx) {
-    ui->docTab->removeTab(idx);
 }

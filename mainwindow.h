@@ -44,21 +44,9 @@ public:
     MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
-signals:
-private slots:
-    void on_docTab_deleteTab(int);
-
 private:
     //UI
     Ui::MainWindow* ui;
-
-    int srtIdx = -1;
-    //QPLIST
-    QPushButton* new_button(QString name, QString str);
-
-    //TABLIST
-    QPushButton* pBtn;
-    void add_box(QWidget* docTab, int listIdx);
 
 };
 
