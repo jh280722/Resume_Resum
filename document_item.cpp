@@ -555,7 +555,7 @@ void Document::AddItemPeriod(QLayout * boxlayout, QString name,QString st,QStrin
     Widget* newWidget = new Widget(tmp);
     QHBoxLayout* newLayout = new QHBoxLayout();
     QPushButton* delButton = new QPushButton(newWidget);
-    QLabel* titleLabel=new QLabel(Kor("³¯ Â¥"));
+    QLabel* titleLabel=new QLabel(name);
     QLineEdit* titleEdit=new QLineEdit(newWidget);
     DoubleClickedWidget* title = new DoubleClickedWidget(titleLabel);
     QLabel* sep = new QLabel((" :"), newWidget);
