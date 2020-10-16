@@ -28,7 +28,7 @@ Sortation::Sortation(QWidget *parent)
         open->setIconSize(QSize(16, 16));
         open->setFlat(true);
         open->setAcceptDrops(true); //hahahahahaha
-        //open->installEventFilter(this);
+        open->installEventFilter(this);
         connect(open, SIGNAL(clicked()), this, SLOT(on_srtopen_clicked()));
         add->setObjectName("srt"+QString::number(i+1)+"add");
         add->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -37,7 +37,7 @@ Sortation::Sortation(QWidget *parent)
         add->setIconSize(QSize(16, 16));
         add->setFlat(true);
         add->setAcceptDrops(true); //hahahahahaha
-        //add->installEventFilter(this);
+        add->installEventFilter(this);
         connect(add, SIGNAL(clicked()), this, SLOT(on_srtadd_clicked()));
 
         srtLayout->setSpacing(0);
@@ -146,23 +146,12 @@ void Sortation::on_docopen_clicked() {
     }
 }
 
-
-void Sortation::on_srtadd_clicked()
-{
-    QObject* sel = QObject::sender();
-    QWidget* srt = (QWidget*)sel->parent();
-    int srtIdx = srt->objectName().remove(0,3).toInt();
-
-    bool ok;
-
-    QString docName = QInputDialog::getText(this, Kor("새 문서"), Kor("이름을 입력하세요:"), QLineEdit::Normal, "", &ok);
-
+QString Sortation:: name_check(QString docName,int srtIdx){
     QStringList currentNameList;
     for (auto i : docList[srtIdx]) {
         QPushButton* docOpen = i->PBS->findChildren<QPushButton*>().first();
         currentNameList.append(docOpen->text());
     }
-    qDebug() << currentNameList;
 
     if (currentNameList.contains(docName)) {
         int i = 2;
@@ -176,13 +165,24 @@ void Sortation::on_srtadd_clicked()
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         msgBox.setDefaultButton(QMessageBox::Yes);
         int ret = msgBox.exec();
-
-        if (ret == QMessageBox::No) return;
+        if (ret == QMessageBox::No)docName="";
         else docName = alterName;
     }
+    return docName;
+}
+void Sortation::on_srtadd_clicked()
+{
+    QObject* sel = QObject::sender();
+    QWidget* srt = (QWidget*)sel->parent();
+    int srtIdx = srt->objectName().remove(0,3).toInt();
 
-    if (ok && !docName.isEmpty()) {
-        make_docBtn(docName, srtIdx, false);
+    bool ok;
+
+    QString docName = QInputDialog::getText(this, Kor("새 문서"), Kor("이름을 입력하세요:"), QLineEdit::Normal, "", &ok);
+    QString getName =name_check(docName,srtIdx);
+
+    if (ok && !getName.isEmpty()) {
+        make_docBtn(getName, srtIdx, false);
     }
 }
 
@@ -217,9 +217,10 @@ void Sortation::make_docBtn(QString docName, int srtIdx, bool isLoad){
     newPBSLayout->addWidget(open);
     newPBSLayout->addWidget(active);
     //newDoc->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    newPBS->setObjectName(QString::number(srtIdx) + "_" + docName);
     newPBS->setFixedHeight(31);
     newPBS->setLayout(newPBSLayout);
-    srtAreaLayout->insertWidget(srtRange[srtIdx+1]-1, newPBS);
+    srtAreaLayout->insertWidget(srtRange[srtIdx+1]-2, newPBS);
     //srtAreaWidgetContents->layout()->addWidget(newDoc);
     //newDoc->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
@@ -229,11 +230,10 @@ void Sortation::make_docBtn(QString docName, int srtIdx, bool isLoad){
     if(isLoad) newDoc->load_doc();
     docList[srtIdx].push_back(newDoc);
 
-
     for (int i = srtIdx + 1; i < 11; i++){
         srtRange[i]++;
     }
-
+    qDebug() << srtRange[0] << ", " << srtRange[1] << ", " << srtRange[2] << ", " << srtRange[3] << ", " << srtRange[4] << ", " << srtRange[5] << ", " << srtRange[6] << ", " << srtRange[7] << ", " << srtRange[8] << ", " << srtRange[9] << ", " << srtRange[10];
     QString emptyName = srt->objectName().append("empty");
     QWidget* empty = srt->parent()->findChild<QWidget*>(emptyName);
 
@@ -320,46 +320,74 @@ void Sortation::load_docList(){
 
 bool Sortation::eventFilter(QObject *object, QEvent *event)
 {
-    if (event->type() == QEvent::MouseButtonPress) {
-        //        QMouseEvent *MouseEvent = static_cast<QMouseEvent *>(event);
-        //        if (MouseEvent->button() != Qt::RightButton)
-        //            return false;
+    //    if (event->type() == QEvent::MouseButtonRelease) {
 
-        //        QPushButton *targetBtn = qobject_cast<QPushButton*>(object);
-        //        QWidget *target = (QWidget*)targetBtn->parent();
-        //        QDrag *drag = new QDrag(this);
-        //        QMimeData *mimeData = new QMimeData;
-        //        QByteArray itemData;
-        //        QDataStream dataStream(&itemData, QIODevice::WriteOnly);
-
-        //        mimeData->setData("application/x-qtcustomitem", itemData);
-        //        mimeData->setText(targetBtn->text());
-
-        //        QPixmap *widgetPixmap = new QPixmap(target->size());
-        //        target->render(widgetPixmap);
-        //        QPixmap *resultPixmap = new QPixmap(target->size());
-        //        resultPixmap->fill(Qt::transparent);
-        //        QPainter p;
-        //        p.begin(resultPixmap);
-        //        p.setOpacity(0.5);
-        //        p.drawPixmap(0, 0, *widgetPixmap);
-        //        p.end();
-
-        //        drag->setMimeData(mimeData);
-        //        drag->setPixmap(*resultPixmap);
-        //        drag->setHotSpot(MouseEvent->pos() - target->rect().topLeft());
-
-        //        drag->exec();
-        //        //Qt::DropAction dropAction = drag->exec();
-        QMouseEvent*e= static_cast<QMouseEvent *>(event);
-        if(e->button() == Qt::LeftButton)
-            startpos = e->pos();
-        return true;
-    }
-
+    //        QMouseEvent*e= static_cast<QMouseEvent *>(event);
+    //         int distance = (e->pos() - startpos).manhattanLength();
+    //         if(distance < QApplication::startDragDistance()){
+    //             emit
+    //             return false;
+    //         }
+    //    }
     if (event->type() == QEvent::Drop) {
         QDropEvent*e= static_cast<QDropEvent *>(event);
         if(e->mimeData()->hasFormat("application/x-qtcustomitem")) {
+            //srt 같은 srt
+            QWidget* srt = (QWidget*)object->parent();
+            QWidget* srtAreaWidgetContents = srt->parentWidget();
+            QVBoxLayout* srtAreaLayout = (QVBoxLayout*)srt->parentWidget()->layout();
+            QString selOpenName = srt->objectName().append("open");
+            QPushButton* selOpen = srt->findChild<QPushButton*>(selOpenName);
+            QString selDocName = e->mimeData()->text();
+            QWidget * selDoc = srtAreaWidgetContents->findChild<QWidget*>(selDocName);
+            int subSrtIdx;
+
+            int srtIdxTo = srt->objectName().remove(0,3).toInt();
+            int srtIdxFrom = selDocName[0].unicode()-'0';
+            //            bool ok;
+            //            QString docName = QInputDialog::getText(this, Kor("새 문서"), Kor("이름을 입력하세요:"), QLineEdit::Normal, "", &ok);
+            //            QString getName =name_check(docName,srtIdx);
+            //            make_docBtn(e->mimeData()->text(), srtIdx, false);
+
+//            QString tmpName =e->mimeData()->text();
+//            tmpName.remove(0,2);
+            qDebug()<<srtIdxTo;
+             qDebug()<<srtIdxFrom;
+            //if(srtIdxTo!=srtIdxFrom){
+            for(auto it:docList[srtIdxFrom]){
+
+                if(it->PBS==selDoc){
+                    subSrtIdx=docList[srtIdxFrom].indexOf(it);
+                    docList[srtIdxTo].push_back(it);
+                    docList[srtIdxFrom].remove(subSrtIdx);
+                    break;
+                }
+            }
+            selDocName[0]=srtIdxTo+'0';
+             selDoc->setObjectName(selDocName);
+
+            srtAreaLayout->insertWidget(srtRange[srtIdxTo+1]-2,selDoc);
+
+            for (int i = srtIdxTo+1; i < srtIdxFrom+1; i++){
+                srtRange[i]++;
+            }
+            for (int i = srtIdxFrom+1; i < srtIdxTo+1; i++){
+                srtRange[i]--;
+            }
+//            for(int i=0;i<=10;++i){
+//                qDebug()<<srtRange[i];
+//            }
+            qDebug() << srtRange[srtIdxTo+1]-2;
+            qDebug() << srtRange[0] << ", " << srtRange[1] << ", " << srtRange[2] << ", " << srtRange[3] << ", " << srtRange[4] << ", " << srtRange[5] << ", " << srtRange[6] << ", " << srtRange[7] << ", " << srtRange[8] << ", " << srtRange[9] << ", " << srtRange[10];
+            QString emptyName = srt->objectName().append("empty");
+            QWidget* empty = srt->parent()->findChild<QWidget*>(emptyName);
+
+            if (empty->height() > 0) empty->setFixedHeight(0);
+            if (empty->isHidden()) {
+                empty->show();
+                selOpen->setIcon(QIcon(":/images/minus_white.png"));
+            }
+
             QByteArray itemData = e->mimeData()->data("application/x-qtcustomitem");
             QDataStream dataStream(&itemData, QIODevice::ReadOnly);
 
@@ -368,13 +396,7 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
             dataStream >> pixmap >> offset;
             qDebug()<<pixmap;
             qDebug()<<e->mimeData()->text();
-
-            if(e->source() == this) {
-                e->setDropAction(Qt::MoveAction);
-                e->accept();
-            } else {
-                e->setDropAction(Qt::CopyAction);
-            }
+            //}
         } else {
             e->ignore();
         }
@@ -396,108 +418,36 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
     if(event->type()==QEvent::MouseMove){
         QMouseEvent*e= static_cast<QMouseEvent *>(event);
         if(e->buttons() & Qt::LeftButton) {
-            int distance = (e->pos() - startpos).manhattanLength();
-            if(distance >= QApplication::startDragDistance())
-            {
-                QDrag * drag = new QDrag(this);
-                QMimeData * mimeData = new QMimeData;
-                QByteArray itemData;
-                QDataStream dataStream(&itemData, QIODevice::WriteOnly);
-                //QPixmap pixmap;
+            QDrag * drag = new QDrag(this);
+            QMimeData * mimeData = new QMimeData;
+            QByteArray itemData;
+            QDataStream dataStream(&itemData, QIODevice::WriteOnly);
+            //QPixmap pixmap;
 
-                QPushButton *targetBtn = qobject_cast<QPushButton*>(object);
-                QWidget *target = (QWidget*)targetBtn->parent();
-                QPixmap *widgetPixmap = new QPixmap(target->size());
-                target->render(widgetPixmap);
-                QPixmap *resultPixmap = new QPixmap(target->size());
-                resultPixmap->fill(Qt::transparent);
-                QPainter p;
-                p.begin(resultPixmap);
-                p.setOpacity(0.5);
-                p.drawPixmap(0, 0, *widgetPixmap);
-                p.end();
+            QPushButton *targetBtn = qobject_cast<QPushButton*>(object);
+            QWidget *target = (QWidget*)targetBtn->parent();
+            QPixmap *widgetPixmap = new QPixmap(target->size());
+            target->render(widgetPixmap);
+            QPixmap *resultPixmap = new QPixmap(target->size());
+            resultPixmap->fill(Qt::transparent);
+            QPainter p;
+            p.begin(resultPixmap);
+            p.setOpacity(0.5);
+            p.drawPixmap(0, 0, *widgetPixmap);
+            p.end();
 
-                drag->setHotSpot(e->pos() - target->rect().topLeft());
+            drag->setHotSpot(e->pos() - target->rect().topLeft());
 
 
-                dataStream << resultPixmap << QPoint(e->pos() - startpos);
 
-                mimeData->setData("application/x-qtcustomitem", itemData);
-                mimeData->setText(targetBtn->text());
-                drag->setMimeData(mimeData);
-                drag->setPixmap(*resultPixmap);
-                drag->exec();
-            }
+            mimeData->setData("application/x-qtcustomitem", itemData);
+            mimeData->setText(target->objectName());
+            drag->setMimeData(mimeData);
+            drag->setPixmap(*resultPixmap);
+            drag->exec();
+
         }
     }
 
     return false;
 }
-//void Sortation::dropEvent(QDropEvent *event){
-//    qDebug() << "Dropping data";
-//    if(event->mimeData()->hasFormat("application/x-qtcustomitem")) {
-//        QByteArray itemData = event->mimeData()->data("application/x-qtcustomitem");
-//        QDataStream dataStream(&itemData, QIODevice::ReadOnly);
-
-//        QPixmap pixmap;
-//        QPoint offset;
-//        dataStream >> pixmap >> offset;
-
-//        if(event->source() == this) {
-//            event->setDropAction(Qt::MoveAction);
-//            event->accept();
-//        } else {
-//            event->setDropAction(Qt::CopyAction);
-//        }
-//    } else {
-//        event->ignore();
-//    }
-//}
-//void Sortation::dragEnterEvent(QDragEnterEvent * event)
-//{
-//    qDebug() << "Possible actions : " << event->possibleActions();
-//    if(event->mimeData()->hasFormat("application/x-qtcustomitem")) {
-//        if(event->source() == this) {
-//            event->setDropAction(Qt::MoveAction);
-//            event->accept();
-//        } else {
-//            event->acceptProposedAction();
-//        }
-//    } else {
-//        event->ignore();
-//    }
-//}
-//void Sortation::mouseMoveEvent(QMouseEvent* event)
-//{
-//    if(event->buttons() & Qt::LeftButton) {
-//        int distance = (event->pos() - startpos).manhattanLength();
-//        if(distance >= QApplication::startDragDistance())
-//        {
-//            QDrag * drag = new QDrag(this);
-//            QMimeData * mimeData = new QMimeData;
-//            qDebug()<<2;
-//            drag->setMimeData(mimeData);
-//            QByteArray itemData;
-//            QDataStream dataStream(&itemData, QIODevice::WriteOnly);
-//            QPixmap pixmap;
-
-//            dataStream << pixmap << QPoint(event->pos() - startpos);
-
-//            mimeData->setData("application/x-qtcustomitem", itemData);
-
-//            drag->setMimeData(mimeData);
-//            drag->setPixmap(pixmap);
-//            drag->exec();
-//        }
-//    }
-
-//    QWidget::mouseMoveEvent(event);
-//}
-//void Sortation::mousePressEvent(QMouseEvent* event)
-//{
-//    qDebug()<<startpos;
-//    if(event->button() == Qt::LeftButton)
-//        startpos = event->pos();
-
-//    QWidget::mousePressEvent(event);
-//}
