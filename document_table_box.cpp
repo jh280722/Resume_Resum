@@ -7,6 +7,60 @@
 #include <QFile>
 #include <QTableWidget>
 #include <QHeaderView>
+#include <QFrame>
+#include <QAbstractTableModel>
+class myHeaderView : public QHeaderView{
+private:
+    QLineEdit* Line;
+    bool sectionedit;
+    QRect edit_geometry;
+    myHeaderView(Qt::Orientation orientation, QWidget *parent = nullptr) : QHeaderView(orientation,parent){
+        setSectionsMovable(1);
+        setSectionsClickable(1);
+        // This block sets up the edit line by making setting the parent
+        // to the Headers Viewport.
+        Line = new QLineEdit(viewport());  //#Create
+        Line->setAlignment(Qt::AlignTop); //# Set the Alignmnet
+        Line->setHidden(1);// # Hide it till its needed
+        // This is needed because I am having a werid issue that I believe has
+        //# to do with it losing focus after editing is done.
+        Line->blockSignals(1);
+
+        sectionedit = 0;
+        //# Connects to double click
+        connect(this,SIGNAL(sectionDoubleClicked()),this,SLOT(editHeader()));
+        connect(Line, SIGNAL(editingFinished),this, SLOT(doneEditing));
+    }
+
+    void doneEditing(){
+        // This block signals needs to happen first otherwise I have lose focus
+        // problems again when there are no rows
+        Line->blockSignals(true);
+        Line->setHidden(true);
+
+        QString newname = Line->text();
+
+        Line->setText("");
+        setCurrentIndex(QModelIndex());
+    }
+
+    void editHeader(bool section){
+        //# This block sets up the geometry for the line edit
+        edit_geometry = Line->geometry();
+        edit_geometry.setWidth(sectionSize(section));
+        edit_geometry.moveLeft(sectionViewportPosition(section));
+        Line->setGeometry(edit_geometry);
+
+        //Line->setText(this->ge);
+        Line->setHidden(false);// # Make it visiable
+        Line->blockSignals(false);// # Let it send signals
+        Line->setFocus();
+        Line->selectAll();
+        sectionedit = section;
+    }
+
+};
+
 
 void Document::add_table_box() {
     QGroupBox* box = new QGroupBox("", tab);
@@ -25,7 +79,6 @@ void Document::add_table_box() {
     table->setHorizontalHeaderLabels(tableHeader); // Table Header 설정
     table->setObjectName("table");
     boxLayout->addWidget(table);
-
     //헤더 수정
     //table->horizontalHeaderItem(0)->setText("Whatever");
 
@@ -62,6 +115,7 @@ void Document::add_table_box() {
 }
 
 void Document::add_row(){
+    qDebug()<<1;
     QGroupBox* box = qobject_cast<QGroupBox*>(QObject::sender()->parent());
     QTableWidget* table = box->findChild<QTableWidget*>("table");
 

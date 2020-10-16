@@ -547,12 +547,10 @@ void Document::AddItemPeriod() {
     title->setObjectName("QLabel");
     stdate->setObjectName("QPeriodSt");
     eddate->setObjectName("QPeriodEd");
-    newWidget->setObjectName("date");
+    newWidget->setObjectName("period");
 }
 
-void Document::AddItemPeriod(QLayout*,QString name,QString st,QString ed) {
-    QObject* item = QObject::sender();
-    QLayout* boxlayout = qobject_cast<QLayout*>(item->parent());
+void Document::AddItemPeriod(QLayout * boxlayout, QString name,QString st,QString ed) {
     QWidget* tmp=new QWidget();
     Widget* newWidget = new Widget(tmp);
     QHBoxLayout* newLayout = new QHBoxLayout();
@@ -606,7 +604,7 @@ void Document::AddItemPeriod(QLayout*,QString name,QString st,QString ed) {
     title->setObjectName("QLabel");
     stdate->setObjectName("QPeriodSt");
     eddate->setObjectName("QPeriodEd");
-    newWidget->setObjectName("date");
+    newWidget->setObjectName("period");
 }
 void Document::add_tool_option(QGroupBox* box, QLayout * boxLayout){
     QWidget* toolWidget = new QWidget(box);

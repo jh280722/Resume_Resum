@@ -6,13 +6,15 @@
 #include <QTextDocument>
 #include <QPrinter>
 
-Data::Data(QString type, QString name ,int valueLine, QString value, QString date,QString path){
+Data::Data(QString type, QString name ,int valueLine, QString value, QString date,QString path, QString stdate,QString eddate){
     this->type=type;
     this->name=name;
     this->value=value;
     this->valueLine=valueLine;
     this->date=date;
     this->path=path;
+    this->stdate=stdate;
+    this->eddate=eddate;
 }
 
 Data::~Data(){
@@ -46,7 +48,8 @@ void Document::load_doc(){
         }
         data->date = in.readLine();
         data->path = in.readLine();
-
+        data->stdate = in.readLine();
+        data->eddate = in.readLine();
         dataList.push_back(data);
     }
     File.close(); // ÆÄÀÏ´Ý±â
@@ -83,6 +86,9 @@ void Document::load_doc(){
         else if(it->type=="date"){
             AddItemDate(loadBox,it->name,it->date);
         }
+        else if(it->type=="period"){
+            AddItemPeriod(loadBox,it->name,it->stdate, it->eddate);
+        }
         else if(it->type=="dropDown"){//setting value
             AddItemDropdown(loadBox,it->name,it->value);
         }
@@ -107,6 +113,8 @@ void Document::save_doc(){
             int valueLine=1;
             QString value="";
             QString date="";
+            QString stdate="";
+            QString eddate="";
             QString path="";
             if(type=="text"){
                 name=item->findChild<QLabel*>("QLabel")->text();
@@ -129,10 +137,15 @@ void Document::save_doc(){
                 name=item->findChild<QLabel*>("QLabel")->text();
                 date=item->findChild<QDateEdit*>("QDate")->text();
             }
+            else if(type=="period"){
+                name=item->findChild<QLabel*>("QLabel")->text();
+                stdate=item->findChild<QDateEdit*>("QPeriodSt")->text();
+                eddate=item->findChild<QDateEdit*>("QPeriodEd")->text();
+            }
             else if(type=="dropDown"){
                 name=item->findChild<QLabel*>("QLabel")->text();
             }
-            dataList.push_back(new Data(type, name, valueLine, value, date,path));
+            dataList.push_back(new Data(type, name, valueLine, value, date,path,stdate,eddate));
         }
     }
 
@@ -154,6 +167,8 @@ void Document::save_doc(){
         out<<data->value<<'\n';
         out<<data->date<<'\n';
         out<<data->path<<'\n';
+        out<<data->stdate<<'\n';
+        out<<data->eddate<<'\n';
     }
     File.close(); // ÆÄÀÏ´Ý±â
 }
