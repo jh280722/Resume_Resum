@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget* parent)
     srtPath = AppPath+"/Data/Srt";
 
     sortation = new Sortation(ui->centralwidget);
+    sortation->hide();
     //    int w=ui->intro->width();
     //    int h=ui->intro->height();
     //    QPixmap pix(":/img/Start.png");

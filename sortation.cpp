@@ -333,70 +333,166 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
         QDropEvent*e= static_cast<QDropEvent *>(event);
         if(e->mimeData()->hasFormat("application/x-qtcustomitem")) {
             //srt 같은 srt
-            QWidget* srt = (QWidget*)object->parent();
-            QWidget* srtAreaWidgetContents = srt->parentWidget();
-            QVBoxLayout* srtAreaLayout = (QVBoxLayout*)srt->parentWidget()->layout();
-            QString selOpenName = srt->objectName().append("open");
-            QPushButton* selOpen = srt->findChild<QPushButton*>(selOpenName);
-            QString selDocName = e->mimeData()->text();
-            QWidget * selDoc = srtAreaWidgetContents->findChild<QWidget*>(selDocName);
-            int subSrtIdx;
 
-            int srtIdxTo = srt->objectName().remove(0,3).toInt();
-            int srtIdxFrom = selDocName[0].unicode()-'0';
-            //            bool ok;
-            //            QString docName = QInputDialog::getText(this, Kor("새 문서"), Kor("이름을 입력하세요:"), QLineEdit::Normal, "", &ok);
-            //            QString getName =name_check(docName,srtIdx);
-            //            make_docBtn(e->mimeData()->text(), srtIdx, false);
+            QWidget* targetObj = (QWidget*)object->parent();
+            if(targetObj->objectName().left(3)== "srt"){//드랍하는 위치가 분류버튼일시
+                QWidget* srt = targetObj;
+                QWidget* srtAreaWidgetContents = targetObj->parentWidget();
+                QVBoxLayout* srtAreaLayout = (QVBoxLayout*)srt->parentWidget()->layout();
+                QString selOpenName = srt->objectName().append("open");
+                QPushButton* selOpen = srt->findChild<QPushButton*>(selOpenName);
+                QString selDocName = e->mimeData()->text();
+                QWidget * selDoc = srtAreaWidgetContents->findChild<QWidget*>(selDocName);
+                int subSrtIdx;
 
-//            QString tmpName =e->mimeData()->text();
-//            tmpName.remove(0,2);
-            qDebug()<<srtIdxTo;
-             qDebug()<<srtIdxFrom;
-            //if(srtIdxTo!=srtIdxFrom){
-            for(auto it:docList[srtIdxFrom]){
+                int srtIdxTo = srt->objectName().remove(0,3).toInt();
+                int srtIdxFrom = selDocName[0].unicode()-'0';
+                //            bool ok;
+                //            QString docName = QInputDialog::getText(this, Kor("새 문서"), Kor("이름을 입력하세요:"), QLineEdit::Normal, "", &ok);
+                //            QString getName =name_check(docName,srtIdx);
+                //            make_docBtn(e->mimeData()->text(), srtIdx, false);
 
-                if(it->PBS==selDoc){
-                    subSrtIdx=docList[srtIdxFrom].indexOf(it);
-                    docList[srtIdxTo].push_back(it);
-                    docList[srtIdxFrom].remove(subSrtIdx);
-                    break;
+    //            QString tmpName =e->mimeData()->text();
+    //            tmpName.remove(0,2);
+                qDebug()<<srtIdxTo;
+                 qDebug()<<srtIdxFrom;
+                for(auto it:docList[srtIdxFrom]){
+
+                    if(it->PBS==selDoc){
+                        subSrtIdx=docList[srtIdxFrom].indexOf(it);
+                        docList[srtIdxTo].push_back(it);
+                        docList[srtIdxFrom].remove(subSrtIdx);
+                        break;
+                    }
                 }
+                selDocName[0]=srtIdxTo+'0';
+                 selDoc->setObjectName(selDocName);
+
+                srtAreaLayout->insertWidget(srtRange[srtIdxTo+1]-2,selDoc);
+
+                for (int i = srtIdxTo+1; i < srtIdxFrom+1; i++){
+                    srtRange[i]++;
+                }
+                for (int i = srtIdxFrom+1; i < srtIdxTo+1; i++){
+                    srtRange[i]--;
+                }
+                qDebug() << srtRange[srtIdxTo+1]-2;
+                qDebug() << srtRange[0] << ", " << srtRange[1] << ", " << srtRange[2] << ", " << srtRange[3] << ", " << srtRange[4] << ", " << srtRange[5] << ", " << srtRange[6] << ", " << srtRange[7] << ", " << srtRange[8] << ", " << srtRange[9] << ", " << srtRange[10];
+                QString emptyName = srt->objectName().append("empty");
+                QWidget* empty = srt->parent()->findChild<QWidget*>(emptyName);
+
+                if (empty->height() > 0) empty->setFixedHeight(0);
+                if (empty->isHidden()) {
+                    empty->show();
+                    selOpen->setIcon(QIcon(":/images/minus_white.png"));
+                }
+
+                QByteArray itemData = e->mimeData()->data("application/x-qtcustomitem");
+                QDataStream dataStream(&itemData, QIODevice::ReadOnly);
+
+                QPixmap pixmap;
+                QPoint offset;
+                dataStream >> pixmap >> offset;
+                qDebug()<<pixmap;
+                qDebug()<<e->mimeData()->text();
+
+
             }
-            selDocName[0]=srtIdxTo+'0';
-             selDoc->setObjectName(selDocName);
+            else{//드랍하는 위치가 문서버튼일시
+                int srtIdxTo = targetObj->objectName().left(1).toInt();
+                QWidget* srt = targetObj->parent()->findChild<QWidget*>("srt"+QString::number(srtIdxTo));
 
-            srtAreaLayout->insertWidget(srtRange[srtIdxTo+1]-2,selDoc);
+                QWidget* srtAreaWidgetContents = srt->parentWidget();
+                QVBoxLayout* srtAreaLayout = (QVBoxLayout*)srt->parentWidget()->layout();
+                QString selOpenName = srt->objectName().append("open");
+                QPushButton* selOpen = srt->findChild<QPushButton*>(selOpenName);
+                QString selDocName = e->mimeData()->text();
+                QWidget * selDoc = srtAreaWidgetContents->findChild<QWidget*>(selDocName);
+                int subSrtIdxTo,subSrtIdxFrom;
 
-            for (int i = srtIdxTo+1; i < srtIdxFrom+1; i++){
-                srtRange[i]++;
+                int srtIdxFrom = selDocName[0].unicode()-'0';
+                //            bool ok;
+                //            QString docName = QInputDialog::getText(this, Kor("새 문서"), Kor("이름을 입력하세요:"), QLineEdit::Normal, "", &ok);
+                //            QString getName =name_check(docName,srtIdx);
+                //            make_docBtn(e->mimeData()->text(), srtIdx, false);
+
+    //            QString tmpName =e->mimeData()->text();
+    //            tmpName.remove(0,2);
+
+                for(auto it:docList[srtIdxTo]){//드랍하는 위치에 인덱스 찾기
+                    if(it->PBS==targetObj){
+                        subSrtIdxTo=docList[srtIdxTo].indexOf(it);
+                        break;
+                    }
+                }
+
+                QMouseEvent*MouseE= static_cast<QMouseEvent *>(event);
+                qDebug()<<targetObj->y();
+                 qDebug()<<MouseE->globalY();
+
+                if(16 < MouseE->globalY()){// 문서 위로 삽입
+                    subSrtIdxTo++;
+                }
+
+                for(auto it:docList[srtIdxFrom]){
+
+                    if(it->PBS==selDoc){
+                        subSrtIdxFrom=docList[srtIdxFrom].indexOf(it);
+                        if(srtIdxTo!=srtIdxFrom || subSrtIdxTo!=subSrtIdxFrom+1) {
+                            if(subSrtIdxTo>subSrtIdxFrom){
+                                docList[srtIdxTo].insert(subSrtIdxTo,it);
+                                docList[srtIdxFrom].remove(subSrtIdxFrom);
+                            }
+                            else{
+
+                                docList[srtIdxFrom].remove(subSrtIdxFrom);
+                                docList[srtIdxTo].insert(subSrtIdxTo,it);
+                            }
+                        }
+                        qDebug() <<"subSrtIdxTo: " + QString::number(subSrtIdxTo);
+                        qDebug() <<"subSrtIdxFrom: " + QString::number(subSrtIdxFrom);
+                        break;
+                    }
+                }
+
+
+                if(srtIdxTo!=srtIdxFrom){//분류가 다를시 이름변경
+                    selDocName[0]=srtIdxTo+'0';
+                    selDoc->setObjectName(selDocName);
+                }
+                if(srtIdxTo==srtIdxFrom && subSrtIdxTo> subSrtIdxFrom)
+                    subSrtIdxTo--;
+                srtAreaLayout->insertWidget(srtRange[srtIdxTo]+subSrtIdxTo,selDoc);
+
+                int num=0;
+                for(auto it: docList[srtIdxTo]){
+                     qDebug() << it->PBS->objectName();
+                }
+
+                for (int i = srtIdxTo+1; i < srtIdxFrom+1; i++){
+                    srtRange[i]++;
+                }
+                for (int i = srtIdxFrom+1; i < srtIdxTo+1; i++){
+                    srtRange[i]--;
+                }
+                QString emptyName = srt->objectName().append("empty");
+                QWidget* empty = srt->parent()->findChild<QWidget*>(emptyName);
+
+                if (empty->height() > 0) empty->setFixedHeight(0);
+                if (empty->isHidden()) {
+                    empty->show();
+                    selOpen->setIcon(QIcon(":/images/minus_white.png"));
+                }
+
+                QByteArray itemData = e->mimeData()->data("application/x-qtcustomitem");
+                QDataStream dataStream(&itemData, QIODevice::ReadOnly);
+
+                QPixmap pixmap;
+                QPoint offset;
+                dataStream >> pixmap >> offset;
             }
-            for (int i = srtIdxFrom+1; i < srtIdxTo+1; i++){
-                srtRange[i]--;
-            }
-//            for(int i=0;i<=10;++i){
-//                qDebug()<<srtRange[i];
-//            }
-            qDebug() << srtRange[srtIdxTo+1]-2;
-            qDebug() << srtRange[0] << ", " << srtRange[1] << ", " << srtRange[2] << ", " << srtRange[3] << ", " << srtRange[4] << ", " << srtRange[5] << ", " << srtRange[6] << ", " << srtRange[7] << ", " << srtRange[8] << ", " << srtRange[9] << ", " << srtRange[10];
-            QString emptyName = srt->objectName().append("empty");
-            QWidget* empty = srt->parent()->findChild<QWidget*>(emptyName);
 
-            if (empty->height() > 0) empty->setFixedHeight(0);
-            if (empty->isHidden()) {
-                empty->show();
-                selOpen->setIcon(QIcon(":/images/minus_white.png"));
-            }
 
-            QByteArray itemData = e->mimeData()->data("application/x-qtcustomitem");
-            QDataStream dataStream(&itemData, QIODevice::ReadOnly);
-
-            QPixmap pixmap;
-            QPoint offset;
-            dataStream >> pixmap >> offset;
-            qDebug()<<pixmap;
-            qDebug()<<e->mimeData()->text();
-            //}
         } else {
             e->ignore();
         }
@@ -424,27 +520,32 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
             QDataStream dataStream(&itemData, QIODevice::WriteOnly);
             //QPixmap pixmap;
 
+
             QPushButton *targetBtn = qobject_cast<QPushButton*>(object);
-            QWidget *target = (QWidget*)targetBtn->parent();
-            QPixmap *widgetPixmap = new QPixmap(target->size());
-            target->render(widgetPixmap);
-            QPixmap *resultPixmap = new QPixmap(target->size());
-            resultPixmap->fill(Qt::transparent);
-            QPainter p;
-            p.begin(resultPixmap);
-            p.setOpacity(0.5);
-            p.drawPixmap(0, 0, *widgetPixmap);
-            p.end();
+            if(targetBtn->objectName().left(3)!= "srt"){//선택된 오브젝트가 문서버튼일시 드래그 가능
 
-            drag->setHotSpot(e->pos() - target->rect().topLeft());
+                QWidget *target = (QWidget*)targetBtn->parent();
+                QPixmap *widgetPixmap = new QPixmap(target->size());
+                target->render(widgetPixmap);
+                QPixmap *resultPixmap = new QPixmap(target->size());
+                resultPixmap->fill(Qt::transparent);
+                QPainter p;
+                p.begin(resultPixmap);
+                p.setOpacity(0.5);
+                p.drawPixmap(0, 0, *widgetPixmap);
+                p.end();
+
+                drag->setHotSpot(e->pos() - target->rect().topLeft());
 
 
 
-            mimeData->setData("application/x-qtcustomitem", itemData);
-            mimeData->setText(target->objectName());
-            drag->setMimeData(mimeData);
-            drag->setPixmap(*resultPixmap);
-            drag->exec();
+                mimeData->setData("application/x-qtcustomitem", itemData);
+                mimeData->setText(target->objectName());
+                drag->setMimeData(mimeData);
+                drag->setPixmap(*resultPixmap);
+                drag->exec();
+            }
+
 
         }
     }
