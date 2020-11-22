@@ -22,8 +22,6 @@ Document::Document(QString name, int srtIdx, bool load):QWidget(){
 }
 
 Document::~Document(){
-    delete this->PBS;
-    delete this->tab;
     delete this;
 }
 

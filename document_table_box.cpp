@@ -10,9 +10,9 @@
 #include <QFrame>
 #include <QAbstractTableModel>
 class myHeaderView : public QHeaderView{
-private:
+public:
     QLineEdit* Line;
-    bool sectionedit;
+    int sectionedit;
     QRect edit_geometry;
     myHeaderView(Qt::Orientation orientation, QWidget *parent = nullptr) : QHeaderView(orientation,parent){
         setSectionsMovable(1);
@@ -25,11 +25,11 @@ private:
         // This is needed because I am having a werid issue that I believe has
         //# to do with it losing focus after editing is done.
         Line->blockSignals(1);
-
         sectionedit = 0;
         //# Connects to double click
-        connect(this,SIGNAL(sectionDoubleClicked()),this,SLOT(editHeader()));
-        connect(Line, SIGNAL(editingFinished),this, SLOT(doneEditing));
+
+        connect(this, &QHeaderView::sectionDoubleClicked,this,&myHeaderView::editHeader);
+        connect(Line, &QLineEdit::editingFinished,this,&myHeaderView::doneEditing);
     }
 
     void doneEditing(){
@@ -39,19 +39,25 @@ private:
         Line->setHidden(true);
 
         QString newname = Line->text();
+        QString oldname = model()->headerData(sectionedit,Qt::Horizontal,Qt::DisplayRole).toString();
 
+        qDebug()<<model()->setHeaderData(sectionedit,Qt::Horizontal, QObject::tr("ID"),Qt::EditRole);
+        //setItemDelegateForColumn(sectionedit,)
+        //self.model().dataset.changeFieldName(oldname, newname)
         Line->setText("");
         setCurrentIndex(QModelIndex());
     }
 
-    void editHeader(bool section){
+    void editHeader(int section){
         //# This block sets up the geometry for the line edit
         edit_geometry = Line->geometry();
         edit_geometry.setWidth(sectionSize(section));
         edit_geometry.moveLeft(sectionViewportPosition(section));
         Line->setGeometry(edit_geometry);
 
-        //Line->setText(this->ge);
+        QString title = model()->headerData(section,Qt::Horizontal,Qt::DisplayRole).toString();
+        Line->setText(title);
+
         Line->setHidden(false);// # Make it visiable
         Line->blockSignals(false);// # Let it send signals
         Line->setFocus();
@@ -76,7 +82,8 @@ void Document::add_table_box() {
     QTableWidget* table=new QTableWidget(box);
     table->setColumnCount(2); // Column을 2개로 설정
     table->setRowCount(2);
-    table->setHorizontalHeaderLabels(tableHeader); // Table Header 설정
+    //table->setHorizontalHeaderLabels(tableHeader); // Table Header 설정
+    table->setHorizontalHeader(new myHeaderView(Qt::Horizontal));
     table->setObjectName("table");
     boxLayout->addWidget(table);
     //헤더 수정
@@ -88,6 +95,7 @@ void Document::add_table_box() {
 
     //헤더 추가
     //tableWiget->setHorizontalHeaderLabels(QStringList() << "Switch.." << "Parameter...");
+
 
     table->resizeColumnsToContents();
     table->resizeRowsToContents();

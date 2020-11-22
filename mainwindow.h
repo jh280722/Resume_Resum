@@ -47,7 +47,8 @@ public:
 private:
     //UI
     Ui::MainWindow* ui;
-
+private slots:
+    void on_docTab_deleteTab(int);
 };
 
 #endif // MAINWINDOW_H

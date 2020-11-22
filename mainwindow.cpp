@@ -54,3 +54,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::on_docTab_deleteTab(int idx) {
+    ui->docTab->removeTab(idx);
+}
