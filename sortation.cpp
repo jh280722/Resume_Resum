@@ -56,6 +56,8 @@ Sortation::Sortation(QWidget *parent)
 
         empty->setObjectName("srt"+QString::number(i+1)+"empty");
         empty->setMinimumHeight(11);
+        empty->setAcceptDrops(true);
+        empty->installEventFilter(this);
         srtAreaLayout->addWidget(empty);
         empty->hide();
 
@@ -320,24 +322,24 @@ void Sortation::load_docList(){
 
 bool Sortation::eventFilter(QObject *object, QEvent *event)
 {
-    //    if (event->type() == QEvent::MouseButtonRelease) {
-
-    //        QMouseEvent*e= static_cast<QMouseEvent *>(event);
-    //         int distance = (e->pos() - startpos).manhattanLength();
-    //         if(distance < QApplication::startDragDistance()){
-    //             emit
-    //             return false;
-    //         }
-    //    }
     if (event->type() == QEvent::Drop) {
         QDropEvent*e= static_cast<QDropEvent *>(event);
         if(e->mimeData()->hasFormat("application/x-qtcustomitem")) {
-            //srt 같은 srt
-
-            QWidget* targetObj = (QWidget*)object->parent();
-            if(targetObj->objectName().left(3)== "srt"){//드랍하는 위치가 분류버튼일시
-                QWidget* srt = targetObj;
+            QWidget* targetObj;
+            //공백 클릭시 targetObj는 object
+            if((*object).objectName().right(5) == "empty")
+                targetObj = (QWidget*)object;
+            //문서버튼이나 분류탭 버튼 클릭시 targetObj는 object->parent
+            else targetObj = (QWidget*)object->parent();
+            if(targetObj->objectName().left(3)== "srt"){//드랍하는 위치가 분류버튼이거나 공백일시
                 QWidget* srtAreaWidgetContents = targetObj->parentWidget();
+                QWidget* srt;
+                //공백 클릭시 srt 찾기
+                if(targetObj->objectName().right(5) == "empty") {
+                    QString srtName = targetObj->objectName().left(4);
+                    srt = srtAreaWidgetContents->findChild<QWidget*>(srtName);
+                }
+                else srt = targetObj;
                 QVBoxLayout* srtAreaLayout = (QVBoxLayout*)srt->parentWidget()->layout();
                 QString selOpenName = srt->objectName().append("open");
                 QPushButton* selOpen = srt->findChild<QPushButton*>(selOpenName);
@@ -349,15 +351,8 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                 int srtIdxTo = srt->objectName().mid(3).toInt();
                 int srtIdxFrom = selDocObjName[0].unicode()-'0';
 
-                //            bool ok;
-                //            QString docName = QInputDialog::getText(this, Kor("새 문서"), Kor("이름을 입력하세요:"), QLineEdit::Normal, "", &ok);
-                //            QString getName =name_check(docName,srtIdx);
-                //            make_docBtn(e->mimeData()->text(), srtIdx, false);
-
-    //            QString tmpName =e->mimeData()->text();
-    //            tmpName.remove(0,2);
-                qDebug()<<srtIdxTo;
-                qDebug()<<srtIdxFrom;
+                //qDebug()<<srtIdxTo;
+                //qDebug()<<srtIdxFrom;
 
                 if (srtIdxTo != srtIdxFrom) {
                     selDocName = name_check(selDocName, srtIdxTo);
@@ -385,15 +380,24 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                 for (int i = srtIdxFrom+1; i < srtIdxTo+1; i++){
                     srtRange[i]--;
                 }
-                qDebug() << srtRange[srtIdxTo+1]-2;
-                qDebug() << srtRange[0] << ", " << srtRange[1] << ", " << srtRange[2] << ", " << srtRange[3] << ", " << srtRange[4] << ", " << srtRange[5] << ", " << srtRange[6] << ", " << srtRange[7] << ", " << srtRange[8] << ", " << srtRange[9] << ", " << srtRange[10];
-                QString emptyName = srt->objectName().append("empty");
-                QWidget* empty = srt->parent()->findChild<QWidget*>(emptyName);
 
-                if (empty->height() > 0) empty->setFixedHeight(0);
-                if (empty->isHidden()) {
-                    empty->show();
+                //다른 분류탭으로 옮길 시 목적지에
+                //문서가 없이 열려있었을 경우 -> empty: 0
+                //닫혀있었을 경우 -> empty: 0, show
+                QString emptyToName = srt->objectName().append("empty");
+                QWidget* emptyTo = srt->parent()->findChild<QWidget*>(emptyToName);
+                if (emptyTo->height() > 0) emptyTo->setFixedHeight(0);
+                if (emptyTo->isHidden()) {
+                    emptyTo->show();
                     selOpen->setIcon(QIcon(":/images/minus_white.png"));
+                }
+                //다른 분류탭으로 옮길 시 출발지에
+                //문서가 0이 된 경우
+                QWidget* srtFrom = targetObj->parent()->findChild<QWidget*>("srt"+QString::number(srtIdxFrom));
+                QString emptyFromName = srtFrom->objectName().append("empty");
+                QWidget* emptyFrom = srt->parent()->findChild<QWidget*>(emptyFromName);
+                if (docList[srtIdxFrom].empty()) {
+                    emptyFrom->setFixedHeight(11);
                 }
 
                 QByteArray itemData = e->mimeData()->data("application/x-qtcustomitem");
@@ -402,15 +406,10 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                 QPixmap pixmap;
                 QPoint offset;
                 dataStream >> pixmap >> offset;
-                qDebug()<<pixmap;
-                qDebug()<<e->mimeData()->text();
-
-
             }
             else{//드랍하는 위치가 문서버튼일시
                 int srtIdxTo = targetObj->objectName().left(1).toInt();
                 QWidget* srt = targetObj->parent()->findChild<QWidget*>("srt"+QString::number(srtIdxTo));
-
                 QWidget* srtAreaWidgetContents = srt->parentWidget();
                 QVBoxLayout* srtAreaLayout = (QVBoxLayout*)srt->parentWidget()->layout();
                 QString selOpenName = srt->objectName().append("open");
@@ -438,8 +437,8 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                 }
 
                 QMouseEvent*MouseE= static_cast<QMouseEvent *>(event);
-                qDebug()<<targetObj->y();
-                 qDebug()<<MouseE->globalY();
+                //qDebug()<<targetObj->y();
+                //qDebug()<<MouseE->globalY();
 
                 if(16 < MouseE->globalY()){// 문서 위로 삽입
                     subSrtIdxTo++;
@@ -460,8 +459,6 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                                 docList[srtIdxTo].insert(subSrtIdxTo,it);
                             }
                         }
-                        qDebug() <<"subSrtIdxTo: " + QString::number(subSrtIdxTo);
-                        qDebug() <<"subSrtIdxFrom: " + QString::number(subSrtIdxFrom);
                         break;
                     }
                 }
@@ -470,24 +467,30 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                     subSrtIdxTo--;
                 srtAreaLayout->insertWidget(srtRange[srtIdxTo]+subSrtIdxTo,selDoc);
 
-                int num=0;
-                for(auto it: docList[srtIdxTo]){
-                     qDebug() << it->PBS->objectName();
-                }
-
                 for (int i = srtIdxTo+1; i < srtIdxFrom+1; i++){
                     srtRange[i]++;
                 }
                 for (int i = srtIdxFrom+1; i < srtIdxTo+1; i++){
                     srtRange[i]--;
                 }
-                QString emptyName = srt->objectName().append("empty");
-                QWidget* empty = srt->parent()->findChild<QWidget*>(emptyName);
 
-                if (empty->height() > 0) empty->setFixedHeight(0);
-                if (empty->isHidden()) {
-                    empty->show();
+                //다른 분류탭으로 옮길 시 목적지에
+                //문서가 없이 열려있었을 경우 -> empty: 0
+                //닫혀있었을 경우 -> empty: 0, show
+                QString emptyToName = srt->objectName().append("empty");
+                QWidget* emptyTo = srt->parent()->findChild<QWidget*>(emptyToName);
+                if (emptyTo->height() > 0) emptyTo->setFixedHeight(0);
+                if (emptyTo->isHidden()) {
+                    emptyTo->show();
                     selOpen->setIcon(QIcon(":/images/minus_white.png"));
+                }
+                //다른 분류탭으로 옮길 시 출발지에
+                //문서가 0이 된 경우
+                QWidget* srtFrom = targetObj->parent()->findChild<QWidget*>("srt"+QString::number(srtIdxFrom));
+                QString emptyFromName = srtFrom->objectName().append("empty");
+                QWidget* emptyFrom = srt->parent()->findChild<QWidget*>(emptyFromName);
+                if (docList[srtIdxFrom].empty()) {
+                    emptyFrom->setFixedHeight(11);
                 }
 
                 QByteArray itemData = e->mimeData()->data("application/x-qtcustomitem");
@@ -525,9 +528,8 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
             QByteArray itemData;
             QDataStream dataStream(&itemData, QIODevice::WriteOnly);
 
-            QPushButton *targetBtn = qobject_cast<QPushButton*>(object);
-            if(targetBtn->objectName().left(3)!= "srt"){//선택된 오브젝트가 문서버튼일시 드래그 가능
-
+            if((*object).objectName().left(3)!= "srt"){//선택된 오브젝트가 문서버튼일시 드래그 가능
+                QPushButton *targetBtn = qobject_cast<QPushButton*>(object);
                 QWidget *target = (QWidget*)targetBtn->parent();
                 QPixmap *widgetPixmap = new QPixmap(target->size());
                 target->render(widgetPixmap);
