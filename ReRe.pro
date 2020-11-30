@@ -29,6 +29,7 @@ SOURCES += \
     sortation.cpp
 
 HEADERS += \
+    customContextMenu.h \
     data.h \
     docbutton.h \
     doctab.h \

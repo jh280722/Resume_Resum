@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "sortation.h"
-
+#include "customContextMenu.h"
 QStringList sortations = {Kor("인적 사항"), Kor("학력 사항"), Kor("경력 사항"), Kor("활동 및 수상경력"),
                           Kor("자격증"), Kor("프로젝트"), Kor("자기소개서"), Kor("포트폴리오"), Kor("기타")};
 int srtRange[11] = {0, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19};
@@ -10,7 +10,6 @@ Sortation::Sortation(QWidget *parent)
     : QWidget(parent)
 {
     setAcceptDrops(true);
-
     QWidget* srtAreaWidgetContents = parent->findChild<QWidget*>("srtAreaWidgetContents");
     QVBoxLayout* srtAreaLayout = new QVBoxLayout(srtAreaWidgetContents);
 
@@ -18,7 +17,9 @@ Sortation::Sortation(QWidget *parent)
     for (int i=0; i<sortations.length(); i++) {
         QWidget* srt = new QWidget(srtAreaWidgetContents);
         QHBoxLayout* srtLayout = new QHBoxLayout(srt);
-        QPushButton* open = new QPushButton(sortations.value(i).prepend(" "), srt);
+//        QPushButton* temp = new QPushButton(sortations.value(i).prepend(" "), srt);
+//        contextMenuQPushButton* open = static_cast<contextMenuQPushButton*>(temp);
+        contextMenuQPushButton* open = new contextMenuQPushButton(sortations.value(i).prepend(" "), srt);
         QPushButton* add = new QPushButton(srt);
 
         open->setObjectName("srt"+QString::number(i+1)+"open");
@@ -30,6 +31,9 @@ Sortation::Sortation(QWidget *parent)
         open->setAcceptDrops(true); //hahahahahaha
         open->installEventFilter(this);
         connect(open, SIGNAL(clicked()), this, SLOT(on_srtopen_clicked()));
+        open->setContextMenuPolicy(Qt::CustomContextMenu);//팝업메뉴 생성가능 정책
+        connect(open,&QLineEdit::customContextMenuRequested,open,&contextMenuQPushButton::showSrtContextMenu);//팝업메뉴 커넥트
+
         add->setObjectName("srt"+QString::number(i+1)+"add");
         add->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         add->setFixedWidth(41);
@@ -200,7 +204,10 @@ void Sortation::make_docBtn(QString docName, int srtIdx, bool isLoad){
 
     QWidget* newPBS = new QWidget(srtAreaWidgetContents);
     QHBoxLayout* newPBSLayout = new QHBoxLayout(newPBS);
-    QPushButton* open = new QPushButton(docName, newPBS);
+    contextMenuQPushButton* open = new contextMenuQPushButton(docName, newPBS);
+//    customQPushButton* open = static_cast<customQPushButton*>(temp);
+//    open->setParent(newPBS);
+//    open->setObjectName(docName);
     QPushButton* active = new QPushButton(newPBS);
 
     open->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -209,6 +216,10 @@ void Sortation::make_docBtn(QString docName, int srtIdx, bool isLoad){
     open->installEventFilter(this);
     open->setAcceptDrops(true);
     connect(open, SIGNAL(clicked()), this, SLOT(on_docopen_clicked()));
+    qDebug()<<open->objectName();
+    open->setContextMenuPolicy(Qt::CustomContextMenu);//팝업메뉴 생성가능 정책
+    connect(open,&QLineEdit::customContextMenuRequested,open,&contextMenuQPushButton::showDocBtnContextMenu);//팝업메뉴 커넥트
+
     active->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     active->setFixedWidth(41);
     active->setFlat(true);
@@ -593,4 +604,41 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
     }
 
     return false;
+}
+
+void contextMenuQPushButton::showSrtContextMenu(const QPoint &pos){
+    QMenu contextMenu(tr("Context menu"), this);
+    QAction action1(Kor("이름변경"), this);
+    connect(&action1, SIGNAL(triggered()), this, SLOT(removeDataPoint()));
+    contextMenu.addAction(&action1);
+
+    QAction action2(Kor("복사"), this);
+    connect(&action2, SIGNAL(triggered()), this, SLOT(removeDataPoint()));
+    contextMenu.addAction(&action2);
+
+    QAction action3(Kor("붙여넣기"), this);
+    connect(&action3, SIGNAL(triggered()), this, SLOT(removeDataPoint()));
+    contextMenu.addAction(&action3);
+    contextMenu.exec(mapToGlobal(pos));
+}
+
+void contextMenuQPushButton::showDocBtnContextMenu(const QPoint &pos){
+    QMenu contextMenu(tr("Context menu"), this);
+    QAction action1(Kor("이름변경"), this);
+    connect(&action1, SIGNAL(triggered()), this, SLOT(removeDataPoint()));
+    contextMenu.addAction(&action1);
+
+    QAction action2(Kor("복사"), this);
+    connect(&action2, SIGNAL(triggered()), this, SLOT(removeDataPoint()));
+    contextMenu.addAction(&action2);
+
+    QAction action3(Kor("잘라내기"), this);
+    connect(&action3, SIGNAL(triggered()), this, SLOT(removeDataPoint()));
+    contextMenu.addAction(&action3);
+
+    QAction action4(Kor("붙여넣기"), this);
+    connect(&action4, SIGNAL(triggered()), this, SLOT(removeDataPoint()));
+    contextMenu.addAction(&action4);
+
+    contextMenu.exec(mapToGlobal(pos));
 }
