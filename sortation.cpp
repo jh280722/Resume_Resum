@@ -361,8 +361,8 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
 
                 if (srtIdxTo != srtIdxFrom) {
                     selDocName = name_check(selDocName, srtIdxTo);
+                    if (selDocName.isEmpty()) return false;
                     selDocObjName = QString::number(srtIdxTo) + "_" + selDocName;
-                    //selDocObjName = selDocName.insert(0, QString::number(srtIdxTo) + "_");
                     selDoc->setObjectName(selDocObjName);
                     selDoc->findChild<QPushButton*>()->setText(selDocName);
                 }
@@ -422,18 +422,10 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
 
                 int srtIdxFrom = selDocObjName[0].unicode()-'0';
 
-                //            bool ok;
-                //            QString docName = QInputDialog::getText(this, Kor("새 문서"), Kor("이름을 입력하세요:"), QLineEdit::Normal, "", &ok);
-                //            QString getName =name_check(docName,srtIdx);
-                //            make_docBtn(e->mimeData()->text(), srtIdx, false);
-
-    //            QString tmpName =e->mimeData()->text();
-    //            tmpName.remove(0,2);
-
                 if (srtIdxTo != srtIdxFrom) {//분류가 다를시 이름변경
                     selDocName = name_check(selDocName, srtIdxTo);
+                    if (selDocName.isEmpty()) return false;
                     selDocObjName = QString::number(srtIdxTo) + "_" + selDocName;
-                    //selDocObjName = selDocName.insert(0, QString::number(srtIdxTo) + "_");
                     selDoc->setObjectName(selDocObjName);
                     selDoc->findChild<QPushButton*>()->setText(selDocName);
                 }
@@ -532,8 +524,6 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
             QMimeData * mimeData = new QMimeData;
             QByteArray itemData;
             QDataStream dataStream(&itemData, QIODevice::WriteOnly);
-            //QPixmap pixmap;
-
 
             QPushButton *targetBtn = qobject_cast<QPushButton*>(object);
             if(targetBtn->objectName().left(3)!= "srt"){//선택된 오브젝트가 문서버튼일시 드래그 가능
