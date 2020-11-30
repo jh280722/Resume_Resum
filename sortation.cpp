@@ -235,8 +235,7 @@ void Sortation::make_docBtn(QString docName, int srtIdx, bool isLoad){
     for (int i = srtIdx + 1; i < 11; i++){
         srtRange[i]++;
     }
-    qDebug() << srtRange[0] << ", " << srtRange[1] << ", " << srtRange[2] << ", " << srtRange[3] << ", " << srtRange[4] << ", " << srtRange[5] << ", " << srtRange[6] << ", " << srtRange[7] << ", " << srtRange[8] << ", " << srtRange[9] << ", " << srtRange[10];
-    QString emptyName = srt->objectName().append("empty");
+     QString emptyName = srt->objectName().append("empty");
     QWidget* empty = srt->parent()->findChild<QWidget*>(emptyName);
 
     if (empty->height() > 0) empty->setFixedHeight(0);
@@ -263,7 +262,7 @@ void Sortation::delete_tab(int srtIdx) {
     QTabWidget* docTab=parent()->findChild<QTabWidget*>("docTab");
     QWidget* empty = parent()->findChild<QWidget*>("srt" + QString::number(srtIdx) + "empty");
     docTab->removeTab(docTab->currentIndex());
-
+    qDebug()<<srtIdx;
     for (int i = srtIdx + 1; i < 11; i++){
         srtRange[i]--;
     }
@@ -274,7 +273,6 @@ void Sortation::delete_tab(int srtIdx) {
 
 void Sortation::save_docList(){
     QString ApplicationPath=QApplication::applicationDirPath();
-    qDebug()<<ApplicationPath;
     QDir Directory(ApplicationPath+"/Data/Srt.ini"); // 폴더 지정
     if(!Directory.exists()) // 폴더가 존재하지 않을경우
     {
@@ -351,8 +349,6 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                 int srtIdxTo = srt->objectName().mid(3).toInt();
                 int srtIdxFrom = selDocObjName[0].unicode()-'0';
 
-                //qDebug()<<srtIdxTo;
-                //qDebug()<<srtIdxFrom;
 
                 if (srtIdxTo != srtIdxFrom) {
                     selDocName = name_check(selDocName, srtIdxTo);
@@ -368,6 +364,23 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                         subSrtIdx=docList[srtIdxFrom].indexOf(it);
                         docList[srtIdxTo].push_back(it);
                         docList[srtIdxFrom].remove(subSrtIdx);
+
+                        //tab 이름 변경시 최신화
+                        bool existList = false;
+                        int tabIdx = -1;
+                        QTabWidget* docTab=parent()->findChild<QTabWidget*>("docTab");
+
+                        for (int i = 0; i < docTab->count(); ++i) {
+                            if (QString::number(srtIdxFrom)+'_'+ selDocName == docTab->tabText(i)) {
+                                existList = true;
+                                tabIdx = i;
+                                break;
+                            }
+                        }
+                        if (existList) {
+                            docTab->setCurrentIndex(tabIdx);
+                            docTab->setTabText(tabIdx,selDocObjName);
+                        }
                         break;
                     }
                 }
@@ -389,6 +402,7 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                 if (emptyTo->height() > 0) emptyTo->setFixedHeight(0);
                 if (emptyTo->isHidden()) {
                     emptyTo->show();
+
                     selOpen->setIcon(QIcon(":/images/minus_white.png"));
                 }
                 //다른 분류탭으로 옮길 시 출발지에
@@ -406,6 +420,9 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                 QPixmap pixmap;
                 QPoint offset;
                 dataStream >> pixmap >> offset;
+
+                //srtIdx 최신화 삭제에 필요
+                srtIdx=srtIdxTo;
             }
             else{//드랍하는 위치가 문서버튼일시
                 int srtIdxTo = targetObj->objectName().left(1).toInt();
@@ -437,8 +454,6 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                 }
 
                 QMouseEvent*MouseE= static_cast<QMouseEvent *>(event);
-                //qDebug()<<targetObj->y();
-                //qDebug()<<MouseE->globalY();
 
                 if(16 < MouseE->globalY()){// 문서 위로 삽입
                     subSrtIdxTo++;
@@ -458,7 +473,24 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                                 docList[srtIdxFrom].remove(subSrtIdxFrom);
                                 docList[srtIdxTo].insert(subSrtIdxTo,it);
                             }
+                            //tab 이름 변경시 최신화
+                            bool existList = false;
+                            int tabIdx = -1;
+                            QTabWidget* docTab=parent()->findChild<QTabWidget*>("docTab");
+
+                            for (int i = 0; i < docTab->count(); ++i) {
+                                if (QString::number(srtIdxFrom)+'_'+ selDocName == docTab->tabText(i)) {
+                                    existList = true;
+                                    tabIdx = i;
+                                    break;
+                                }
+                            }
+                            if (existList) {
+                                docTab->setCurrentIndex(tabIdx);
+                                docTab->setTabText(tabIdx,selDocObjName);
+                            }
                         }
+
                         break;
                     }
                 }
@@ -499,6 +531,10 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                 QPixmap pixmap;
                 QPoint offset;
                 dataStream >> pixmap >> offset;
+
+
+                //srtIdx 최신화 삭제에 필요
+                srtIdx=srtIdxTo;
             }
 
 
@@ -508,7 +544,6 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
     }
     if(event->type()==QEvent::DragEnter){
         QDragEnterEvent*e= static_cast<QDragEnterEvent *>(event);
-        qDebug() << "Possible actions : " << e->possibleActions();
         if(e->mimeData()->hasFormat("application/x-qtcustomitem")) {
             if(e->source() == this) {
                 e->setDropAction(Qt::MoveAction);
