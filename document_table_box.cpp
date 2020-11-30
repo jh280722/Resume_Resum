@@ -9,62 +9,63 @@
 #include <QHeaderView>
 #include <QFrame>
 #include <QAbstractTableModel>
-class myHeaderView : public QHeaderView{
+#include <QAbstractItemModel>
+
+class myTable : public QTableWidget{
 public:
     QLineEdit* Line;
     int sectionedit;
     QRect edit_geometry;
-    myHeaderView(Qt::Orientation orientation, QWidget *parent = nullptr) : QHeaderView(orientation,parent){
-        setSectionsMovable(1);
-        setSectionsClickable(1);
-        // This block sets up the edit line by making setting the parent
-        // to the Headers Viewport.
-        Line = new QLineEdit(viewport());  //#Create
+    myTable(QWidget *parent = nullptr) : QTableWidget(parent){
+        //click, move가능
+        horizontalHeader()->setSectionsMovable(1);
+        horizontalHeader()->setSectionsClickable(1);
+
+        // 헤더의 viewport를 부모로 라인에디터 생성
+        Line = new QLineEdit(horizontalHeader()->viewport());  //#Create
         Line->setAlignment(Qt::AlignTop); //# Set the Alignmnet
         Line->setHidden(1);// # Hide it till its needed
-        // This is needed because I am having a werid issue that I believe has
-        //# to do with it losing focus after editing is done.
         Line->blockSignals(1);
         sectionedit = 0;
-        //# Connects to double click
 
-        connect(this, &QHeaderView::sectionDoubleClicked,this,&myHeaderView::editHeader);
-        connect(Line, &QLineEdit::editingFinished,this,&myHeaderView::doneEditing);
+        //더블클릭시 라벨 에디터 함수 실행, 라벨 수정 끝에 텍스트 수정 함수 실행
+        connect(horizontalHeader(), &QHeaderView::sectionDoubleClicked,this,&myTable::editHeader);
+        connect(Line, &QLineEdit::editingFinished,this,&myTable::doneEditing);
     }
 
     void doneEditing(){
-        // This block signals needs to happen first otherwise I have lose focus
-        // problems again when there are no rows
+        //라벨이 수정됐으면 다시 시그널을 막고 히든해준다.
         Line->blockSignals(true);
         Line->setHidden(true);
-
         QString newname = Line->text();
-        QString oldname = model()->headerData(sectionedit,Qt::Horizontal,Qt::DisplayRole).toString();
+        QString oldname = horizontalHeaderItem(sectionedit)->text();
 
-        qDebug()<<model()->setHeaderData(sectionedit,Qt::Horizontal, QObject::tr("ID"),Qt::EditRole);
-        //setItemDelegateForColumn(sectionedit,)
-        //self.model().dataset.changeFieldName(oldname, newname)
         Line->setText("");
-        setCurrentIndex(QModelIndex());
+
+        horizontalHeaderItem(sectionedit)->setText(newname); //새 이름으로 적용
+
+        resizeColumnsToContents(); //문자 길이에 따라 폭 수정
+        setCurrentIndex(QModelIndex()); //현재 인덱스로 설정
     }
 
     void editHeader(int section){
-        //# This block sets up the geometry for the line edit
-        edit_geometry = Line->geometry();
-        edit_geometry.setWidth(sectionSize(section));
-        edit_geometry.moveLeft(sectionViewportPosition(section));
+        edit_geometry = Line->geometry(); //라인 에디터의 좌표를 받아온다.
+        //선택된 헤더의 섹션에 맞게 위치를 조절한다.
+        edit_geometry.setWidth(horizontalHeader()->sectionSize(section));
+        edit_geometry.moveLeft(horizontalHeader()->sectionViewportPosition(section));
         Line->setGeometry(edit_geometry);
 
-        QString title = model()->headerData(section,Qt::Horizontal,Qt::DisplayRole).toString();
-        Line->setText(title);
+        QString oldname = horizontalHeaderItem(sectionedit)->text();
+        Line->setText(oldname);
 
-        Line->setHidden(false);// # Make it visiable
-        Line->blockSignals(false);// # Let it send signals
+        //라인 에디터의 hidden,blocksignal을 풀고 포커스해준다음 전체를 셀렉해준다.
+        Line->setHidden(false);
+        Line->blockSignals(false);
         Line->setFocus();
         Line->selectAll();
-        sectionedit = section;
-    }
 
+        sectionedit = section; //현재 선택된 세션의 인덱스를 저장한다.
+    }
 };
 
 
@@ -78,24 +79,14 @@ void Document::add_table_box() {
     add_table_tool_option(box, boxLayout);
 
     QStringList tableHeader;
-    tableHeader << "Name" << "Phone Number";
-    QTableWidget* table=new QTableWidget(box);
+    tableHeader << "1" << "2";
+    myTable* table=new myTable(box);
     table->setColumnCount(2); // Column을 2개로 설정
     table->setRowCount(2);
-    //table->setHorizontalHeaderLabels(tableHeader); // Table Header 설정
-    table->setHorizontalHeader(new myHeaderView(Qt::Horizontal));
+    table->setHorizontalHeaderLabels(tableHeader); // Table Header 설정
+
     table->setObjectName("table");
     boxLayout->addWidget(table);
-    //헤더 수정
-    //table->horizontalHeaderItem(0)->setText("Whatever");
-
-    //QTableWidgetItem *header2 = new QTableWidgetItem();
-    //header2->setText("Parameter No.");
-    //tableWidget->setHorizontalHeaderItem(1,header2);
-
-    //헤더 추가
-    //tableWiget->setHorizontalHeaderLabels(QStringList() << "Switch.." << "Parameter...");
-
 
     table->resizeColumnsToContents();
     table->resizeRowsToContents();
@@ -123,7 +114,6 @@ void Document::add_table_box() {
 }
 
 void Document::add_row(){
-    qDebug()<<1;
     QGroupBox* box = qobject_cast<QGroupBox*>(QObject::sender()->parent());
     QTableWidget* table = box->findChild<QTableWidget*>("table");
 
@@ -148,7 +138,17 @@ void Document::add_row(){
 void Document::add_col(){
     QGroupBox* box = qobject_cast<QGroupBox*>(QObject::sender()->parent());
     QTableWidget* table = box->findChild<QTableWidget*>("table");
+
+    QStringList label;
+    for(int i=0;i<table->columnCount();i++){
+        label<<table->horizontalHeaderItem(i)->text();
+    }
+    label << QString::number(table->columnCount()+1);
+    //QString만 한다고 되는게 아니라 실제 카운트를 늘려주어야한다.
     table->setColumnCount(table->columnCount()+1);
+    //headerview는 변경이 안되므로(? 못 찾았으므로) QString으로 set해주어서 변경을 한다.
+    table->setHorizontalHeaderLabels(label);
+
     table->resizeColumnsToContents();
     table->resizeRowsToContents();
 
