@@ -28,7 +28,10 @@ public:
     DocTab* tab;
     void init_docTab(bool load);
     QVBoxLayout* load_add_box();
+    QString get_html(); //pdf로 변환할 html 추출 함수
 
+    bool getActive();
+    void setActive(bool val);
 
 private:
     void add_tool_option(QGroupBox* box, QLayout * boxLayout);
@@ -38,11 +41,11 @@ signals:
 public slots:
     void save_doc();
     void load_doc();
+    void active_doc_select();
 
 private slots:
     void delete_doc();
     void preview_doc();
-    void active_doc_select();
 
     //box
     void make_doc0();

@@ -35,6 +35,7 @@ extern QString srtTitle[9];
 extern QString AppPath;
 extern QString srtPath;
 extern float DPI;
+extern int imgIdx;
 
 class MainWindow : public QMainWindow
 {

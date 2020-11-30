@@ -226,7 +226,6 @@ void Sortation::make_docBtn(QString docName, int srtIdx, bool isLoad){
     active->installEventFilter(this);
     active->setAcceptDrops(true);
     active->setIconSize(QSize(12, 12));
-    connect(active, SIGNAL(clicked()), this, SLOT(on_docactive_clicked()));
 
     newPBSLayout->setSpacing(0);
     newPBSLayout->setContentsMargins(0, 0, 0, 0);
@@ -246,6 +245,9 @@ void Sortation::make_docBtn(QString docName, int srtIdx, bool isLoad){
     if(isLoad) newDoc->load_doc();
     docList[srtIdx].push_back(newDoc);
 
+    //document에서 active_doc_select slot 실행
+    connect(active, SIGNAL(clicked()), newDoc, SLOT(active_doc_select()));
+
     for (int i = srtIdx + 1; i < 11; i++){
         srtRange[i]++;
     }
@@ -257,19 +259,6 @@ void Sortation::make_docBtn(QString docName, int srtIdx, bool isLoad){
         empty->show();
         selOpen->setIcon(QIcon(":/images/minus_white.png"));
     }
-}
-void Sortation::on_docactive_clicked()
-{
-    QObject* sel = QObject::sender();
-    QPushButton* active = (QPushButton*)sel;
-
-    if (active->icon().isNull()) {
-        active->setIcon(QIcon(":/images/dot.png"));
-    }
-    else {
-        active->setIcon(QIcon());
-    }
-
 }
 
 void Sortation::delete_tab(int srtIdx) {
@@ -303,6 +292,7 @@ void Sortation::save_docList(){
             doc->save_doc();
         }
     }
+    out<<imgIdx<<'\n'; //imgIdx 저장
     File.close(); // 파일닫기
 }
 
@@ -329,6 +319,7 @@ void Sortation::load_docList(){
             make_docBtn(name, srtIdx, true);
         }
     }
+    imgIdx=in.readLine().toInt();//imgIdx 초기화
     File.close(); // 파일닫기
 }
 

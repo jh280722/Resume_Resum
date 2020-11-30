@@ -26,7 +26,6 @@ private slots:
     void on_srtopen_clicked();
     void on_srtadd_clicked();
     void on_docopen_clicked();
-    void on_docactive_clicked();
     void save_docList();
     void load_docList();
     void save_pdf();

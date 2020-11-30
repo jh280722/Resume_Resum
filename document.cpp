@@ -10,6 +10,7 @@ Document::Document(QString name, int srtIdx, bool load):QWidget(){
     setObjectName("document");
     this->name=name;
     this->srtIdx=srtIdx;
+    this->active=0;
     docPath=srtPath+QString::number(srtIdx) +"/"+this->name+"/";
     QDir Directory(docPath); // 폴더 지정
     if(!Directory.exists()) // 폴더가 존재하지 않을경우
@@ -19,6 +20,7 @@ Document::Document(QString name, int srtIdx, bool load):QWidget(){
         Directory.mkdir(docPath); // 폴더 생성
     }
     init_docTab(load);
+    qDebug()<<active;
 }
 
 Document::~Document(){
@@ -51,7 +53,7 @@ void Document::init_docTab(bool load) {
     HBox->addWidget(PB);
     PB=new QPushButton(Kor("활성화"),Par);
     PB->setObjectName("active");
-    connect(PB, SIGNAL(clicked()), this, SLOT(active_doc_select()));
+    //connect(PB, SIGNAL(clicked()), this, SLOT(active_doc_select()));
     HBox->addWidget(PB);
     Par->setSizePolicy(QSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed));
 
@@ -162,6 +164,21 @@ void Document::preview_doc(){
 }
 
 void Document::active_doc_select(){
-
+    active=!active;
+    QObject* sel = QObject::sender();
+    QPushButton* activePB = (QPushButton*)sel;
+    if (activePB->icon().isNull()) {
+        activePB->setIcon(QIcon(":/images/dot.png"));
+    }
+    else {
+        activePB->setIcon(QIcon());
+    }
 }
 
+bool Document::getActive(){
+    return active;
+}
+
+void Document::setActive(bool val){
+    active=val;
+}

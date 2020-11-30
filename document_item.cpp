@@ -209,15 +209,11 @@ void Document::imageUpload() {
     QFileDialog  dlg;
     QString filepath = dlg.getOpenFileName(this, "Load Image", "", "Image Files (*.png *.jpg *.bmp)");
     QString fileName = filepath.section("/", -1);
-    path->setText(fileName);
+    path->setText(QString::number(imgIdx)+"_"+fileName);
     QObjectList box=item->parent()->parent()->children();
-    int idx=0;
-    for(;idx<box.size();idx++){
-        if(box[idx]==item->parent()){
-            break;
-        }
-    }
-    QString newName = docPath + QString::number(idx)+"_"+fileName;
+
+    QString newName = QApplication::applicationDirPath()+"/img/"+QString::number(imgIdx)+"_"+fileName;
+    imgIdx++;
     QFile::copy ( filepath, newName );
 }
 

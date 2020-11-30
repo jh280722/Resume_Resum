@@ -11,6 +11,7 @@ QVector<QPushButton*> docBtnList[9];
 Sortation *sortation;
 QString AppPath=QApplication::applicationDirPath();
 QString srtPath = AppPath+"/Data/Srt";
+int imgIdx=0;
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)

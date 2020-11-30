@@ -24,8 +24,16 @@ Data::~Data(){
 
 void Document::load_doc(){
     dataList.clear();
+    //img 폴더 생성
     QString ApplicationPath=QApplication::applicationDirPath();
-    QDir Directory(ApplicationPath+"/Data/Srt"+QString::number(srtIdx)); // 폴더 지정
+
+    QDir Directory(ApplicationPath+"/img/"); // 폴더 지정
+    if(!Directory.exists()) // 폴더가 존재하지 않을경우
+    {
+        Directory.mkdir(ApplicationPath+"/img"); // 폴더 생성/ 폴더 생성
+    }
+
+    Directory = QDir(ApplicationPath+"/Data/Srt"+QString::number(srtIdx)); // 폴더 지정
     if(!Directory.exists()) // 폴더가 존재하지 않을경우
     {
         Directory.mkdir(ApplicationPath+"/Data"); // 폴더 생성
@@ -174,6 +182,66 @@ void Document::save_doc(){
 }
 
 
+QString Document::get_html(){
+    QString html;
+    QObjectList tabList = tab->box->children();
+    for(auto it:tabList){
+        if(it->objectName()=="boxAreaLayout") continue;
+        QObjectList itemList = it->children();
+        for(auto item: itemList){
+            if(item->objectName()=="groupBoxLayout") {
+                //새로운 박스를 만났을때
+                continue;
+            }
+            if(item->objectName()=="tool") continue;
+
+            QString type=item->objectName();
+            QString name="";
+            QString value="";
+            QString date="";
+            QString stdate="";
+            QString eddate="";
+            QString path="";
+
+            html+="<p>"; //문단 시작(아이템 종류마다)
+
+            if(type=="text"){
+                name=item->findChild<QLabel*>("QLabel")->text();
+                value=item->findChild<QLineEdit*>("QLineEdit")->text();
+
+                html+=name + " : " + value;
+            }
+            else if(type=="textArea"){
+                name=item->findChild<QLabel*>("QLabel")->text();
+                value=item->findChild<QTextEdit*>("QTextEdit")->toPlainText();
+
+                html+=name + "\n" + value;
+            }
+            else if(type=="image"){
+                name=item->findChild<QLabel*>("QLabel")->text();
+                path=item->findChild<QLabel*>("path")->text();
+
+                html+="<img src='"+QApplication::applicationDirPath()+"/img/"+path+"' width=300 height=300>";
+            }
+            else if(type=="date"){
+                name=item->findChild<QLabel*>("QLabel")->text();
+                date=item->findChild<QDateEdit*>("QDate")->text();
+            }
+            else if(type=="period"){
+                name=item->findChild<QLabel*>("QLabel")->text();
+                stdate=item->findChild<QDateEdit*>("QPeriodSt")->text();
+                eddate=item->findChild<QDateEdit*>("QPeriodEd")->text();
+            }
+            else if(type=="dropDown"){
+                name=item->findChild<QLabel*>("QLabel")->text();
+            }
+            html+="</p>";
+        }
+    }
+    return html;
+}
+
+
 void Sortation::save_pdf(){
     QString fileName = QFileDialog::getSaveFileName((QWidget* )0, "Export PDF", QString(), "*.pdf");
     if (QFileInfo(fileName).suffix().isEmpty()) { fileName.append(".pdf"); }
@@ -184,7 +252,26 @@ void Sortation::save_pdf(){
     printer.setOutputFileName(fileName);
 
     QTextDocument doc;
-    doc.setHtml("<h1>Hello, World!</h1>\n<p>Lorem ipsum dolor sit amet, consectitur adipisci elit.</p>");
+    QString html;
+    html+="<html>";
+    html+="<head>";
+    //head 공간
+    html+="</head>";
+    html+="<body>";
+    //body 공간
+    for(int i=0;i<10;i++){
+        for(auto doc:docList[i]){
+            if(!doc->getActive()) continue;
+            //활성화돼있으면 html 추출 함수 실행
+            html+=doc->get_html();
+        }
+    }
+
+    //body마무리
+    html+="</body>";
+    html+="</html>";
+    doc.setHtml(html);
+    qDebug()<<html;
     //doc.setPageSize(printer.pageRect().size()); // This is necessary if you want to hide the page number
     doc.print(&printer);
 }
