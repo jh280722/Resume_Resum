@@ -80,7 +80,7 @@ void Sortation::on_srtopen_clicked()
     QObject* sel = QObject::sender();
     QPushButton* selBtn = (QPushButton*)sel;
     QWidget* srt = (QWidget*)sel->parent();
-    int srtIdx = srt->objectName().remove(0,3).toInt();
+    int srtIdx = srt->objectName().mid(3).toInt();
     QString emptyName = srt->objectName().append("empty");
     QWidget* empty = srt->parent()->findChild<QWidget*>(emptyName);
 
@@ -174,7 +174,7 @@ void Sortation::on_srtadd_clicked()
 {
     QObject* sel = QObject::sender();
     QWidget* srt = (QWidget*)sel->parent();
-    int srtIdx = srt->objectName().remove(0,3).toInt();
+    int srtIdx = srt->objectName().mid(3).toInt();
 
     bool ok;
 
@@ -341,12 +341,14 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                 QVBoxLayout* srtAreaLayout = (QVBoxLayout*)srt->parentWidget()->layout();
                 QString selOpenName = srt->objectName().append("open");
                 QPushButton* selOpen = srt->findChild<QPushButton*>(selOpenName);
-                QString selDocName = e->mimeData()->text();
-                QWidget * selDoc = srtAreaWidgetContents->findChild<QWidget*>(selDocName);
+                QString selDocObjName = e->mimeData()->text();
+                QString selDocName = selDocObjName.mid(2);
+                QWidget * selDoc = srtAreaWidgetContents->findChild<QWidget*>(selDocObjName);
                 int subSrtIdx;
 
-                int srtIdxTo = srt->objectName().remove(0,3).toInt();
-                int srtIdxFrom = selDocName[0].unicode()-'0';
+                int srtIdxTo = srt->objectName().mid(3).toInt();
+                int srtIdxFrom = selDocObjName[0].unicode()-'0';
+
                 //            bool ok;
                 //            QString docName = QInputDialog::getText(this, Kor("새 문서"), Kor("이름을 입력하세요:"), QLineEdit::Normal, "", &ok);
                 //            QString getName =name_check(docName,srtIdx);
@@ -355,7 +357,16 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
     //            QString tmpName =e->mimeData()->text();
     //            tmpName.remove(0,2);
                 qDebug()<<srtIdxTo;
-                 qDebug()<<srtIdxFrom;
+                qDebug()<<srtIdxFrom;
+
+                if (srtIdxTo != srtIdxFrom) {
+                    selDocName = name_check(selDocName, srtIdxTo);
+                    selDocObjName = QString::number(srtIdxTo) + "_" + selDocName;
+                    //selDocObjName = selDocName.insert(0, QString::number(srtIdxTo) + "_");
+                    selDoc->setObjectName(selDocObjName);
+                    selDoc->findChild<QPushButton*>()->setText(selDocName);
+                }
+
                 for(auto it:docList[srtIdxFrom]){
 
                     if(it->PBS==selDoc){
@@ -365,8 +376,6 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                         break;
                     }
                 }
-                selDocName[0]=srtIdxTo+'0';
-                 selDoc->setObjectName(selDocName);
 
                 srtAreaLayout->insertWidget(srtRange[srtIdxTo+1]-2,selDoc);
 
@@ -406,11 +415,13 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                 QVBoxLayout* srtAreaLayout = (QVBoxLayout*)srt->parentWidget()->layout();
                 QString selOpenName = srt->objectName().append("open");
                 QPushButton* selOpen = srt->findChild<QPushButton*>(selOpenName);
-                QString selDocName = e->mimeData()->text();
-                QWidget * selDoc = srtAreaWidgetContents->findChild<QWidget*>(selDocName);
-                int subSrtIdxTo,subSrtIdxFrom;
+                QString selDocObjName = e->mimeData()->text();
+                QString selDocName = selDocObjName.mid(2);
+                QWidget * selDoc = srtAreaWidgetContents->findChild<QWidget*>(selDocObjName);
+                int subSrtIdxTo, subSrtIdxFrom;
 
-                int srtIdxFrom = selDocName[0].unicode()-'0';
+                int srtIdxFrom = selDocObjName[0].unicode()-'0';
+
                 //            bool ok;
                 //            QString docName = QInputDialog::getText(this, Kor("새 문서"), Kor("이름을 입력하세요:"), QLineEdit::Normal, "", &ok);
                 //            QString getName =name_check(docName,srtIdx);
@@ -418,6 +429,14 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
 
     //            QString tmpName =e->mimeData()->text();
     //            tmpName.remove(0,2);
+
+                if (srtIdxTo != srtIdxFrom) {//분류가 다를시 이름변경
+                    selDocName = name_check(selDocName, srtIdxTo);
+                    selDocObjName = QString::number(srtIdxTo) + "_" + selDocName;
+                    //selDocObjName = selDocName.insert(0, QString::number(srtIdxTo) + "_");
+                    selDoc->setObjectName(selDocObjName);
+                    selDoc->findChild<QPushButton*>()->setText(selDocName);
+                }
 
                 for(auto it:docList[srtIdxTo]){//드랍하는 위치에 인덱스 찾기
                     if(it->PBS==targetObj){
@@ -455,11 +474,6 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                     }
                 }
 
-
-                if(srtIdxTo!=srtIdxFrom){//분류가 다를시 이름변경
-                    selDocName[0]=srtIdxTo+'0';
-                    selDoc->setObjectName(selDocName);
-                }
                 if(srtIdxTo==srtIdxFrom && subSrtIdxTo> subSrtIdxFrom)
                     subSrtIdxTo--;
                 srtAreaLayout->insertWidget(srtRange[srtIdxTo]+subSrtIdxTo,selDoc);
