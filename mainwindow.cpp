@@ -20,13 +20,10 @@ MainWindow::MainWindow(QWidget* parent)
     AppPath=QApplication::applicationDirPath();
     srtPath = AppPath+"/Data/Srt";
 
+    ui->startImg->setStyleSheet("background-color: rgb(158, 158, 158)");
     sortation = new Sortation(ui->centralwidget);
     sortation->hide();
-    //    int w=ui->intro->width();
-    //    int h=ui->intro->height();
-    //    QPixmap pix(":/img/Start.png");
-    //ui->intro->setPixmap(pix);
-    //ui->intro->setPixmap(pix.scaled(w,h,Qt::KeepAspectRatio));
+    ui->docTab->hide();
 
     QMenu *pFileMenu;
     QAction *pSlotNewFile = new QAction(Kor("ÀúÀå"), this);
@@ -57,4 +54,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_docTab_deleteTab(int idx) {
     ui->docTab->removeTab(idx);
+    if (ui->docTab->count() == 0) {
+        ui->docTab->hide();
+        ui->startImg->show();
+    }
 }

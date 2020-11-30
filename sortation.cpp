@@ -114,6 +114,7 @@ void Sortation::on_docopen_clicked() {
     int srtIdx = -1;
     int subSrtIdx = -1;
     QTabWidget* docTab=parent()->findChild<QTabWidget*>("docTab");
+    QWidget* startImg=parent()->findChild<QWidget*>("startImg");
 
 
     for (int i=0; i<9; i++) {
@@ -142,6 +143,8 @@ void Sortation::on_docopen_clicked() {
         docList[srtIdx][subSrtIdx]->load_doc();
         QWidget* new_tab = docList[srtIdx][subSrtIdx];
 
+        startImg->hide();
+        docTab->show();
         docTab->tabBar()->setStyleSheet(QString("QTabBar::tab { width:100; }"));
         docTab->addTab(new_tab, QString::number(srtIdx)+'_'+ selPB->text());
         docTab->setCurrentIndex(docTab->count() - 1);
@@ -577,8 +580,6 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                 p.end();
 
                 drag->setHotSpot(e->pos() - target->rect().topLeft());
-
-
 
                 mimeData->setData("application/x-qtcustomitem", itemData);
                 mimeData->setText(target->objectName());
