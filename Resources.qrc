@@ -13,5 +13,7 @@
         <file>images/ReRe Icon.png</file>
         <file>images/ReRe Icon tmp.png</file>
         <file>images/ReRe content.png</file>
+        <file>ReRe.ico</file>
+        <file>ReRe.rc</file>
     </qresource>
 </RCC>

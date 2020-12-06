@@ -369,6 +369,7 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                         subSrtIdx=docList[srtIdxFrom].indexOf(it);
                         docList[srtIdxTo].push_back(it);
                         docList[srtIdxFrom].remove(subSrtIdx);
+                        it->setSrtIdx(srtIdxTo);
 
                         //tab 이름 변경시 최신화
                         bool existList = false;
@@ -478,6 +479,8 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
                                 docList[srtIdxFrom].remove(subSrtIdxFrom);
                                 docList[srtIdxTo].insert(subSrtIdxTo,it);
                             }
+                            it->setSrtIdx(srtIdxTo);
+
                             //tab 이름 변경시 최신화
                             bool existList = false;
                             int tabIdx = -1;
