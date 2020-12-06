@@ -226,11 +226,15 @@ QString Document::get_html(){
             else if(type=="date"){
                 name=item->findChild<QLabel*>("QLabel")->text();
                 date=item->findChild<QDateEdit*>("QDate")->text();
+
+                html+=name + " : " + date;
             }
             else if(type=="period"){
                 name=item->findChild<QLabel*>("QLabel")->text();
                 stdate=item->findChild<QDateEdit*>("QPeriodSt")->text();
                 eddate=item->findChild<QDateEdit*>("QPeriodEd")->text();
+
+                html+=name + " : " + stdate + " ~ " + eddate;
             }
             else if(type=="dropDown"){
                 name=item->findChild<QLabel*>("QLabel")->text();
