@@ -30,10 +30,13 @@ private slots:
     void load_docList();
     void save_pdf();
 
+
 private:
     bool eventFilter(QObject *object, QEvent *event);
     void make_docBtn(QString docName, int srtIdx, bool isLoad);
     QString name_check(QString,int);
 
+    Document* cutDoc;
+    QVector<Data*> copyDoc;
 };
 #endif // SORTATION_H

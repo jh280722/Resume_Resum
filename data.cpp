@@ -62,14 +62,6 @@ void Document::load_doc(){
     }
     File.close(); // ÆÄÀÏ´Ý±â
 
-//    for(auto data:dataList){
-//        qDebug()<<data->type<<'\n';
-//        qDebug()<<data->name<<'\n';
-//        qDebug()<<data->valueLine<<'\n';
-//        qDebug()<<data->value<<'\n';
-//        qDebug()<<data->date<<'\n';
-//        qDebug()<<data->path<<'\n';
-//    }
     if(tab){
         QObjectList tabList = tab->box->children();
         for(auto it:tabList){

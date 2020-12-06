@@ -604,11 +604,11 @@ void contextMenuQPushButton::showSrtContextMenu(const QPoint &pos){
     contextMenu.addAction(&action1);
 
     QAction action2(Kor("복사"), this);
-    connect(&action2, SIGNAL(triggered()), this, SLOT(removeDataPoint()));
+    connect(&action2, SIGNAL(triggered()), this, SLOT(copy_doc()));
     contextMenu.addAction(&action2);
 
     QAction action3(Kor("붙여넣기"), this);
-    connect(&action3, SIGNAL(triggered()), this, SLOT(removeDataPoint()));
+    connect(&action3, SIGNAL(triggered()), this, SLOT(paste_doc()));
     contextMenu.addAction(&action3);
     contextMenu.exec(mapToGlobal(pos));
 }
@@ -620,15 +620,15 @@ void contextMenuQPushButton::showDocBtnContextMenu(const QPoint &pos){
     contextMenu.addAction(&action1);
 
     QAction action2(Kor("복사"), this);
-    connect(&action2, SIGNAL(triggered()), this, SLOT(removeDataPoint()));
+    connect(&action2, SIGNAL(triggered()), this, SLOT(copy_doc()));
     contextMenu.addAction(&action2);
 
     QAction action3(Kor("잘라내기"), this);
-    connect(&action3, SIGNAL(triggered()), this, SLOT(removeDataPoint()));
+    connect(&action3, SIGNAL(triggered()), this, SLOT(cut_doc()));
     contextMenu.addAction(&action3);
 
     QAction action4(Kor("붙여넣기"), this);
-    connect(&action4, SIGNAL(triggered()), this, SLOT(removeDataPoint()));
+    connect(&action4, SIGNAL(triggered()), this, SLOT(paste_doc()));
     contextMenu.addAction(&action4);
 
     contextMenu.exec(mapToGlobal(pos));
