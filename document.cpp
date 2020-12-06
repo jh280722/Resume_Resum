@@ -182,3 +182,11 @@ bool Document::getActive(){
 void Document::setActive(bool val){
     active=val;
 }
+
+int Document::getSrtIdx(){
+    return srtIdx;
+}
+
+void Document::setSrtIdx(int val){
+    srtIdx=val;
+}

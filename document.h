@@ -32,6 +32,8 @@ public:
 
     bool getActive();
     void setActive(bool val);
+    int getSrtIdx();
+    void setSrtIdx(int val);
 
 private:
     void add_tool_option(QGroupBox* box, QLayout * boxLayout);
