@@ -191,11 +191,11 @@ void Sortation::on_srtadd_clicked()
     QString getName =name_check(docName,srtIdx);
 
     if (ok && !getName.isEmpty()) {
-        make_docBtn(getName, srtIdx, false);
+        make_docBtn(getName, srtIdx, 0);//0 새 문서 만들기
     }
 }
 
-void Sortation::make_docBtn(QString docName, int srtIdx, bool isLoad){
+void Sortation::make_docBtn(QString docName, int srtIdx, int type){
     QWidget* srt = this->parent()->findChild<QWidget*>("srt"+QString::number(srtIdx));
     QWidget* srtAreaWidgetContents = srt->parentWidget();
     QVBoxLayout* srtAreaLayout = (QVBoxLayout*)srtAreaWidgetContents->layout();
@@ -240,9 +240,14 @@ void Sortation::make_docBtn(QString docName, int srtIdx, bool isLoad){
     //newDoc->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     //버튼 리스트에 추가 | connect 해주기
-    Document* newDoc = new Document(docName, srtIdx, 1);
+    Document* newDoc = new Document(docName, srtIdx, type);
     newDoc->PBS=newPBS;
-    if(isLoad) newDoc->load_doc();
+
+    if(type==1)
+        newDoc->load_doc();
+    else if(type==2)
+        newDoc->paste_doc();
+
     docList[srtIdx].push_back(newDoc);
 
     //document에서 active_doc_select slot 실행
@@ -316,7 +321,7 @@ void Sortation::load_docList(){
         for(int i=0;i<num;i++){
             QString name;
             name = in.readLine();
-            make_docBtn(name, srtIdx, true);
+            make_docBtn(name, srtIdx, 1);//1은 로드
         }
     }
     imgIdx=in.readLine().toInt();//imgIdx 초기화
@@ -603,16 +608,17 @@ bool Sortation::eventFilter(QObject *object, QEvent *event)
 void contextMenuQPushButton::showSrtContextMenu(const QPoint &pos){
     QMenu contextMenu(tr("Context menu"), this);
     QAction action1(Kor("이름변경"), this);
-    connect(&action1, SIGNAL(triggered()), this, SLOT(removeDataPoint()));
+    //connect(&action1, SIGNAL(triggered()), this, SLOT(removeDataPoint()));
     contextMenu.addAction(&action1);
 
     QAction action2(Kor("복사"), this);
-    connect(&action2, SIGNAL(triggered()), this, SLOT(copy_doc()));
+    //connect(&action2,&QAction::triggered,this,&contextMenuQPushButton::copy_doc);//팝업메뉴 커넥트
     contextMenu.addAction(&action2);
 
     QAction action3(Kor("붙여넣기"), this);
-    connect(&action3, SIGNAL(triggered()), this, SLOT(paste_doc()));
+    //connect(&action3,&QAction::triggered,this,&contextMenuQPushButton::paste_doc);
     contextMenu.addAction(&action3);
+
     contextMenu.exec(mapToGlobal(pos));
 }
 
@@ -623,16 +629,26 @@ void contextMenuQPushButton::showDocBtnContextMenu(const QPoint &pos){
     contextMenu.addAction(&action1);
 
     QAction action2(Kor("복사"), this);
-    connect(&action2, SIGNAL(triggered()), this, SLOT(copy_doc()));
+    connect(&action2,&QAction::triggered,this,&contextMenuQPushButton::copy_doc);//팝업메뉴 커넥트
     contextMenu.addAction(&action2);
 
     QAction action3(Kor("잘라내기"), this);
-    connect(&action3, SIGNAL(triggered()), this, SLOT(cut_doc()));
+    connect(&action3,&QAction::triggered,this,&contextMenuQPushButton::cut_doc);
     contextMenu.addAction(&action3);
 
     QAction action4(Kor("붙여넣기"), this);
-    connect(&action4, SIGNAL(triggered()), this, SLOT(paste_doc()));
+    connect(&action4,&QAction::triggered,this,&contextMenuQPushButton::paste_doc);
     contextMenu.addAction(&action4);
 
     contextMenu.exec(mapToGlobal(pos));
+}
+
+Document* Sortation::find_doc(QObject* pbs){
+    for(int i=0;i<(sizeof(docList) / sizeof(docList[0]));i++){
+        for(auto it:docList[i]){
+            if(it->PBS==pbs)
+                return it;
+        }
+    }
+    return nullptr;
 }

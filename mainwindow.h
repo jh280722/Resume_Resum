@@ -25,6 +25,8 @@
 #include <QTextEdit>
 #include <QMessageBox>
 #include "document.h"
+#include "sortation.h"
+
 #define Kor(str) QString::fromLocal8Bit(str)
 
 QT_BEGIN_NAMESPACE
@@ -36,6 +38,9 @@ extern QString AppPath;
 extern QString srtPath;
 extern float DPI;
 extern int imgIdx;
+extern Sortation *sortation;
+extern QVector<Data*> clipBoard;
+extern QString clipBoardName;
 
 class MainWindow : public QMainWindow
 {

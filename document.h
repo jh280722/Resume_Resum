@@ -20,15 +20,16 @@ class Document : public QWidget
     Q_OBJECT
 
 public:
-    Document(QString name, int srtIdx, bool load=0);
+    Document(QString name, int srtIdx, int type=0);
     ~Document();
     QString name;
     QString docPath;
     QWidget* PBS;
     DocTab* tab;
-    void init_docTab(bool load);
+    void init_docTab(int type);
     QVBoxLayout* load_add_box();
     QString get_html(); //pdf로 변환할 html 추출 함수
+
 
     bool getActive();
     void setActive(bool val);
@@ -44,6 +45,8 @@ public slots:
     void save_doc();
     void load_doc();
     void active_doc_select();
+
+    void paste_doc(); //문서 붙여넣기
 
 private slots:
     void delete_doc();

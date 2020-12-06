@@ -19,6 +19,8 @@ public:
     void delete_tab(int srtIdx);
     int srtIdx;
     QVector<Document*> docList[10];
+    Document* find_doc(QObject* pbs);
+    void paste_doc(QString docName, int srtIdx);
 
 protected:
 
@@ -33,10 +35,7 @@ private slots:
 
 private:
     bool eventFilter(QObject *object, QEvent *event);
-    void make_docBtn(QString docName, int srtIdx, bool isLoad);
+    void make_docBtn(QString docName, int srtIdx, int type);
     QString name_check(QString,int);
-
-    Document* cutDoc;
-    QVector<Data*> copyDoc;
 };
 #endif // SORTATION_H

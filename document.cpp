@@ -6,7 +6,7 @@
 #include <QFile>
 extern Sortation *sortation;
 
-Document::Document(QString name, int srtIdx, bool load):QWidget(){
+Document::Document(QString name, int srtIdx, int type):QWidget(){
     setObjectName("document");
     this->name=name;
     this->srtIdx=srtIdx;
@@ -19,8 +19,7 @@ Document::Document(QString name, int srtIdx, bool load):QWidget(){
         Directory.mkdir(srtPath+QString::number(srtIdx)); // 폴더 생성
         Directory.mkdir(docPath); // 폴더 생성
     }
-    init_docTab(load);
-    qDebug()<<active;
+    init_docTab(type);
 }
 
 Document::~Document(){
@@ -29,7 +28,7 @@ Document::~Document(){
 
 
 //문서 만들때 한 번 실행되는 함수
-void Document::init_docTab(bool load) {
+void Document::init_docTab(int type) {
 
     //스크롤 영역 위젯 생성
     tab=new DocTab(this,srtIdx);
@@ -116,7 +115,7 @@ void Document::init_docTab(bool load) {
         connect(PB, SIGNAL(clicked()), this, SLOT(make_doc8()));
         break;
     }
-    if(!load)
+    if(!type)
         this->save_doc();
 }
 

@@ -12,6 +12,8 @@ Sortation *sortation;
 QString AppPath=QApplication::applicationDirPath();
 QString srtPath = AppPath+"/Data/Srt";
 int imgIdx=0;
+QVector<Data*> clipBoard;
+QString clipBoardName;
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)

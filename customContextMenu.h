@@ -17,11 +17,12 @@ public slots:
     void showSrtContextMenu(const QPoint &);
     void showDocBtnContextMenu(const QPoint &);
 
-private slots:
     //copy, paste, cut
     void copy_doc();
     void paste_doc();
     void cut_doc();
+
+private slots:
 };
 
 
