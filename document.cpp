@@ -115,7 +115,7 @@ void Document::init_docTab(int type) {
         connect(PB, SIGNAL(clicked()), this, SLOT(make_doc8()));
         break;
     }
-    if(!type)
+    if(type!=1)
         this->save_doc();
 }
 

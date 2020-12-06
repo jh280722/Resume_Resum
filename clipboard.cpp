@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "customContextMenu.h"
+#include <QApplication>
 
 void contextMenuQPushButton::copy_doc(){
     QObject* sel = QObject::sender();
@@ -91,7 +92,13 @@ void Document::paste_doc(){
     }
     QVBoxLayout* loadBox;
     for(auto it: clipBoard){
-        qDebug()<<loadBox;
+        qDebug()<<it->type;
+        qDebug()<<it->name;
+        qDebug()<<it->valueLine;
+        qDebug()<<it->value;
+        qDebug()<<it->path;
+        qDebug()<<it->stdate;
+        qDebug()<<it->eddate;
         if(it->type=="box"){
             loadBox=load_add_box();
         }
@@ -114,4 +121,5 @@ void Document::paste_doc(){
             AddItemDropdown(loadBox,it->name,it->value);
         }
     }
+    save_doc();
 }
